@@ -1,498 +1,425 @@
 ---
 /**
- * Hero visual: a plain-language mockup that cycles through three real
- * Houshiva services (sales, accounting, POS) inside one browser window —
- * a small product tour instead of a single static screenshot. Pattern
- * borrowed from how Linear/Notion/Framer show their product in motion
- * rather than a frozen dashboard image.
+ * Hero visual: Houshiva's mark sits at the center with six real services
+ * orbiting it on a slowly spinning ring. Hovering (or tapping, on touch) a
+ * node brings it into focus and reveals a small live stat + chart for that
+ * service — an idle "spotlight" also cycles through them on its own.
  */
 import Icon from '../common/Icon.astro';
+import Logo from './Logo.astro';
+import { services } from '../../data/services';
+import { toneForIndex, toneVars } from '../../lib/tones';
 
-const chartBars = [38, 58, 48, 72, 62, 88, 78];
+const featuredSlugs = ['website-design', 'ecommerce', 'accounting', 'pos', 'crm', 'dashboard'];
+const featured = featuredSlugs
+  .map((slug) => services.find((s) => s.slug === slug))
+  .filter((s): s is (typeof services)[number] => Boolean(s));
 
-const tabs = [
-  { id: 'sales', label: 'فروش', icon: 'trending-up' as const },
-  { id: 'accounting', label: 'حسابداری', icon: 'cash' as const },
-  { id: 'pos', label: 'صندوق', icon: 'pos' as const },
-];
+const extras: Record<string, { label: string; value: number; suffix: string; bars: number[] }> = {
+  'website-design': { label: 'امتیاز عملکرد سایت', value: 96, suffix: '٪', bars: [55, 70, 60, 85, 96] },
+  ecommerce: { label: 'فروش این هفته', value: 8400000, suffix: ' تومان', bars: [40, 55, 50, 75, 90] },
+  accounting: { label: 'اسناد ثبت‌شده', value: 240, suffix: ' سند', bars: [30, 50, 45, 65, 80] },
+  pos: { label: 'تراکنش امروز', value: 58, suffix: ' تراکنش', bars: [45, 60, 55, 80, 70] },
+  crm: { label: 'فرصت‌های فعال', value: 12, suffix: ' فرصت', bars: [35, 45, 60, 50, 75] },
+  dashboard: { label: 'شاخص‌های زنده', value: 9, suffix: ' شاخص', bars: [50, 65, 55, 90, 85] },
+};
+
+const RADIUS = 128;
+const nodes = featured.map((service, i) => {
+  const angleDeg = -90 + i * (360 / featured.length);
+  const angleRad = (angleDeg * Math.PI) / 180;
+  return {
+    service,
+    extra: extras[service.slug],
+    x: Math.round(Math.cos(angleRad) * RADIUS),
+    y: Math.round(Math.sin(angleRad) * RADIUS),
+  };
+});
 ---
 
-<div class="biz-mock">
-  <div class="biz-mock__glow" aria-hidden="true"></div>
+<div class="orbit-mock">
+  <div class="orbit-mock__glow" aria-hidden="true"></div>
 
-  <div class="biz-mock__browser">
-    <div class="biz-mock__titlebar">
-      <span class="biz-mock__dot" aria-hidden="true"></span>
-      <span class="biz-mock__dot" aria-hidden="true"></span>
-      <span class="biz-mock__dot" aria-hidden="true"></span>
+  <div class="orbit-mock__ring">
+    <div class="orbit-mock__spin-ring" aria-hidden="true"></div>
 
-      <div class="biz-mock__tabs">
-        {
-          tabs.map((tab, i) => (
-            <button type="button" class:list={['biz-mock__tab', { 'is-active': i === 0 }]} data-scene-btn={tab.id}>
-              <Icon name={tab.icon} size={14} />
-              <span>{tab.label}</span>
-            </button>
-          ))
-        }
-      </div>
+    {
+      nodes.map(({ x, y }) => {
+        const angleDeg = (Math.atan2(y, x) * 180) / Math.PI;
+        const length = Math.hypot(x, y);
+        return (
+          <span
+            class="orbit-mock__line"
+            style={{ width: `${length}px`, transform: `rotate(${angleDeg}deg)` }}
+            aria-hidden="true"
+          />
+        );
+      })
+    }
+
+    <div class="orbit-mock__center" aria-hidden="true">
+      <Logo size={32} withWordmark={false} />
     </div>
 
-    <div class="biz-mock__screen">
-      <div class="biz-mock__scene is-active" data-scene="sales">
-        <div class="biz-mock__stat">
-          <div>
-            <span class="biz-mock__stat-label">فروش امروز</span>
-            <strong class="biz-mock__stat-value" data-count-to="12540000" data-suffix=" تومان">۰ تومان</strong>
-          </div>
-          <span class="biz-mock__badge">۱۸٪ ⬆</span>
-        </div>
-
-        <div class="biz-mock__chart" aria-hidden="true">
-          {chartBars.map((h, i) => <span style={{ '--h': `${h}%`, '--i': i }}></span>)}
-        </div>
-
-        <ul class="biz-mock__list">
-          <li>
-            <span class="biz-mock__list-icon"><Icon name="cart" size={16} /></span>
-            <span class="biz-mock__list-text">سفارش جدید ثبت شد</span>
-            <span class="biz-mock__list-value">۴۵۰,۰۰۰ تومان</span>
-          </li>
-          <li>
-            <span class="biz-mock__list-icon biz-mock__list-icon--warn"><Icon name="warehouse" size={16} /></span>
-            <span class="biz-mock__list-text">موجودی رو به اتمام</span>
-            <span class="biz-mock__list-value">۳ عدد باقی‌مانده</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="biz-mock__scene" data-scene="accounting" aria-hidden="true">
-        <div class="biz-mock__stat">
-          <div>
-            <span class="biz-mock__stat-label">مانده حساب</span>
-            <strong class="biz-mock__stat-value" data-count-to="8200000" data-suffix=" تومان">۰ تومان</strong>
-          </div>
-        </div>
-
-        <ul class="biz-mock__invoices">
-          <li>
-            <span class="biz-mock__invoice-id">فاکتور #۱۰۲۱</span>
-            <span class="biz-mock__invoice-amount">۲,۴۰۰,۰۰۰ تومان</span>
-            <span class="biz-mock__status biz-mock__status--paid">پرداخت‌شده</span>
-          </li>
-          <li>
-            <span class="biz-mock__invoice-id">فاکتور #۱۰۲۲</span>
-            <span class="biz-mock__invoice-amount">۳,۸۰۰,۰۰۰ تومان</span>
-            <span class="biz-mock__status biz-mock__status--pending">در انتظار</span>
-          </li>
-          <li>
-            <span class="biz-mock__invoice-id">فاکتور #۱۰۲۳</span>
-            <span class="biz-mock__invoice-amount">۲,۰۰۰,۰۰۰ تومان</span>
-            <span class="biz-mock__status biz-mock__status--paid">پرداخت‌شده</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="biz-mock__scene" data-scene="pos" aria-hidden="true">
-        <div class="biz-mock__receipt">
-          <div class="biz-mock__receipt-head">
-            <span>فروشگاه شما</span>
-            <span class="biz-mock__receipt-date">امروز، ۱۴:۳۲</span>
-          </div>
-          <ul class="biz-mock__receipt-items">
-            <li><span>پیراهن آبی × ۲</span><span>۱,۲۰۰,۰۰۰</span></li>
-            <li><span>کفش اسپرت × ۱</span><span>۲,۵۰۰,۰۰۰</span></li>
-            <li><span>کلاه × ۱</span><span>۳۵۰,۰۰۰</span></li>
-          </ul>
-          <div class="biz-mock__receipt-total">
-            <span>مبلغ قابل پرداخت</span>
-            <strong class="biz-mock__stat-value" data-count-to="4050000" data-suffix=" تومان">۰ تومان</strong>
-          </div>
-          <span class="biz-mock__badge">پرداخت موفق ✓</span>
-        </div>
-      </div>
-    </div>
+    {
+      nodes.map(({ service, x, y }, i) => (
+        <button
+          type="button"
+          class:list={['orbit-mock__node', { 'is-active': i === 0 }]}
+          style={{ left: `calc(50% + ${x}px)`, top: `calc(50% + ${y}px)`, '--i': i, ...toneVars(toneForIndex(i)) }}
+          data-node-index={i}
+          aria-label={service.title}
+        >
+          <span class="orbit-mock__node-float">
+            <span class="orbit-mock__node-visual">
+              <Icon name={service.icon as any} size={18} />
+            </span>
+          </span>
+        </button>
+      ))
+    }
   </div>
 
-  <div class="biz-mock__phone" role="img" aria-label="همان نرم‌افزار، روی صفحه موبایل">
-    <div class="biz-mock__phone-notch"></div>
-    <div class="biz-mock__phone-screen">
-      <span class="biz-mock__phone-label">فروش امروز</span>
-      <strong class="biz-mock__phone-value">۱۲,۵۴۰,۰۰۰</strong>
-      <div class="biz-mock__phone-chart" aria-hidden="true">
-        {chartBars.slice(0, 5).map((h, i) => <span style={{ '--h': `${h}%`, '--i': i }}></span>)}
-      </div>
-    </div>
+  <div class="orbit-mock__panel">
+    {
+      nodes.map(({ service, extra }, i) => (
+        <div class:list={['orbit-mock__panel-item', { 'is-active': i === 0 }]} aria-hidden={i === 0 ? 'false' : 'true'}>
+          <div class="orbit-mock__panel-main">
+            <div class="orbit-mock__panel-icon" style={toneVars(toneForIndex(i))}>
+              <Icon name={service.icon as any} size={20} />
+            </div>
+            <div>
+              <h3 class="orbit-mock__panel-title">{service.title}</h3>
+              <p class="orbit-mock__panel-desc">{service.shortDescription}</p>
+            </div>
+          </div>
+
+          {extra && (
+            <div class="orbit-mock__widget" style={toneVars(toneForIndex(i))}>
+              <span class="orbit-mock__widget-label">{extra.label}</span>
+              <strong class="orbit-mock__widget-value" data-count-to={extra.value} data-suffix={extra.suffix}>
+                ۰
+              </strong>
+              <div class="orbit-mock__widget-chart" aria-hidden="true">
+                {extra.bars.map((h, bi) => (
+                  <span style={{ '--h': `${h}%`, '--i': bi }} />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="orbit-mock__dots">
+    {nodes.map((_, i) => <span class:list={['orbit-mock__dot', { 'is-active': i === 0 }]} data-dot-index={i} />)}
   </div>
 </div>
 
 <style>
-  .biz-mock {
+  .orbit-mock {
     position: relative;
     width: 100%;
     min-width: 0;
   }
 
-  .biz-mock__glow {
+  .orbit-mock__glow {
     position: absolute;
-    inset: -15%;
-    background: radial-gradient(circle at 40% 30%, var(--tone-accent) 0%, transparent 60%);
-    opacity: 0.22;
-    filter: blur(48px);
+    inset: -20%;
+    background: radial-gradient(circle at 50% 35%, var(--tone-accent) 0%, transparent 60%);
+    opacity: 0.2;
+    filter: blur(56px);
     z-index: -1;
   }
 
-  .biz-mock__browser {
+  .orbit-mock__ring {
+    position: relative;
+    width: min(320px, 100%);
+    aspect-ratio: 1;
+    margin-inline: auto;
+  }
+
+  .orbit-mock__spin-ring {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    border: 1.5px dashed var(--color-border-hairline);
+    border-radius: 50%;
+    animation: orbit-spin 60s linear infinite;
+  }
+
+  .orbit-mock__line {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    height: 0;
+    border-top: 1.5px dashed var(--color-border-strong);
+    transform-origin: 0 50%;
+  }
+
+  .orbit-mock__center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface-elevated);
+    border: 1px solid var(--color-border-strong);
+    box-shadow: var(--shadow-glow-primary);
+    z-index: 2;
+  }
+
+  .orbit-mock__node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 48px;
+    height: 48px;
+    z-index: 1;
+  }
+
+  .orbit-mock__node-float {
+    display: block;
+    width: 100%;
+    height: 100%;
+    animation: orbit-node-float 5s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -0.8s);
+  }
+
+  .orbit-mock__node-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--color-surface-elevated);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    transition:
+      border-color 0.25s ease,
+      color 0.25s ease,
+      background-color 0.25s ease,
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .orbit-mock__node:hover .orbit-mock__node-visual,
+  .orbit-mock__node:focus-visible .orbit-mock__node-visual,
+  .orbit-mock__node.is-active .orbit-mock__node-visual {
+    border-color: var(--tone-accent);
+    color: var(--tone-accent-hover);
+    background: var(--tone-accent-soft);
+    transform: scale(1.16);
+    box-shadow: var(--tone-glow);
+  }
+
+  .orbit-mock__panel {
+    position: relative;
+    min-height: 168px;
+    margin-top: var(--space-8);
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    overflow: hidden;
   }
 
-  .biz-mock__titlebar {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-3) var(--space-4);
-    border-bottom: 1px solid var(--color-border-hairline);
-    background: var(--color-background-alt);
-  }
-
-  .biz-mock__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--color-border-strong);
-    flex-shrink: 0;
-  }
-
-  .biz-mock__tabs {
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
-    margin-inline-start: var(--space-2);
-    overflow-x: auto;
-  }
-
-  .biz-mock__tab {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    flex-shrink: 0;
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-subtle);
-    padding: var(--space-1) var(--space-3);
-    border-radius: var(--radius-full);
-    transition:
-      color var(--transition-fast),
-      background-color var(--transition-fast);
-  }
-
-  .biz-mock__tab:hover {
-    color: var(--color-text);
-  }
-
-  .biz-mock__tab.is-active {
-    color: var(--tone-accent-hover);
-    background: var(--tone-accent-soft);
-  }
-
-  .biz-mock__screen {
-    position: relative;
-    min-height: 336px;
-  }
-
-  .biz-mock__scene {
+  .orbit-mock__panel-item {
     position: absolute;
     inset: 0;
-    padding: var(--space-6);
+    padding: var(--space-5) var(--space-6);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
     opacity: 0;
     transform: translateY(6px);
     pointer-events: none;
     transition:
-      opacity 0.45s ease,
-      transform 0.45s ease;
+      opacity 0.4s ease,
+      transform 0.4s ease;
   }
 
-  .biz-mock__scene.is-active {
+  .orbit-mock__panel-item.is-active {
     position: relative;
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
   }
 
-  .biz-mock__stat {
+  .orbit-mock__panel-main {
     display: flex;
     align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: var(--space-6);
+    gap: var(--space-4);
+    min-width: 0;
   }
 
-  .biz-mock__stat-label {
-    display: block;
-    font-size: var(--font-size-xs);
-    color: var(--color-text-subtle);
-    margin-bottom: var(--space-1);
-  }
-
-  .biz-mock__stat-value {
-    font-size: var(--font-size-2xl);
-    color: var(--color-text);
-  }
-
-  .biz-mock__badge {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-success);
-    background: var(--color-success-soft);
-    padding: var(--space-1) var(--space-3);
-    border-radius: var(--radius-full);
-  }
-
-  .biz-mock__chart {
-    display: flex;
-    align-items: flex-end;
-    gap: var(--space-2);
-    height: 84px;
-    margin-bottom: var(--space-6);
-  }
-
-  .biz-mock__chart span {
-    flex: 1;
-    height: var(--h);
-    border-radius: 6px 6px 2px 2px;
-    background: var(--tone-accent-soft);
-    transform: scaleY(0);
-    transform-origin: bottom;
-    animation: biz-bar-grow 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: calc(var(--i) * 90ms + 150ms);
-  }
-
-  .biz-mock__chart span:nth-child(odd) {
-    background: var(--tone-accent);
-  }
-
-  .biz-mock__list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding-top: var(--space-5);
-    border-top: 1px solid var(--color-border-hairline);
-  }
-
-  .biz-mock__list li {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    font-size: var(--font-size-sm);
-  }
-
-  .biz-mock__list-icon {
+  .orbit-mock__panel-icon {
     flex-shrink: 0;
-    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: var(--radius-sm);
     background: var(--tone-accent-soft);
     color: var(--tone-accent-hover);
   }
 
-  .biz-mock__list-icon--warn {
-    background: rgba(232, 185, 117, 0.14);
-    color: var(--color-accent-gold);
-  }
-
-  .biz-mock__list-text {
-    flex-grow: 1;
-    color: var(--color-text-muted);
-  }
-
-  .biz-mock__list-value {
-    flex-shrink: 0;
-    font-size: var(--font-size-xs);
-    color: var(--color-text-subtle);
-  }
-
-  /* accounting scene */
-  .biz-mock__invoices {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    padding-top: var(--space-5);
-    border-top: 1px solid var(--color-border-hairline);
-  }
-
-  .biz-mock__invoices li {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    font-size: var(--font-size-sm);
-  }
-
-  .biz-mock__invoice-id {
-    color: var(--color-text-muted);
-  }
-
-  .biz-mock__invoice-amount {
-    flex-grow: 1;
-    text-align: end;
-    font-size: var(--font-size-xs);
-    color: var(--color-text-subtle);
-  }
-
-  .biz-mock__status {
-    flex-shrink: 0;
-    font-size: 0.6875rem;
-    font-weight: var(--font-weight-semibold);
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--radius-full);
-  }
-
-  .biz-mock__status--paid {
-    color: var(--color-success);
-    background: var(--color-success-soft);
-  }
-
-  .biz-mock__status--pending {
-    color: var(--color-accent-gold);
-    background: rgba(232, 185, 117, 0.14);
-  }
-
-  /* pos scene */
-  .biz-mock__receipt-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    font-size: var(--font-size-sm);
+  .orbit-mock__panel-title {
+    font-size: var(--font-size-base);
     font-weight: var(--font-weight-semibold);
     color: var(--color-text);
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-1);
   }
 
-  .biz-mock__receipt-date {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-regular);
-    color: var(--color-text-subtle);
-  }
-
-  .biz-mock__receipt-items {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    padding-bottom: var(--space-4);
-    border-bottom: 1px dashed var(--color-border-strong);
-    margin-bottom: var(--space-4);
-  }
-
-  .biz-mock__receipt-items li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .orbit-mock__panel-desc {
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);
   }
 
-  .biz-mock__receipt-total {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: var(--space-5);
+  .orbit-mock__widget {
+    flex-shrink: 0;
+    width: 132px;
+    padding: var(--space-3);
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border-hairline);
+    border-radius: var(--radius-md);
   }
 
-  .biz-mock__receipt-total span {
-    font-size: var(--font-size-xs);
+  .orbit-mock__widget-label {
+    display: block;
+    font-size: 0.6875rem;
     color: var(--color-text-subtle);
+    margin-bottom: var(--space-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .biz-mock__phone {
-    position: absolute;
-    bottom: calc(-1 * var(--space-6));
-    inset-inline-end: -108px;
-    width: 120px;
-    background: var(--color-surface-elevated);
-    border: 1px solid var(--color-border-strong);
-    border-radius: 22px;
-    box-shadow: var(--shadow-lg);
-    padding: var(--space-3) var(--space-3) var(--space-4);
-  }
-
-  .biz-mock__phone-notch {
-    width: 28px;
-    height: 4px;
-    border-radius: var(--radius-full);
-    background: var(--color-border-strong);
-    margin: 0 auto var(--space-3);
-  }
-
-  .biz-mock__phone-screen {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-  }
-
-  .biz-mock__phone-label {
-    font-size: 0.6rem;
-    color: var(--color-text-subtle);
-  }
-
-  .biz-mock__phone-value {
+  .orbit-mock__widget-value {
+    display: block;
     font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-text);
     margin-bottom: var(--space-2);
+    white-space: nowrap;
   }
 
-  .biz-mock__phone-chart {
+  .orbit-mock__widget-chart {
     display: flex;
     align-items: flex-end;
     gap: 3px;
-    height: 32px;
+    height: 28px;
   }
 
-  .biz-mock__phone-chart span {
+  .orbit-mock__widget-chart span {
     flex: 1;
     height: var(--h);
     border-radius: 3px 3px 1px 1px;
     background: var(--tone-accent-soft);
     transform: scaleY(0);
     transform-origin: bottom;
-    animation: biz-bar-grow 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: calc(var(--i) * 90ms + 500ms);
+    animation: orbit-bar-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--i) * 80ms + 100ms);
   }
 
-  .biz-mock__phone-chart span:nth-child(odd) {
+  .orbit-mock__widget-chart span:nth-child(odd) {
     background: var(--tone-accent);
   }
 
-  @keyframes biz-bar-grow {
+  .orbit-mock__dots {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-2);
+    margin-top: var(--space-5);
+  }
+
+  .orbit-mock__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-border-strong);
+    cursor: pointer;
+    transition:
+      background-color 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  .orbit-mock__dot.is-active {
+    background: var(--tone-accent);
+    transform: scale(1.5);
+  }
+
+  @keyframes orbit-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes orbit-node-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  @keyframes orbit-bar-grow {
     to {
       transform: scaleY(1);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .biz-mock__chart span,
-    .biz-mock__phone-chart span {
+    .orbit-mock__spin-ring,
+    .orbit-mock__node-float {
       animation: none;
-      transform: scaleY(1);
     }
 
-    .biz-mock__scene {
+    .orbit-mock__panel-item {
       transition: opacity 0.2s ease;
       transform: none;
     }
+
+    .orbit-mock__widget-chart span {
+      animation: none;
+      transform: scaleY(1);
+    }
   }
 
-  @media (max-width: 640px) {
-    .biz-mock__phone {
-      display: none;
+  @media (max-width: 560px) {
+    .orbit-mock__panel-item {
+      flex-direction: column;
+      align-items: stretch;
     }
 
-    .biz-mock__tab span {
-      display: none;
+    .orbit-mock__widget {
+      width: auto;
+    }
+
+    .orbit-mock__panel {
+      min-height: 232px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .orbit-mock__node {
+      width: 40px;
+      height: 40px;
+    }
+
+    .orbit-mock__center {
+      width: 56px;
+      height: 56px;
     }
   }
 </style>
@@ -508,7 +435,7 @@ const tabs = [
       return;
     }
 
-    const duration = 900;
+    const duration = 800;
     const start = performance.now();
 
     function tick(now: number) {
@@ -522,38 +449,39 @@ const tabs = [
     requestAnimationFrame(tick);
   }
 
-  function restartBarAnimations(scene: HTMLElement) {
-    scene.querySelectorAll<HTMLElement>('.biz-mock__chart span').forEach((bar) => {
+  function restartWidgetAnimations(panel: HTMLElement) {
+    panel.querySelectorAll<HTMLElement>('.orbit-mock__widget-chart span').forEach((bar) => {
       bar.style.animation = 'none';
       void bar.offsetWidth;
       bar.style.animation = '';
     });
+    panel.querySelectorAll<HTMLElement>('[data-count-to]').forEach(animateCount);
   }
 
-  function initBizMock() {
-    const root = document.querySelector<HTMLElement>('.biz-mock');
+  function initOrbit() {
+    const root = document.querySelector<HTMLElement>('.orbit-mock');
     if (!root) return;
 
-    const scenes = Array.from(root.querySelectorAll<HTMLElement>('.biz-mock__scene'));
-    const tabButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-scene-btn]'));
-    if (scenes.length === 0) return;
+    const nodes = Array.from(root.querySelectorAll<HTMLButtonElement>('.orbit-mock__node'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('.orbit-mock__panel-item'));
+    const dots = Array.from(root.querySelectorAll<HTMLElement>('.orbit-mock__dot'));
+    if (nodes.length === 0) return;
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let current = 0;
     let timer: ReturnType<typeof setInterval> | undefined;
 
     function activate(index: number) {
-      current = (index + scenes.length) % scenes.length;
-      scenes.forEach((scene, i) => {
-        const active = i === current;
-        scene.classList.toggle('is-active', active);
-        scene.setAttribute('aria-hidden', String(!active));
-      });
-      tabButtons.forEach((btn, i) => btn.classList.toggle('is-active', i === current));
+      current = (index + nodes.length) % nodes.length;
+      nodes.forEach((n, i) => n.classList.toggle('is-active', i === current));
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
 
-      const activeScene = scenes[current];
-      activeScene.querySelectorAll<HTMLElement>('[data-count-to]').forEach(animateCount);
-      restartBarAnimations(activeScene);
+      panels.forEach((p, i) => {
+        const active = i === current;
+        p.classList.toggle('is-active', active);
+        p.setAttribute('aria-hidden', String(!active));
+        if (active) restartWidgetAnimations(p);
+      });
     }
 
     function stopRotation() {
@@ -564,22 +492,33 @@ const tabs = [
     function startRotation() {
       if (reduceMotion) return;
       stopRotation();
-      timer = setInterval(() => activate(current + 1), 4500);
+      timer = setInterval(() => activate(current + 1), 4000);
     }
 
-    tabButtons.forEach((btn, i) => {
-      btn.addEventListener('click', () => {
+    nodes.forEach((node, i) => {
+      node.addEventListener('mouseenter', () => {
+        activate(i);
+        stopRotation();
+      });
+      node.addEventListener('focus', () => {
+        activate(i);
+        stopRotation();
+      });
+      node.addEventListener('click', () => activate(i));
+    });
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
         activate(i);
         startRotation();
       });
     });
 
-    root.addEventListener('mouseenter', stopRotation);
     root.addEventListener('mouseleave', startRotation);
 
     activate(0);
     startRotation();
   }
 
-  document.addEventListener('astro:page-load', initBizMock);
+  document.addEventListener('astro:page-load', initOrbit);
 </script>
