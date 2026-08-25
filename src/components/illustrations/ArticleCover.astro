@@ -1,0 +1,58 @@
+---
+/**
+ * Lightweight cover banner for article cards — a tone-colored gradient
+ * with the category's icon, not a photo. Keeps the "no stock imagery"
+ * convention used across portfolio/tool covers.
+ */
+import Icon from '../common/Icon.astro';
+import type { IconName } from '../common/Icon.astro';
+
+export interface Props {
+  icon: IconName;
+}
+
+const { icon } = Astro.props;
+---
+
+<div class="article-cover" aria-hidden="true">
+  <div class="article-cover__glow"></div>
+  <div class="article-cover__grid"></div>
+  <Icon name={icon} size={36} />
+</div>
+
+<style>
+  .article-cover {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--tone-accent-soft), var(--color-surface) 70%);
+    color: var(--tone-accent-hover);
+    overflow: hidden;
+  }
+
+  .article-cover__glow {
+    position: absolute;
+    width: 160%;
+    height: 160%;
+    background: radial-gradient(circle, var(--tone-accent) 0%, transparent 65%);
+    opacity: 0.28;
+    filter: blur(28px);
+  }
+
+  .article-cover__grid {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(var(--color-border-hairline) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-border-hairline) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(circle at center, black 0%, transparent 75%);
+  }
+
+  .article-cover :global(svg) {
+    position: relative;
+    z-index: 1;
+  }
+</style>

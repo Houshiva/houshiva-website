@@ -7,6 +7,7 @@ import VideoCard from '../../components/education/VideoCard.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
 import GradientMesh from '../../components/common/GradientMesh.astro';
 import { videos } from '../../data/videos';
+import { articleCategories, slugForCategory } from '../../data/articleCategories';
 
 const articles = (await getCollection('articles')).sort(
   (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
@@ -34,6 +35,13 @@ const articles = (await getCollection('articles')).sort(
         <input type="radio" name="education-filter" id="filter-content-article" class="visually-hidden" />
         <input type="radio" name="education-filter" id="filter-content-video" class="visually-hidden" />
 
+        <input type="radio" name="article-category-filter" id="filter-topic-all" class="visually-hidden" checked />
+        {
+          articleCategories.map((_, i) => (
+            <input type="radio" name="article-category-filter" id={`filter-topic-${i}`} class="visually-hidden" />
+          ))
+        }
+
         <div class="education-filter__tabs">
           <label for="filter-content-all">همه</label>
           <label for="filter-content-article">مقاله</label>
@@ -42,20 +50,30 @@ const articles = (await getCollection('articles')).sort(
 
         <div class="education-filter__grid">
           <div class="education-filter__group education-filter__group--articles">
-            {
-              articles.map((article) => (
-                <div class="education-filter__item cat-article" data-reveal>
-                  <ArticleCard
-                    slug={article.id}
-                    title={article.data.title}
-                    description={article.data.description}
-                    category={article.data.category}
-                    readingTime={article.data.readingTime}
-                    publishDate={article.data.publishDate}
-                  />
-                </div>
-              ))
-            }
+            <div class="education-filter__topic-tabs">
+              <label for="filter-topic-all">همه موضوعات</label>
+              {articleCategories.map((cat, i) => <label for={`filter-topic-${i}`}>{cat.name}</label>)}
+            </div>
+
+            <div class="education-filter__articles-grid">
+              {
+                articles.map((article) => (
+                  <div
+                    class:list={['education-filter__item', 'cat-article', slugForCategory(article.data.category)]}
+                    data-reveal
+                  >
+                    <ArticleCard
+                      slug={article.id}
+                      title={article.data.title}
+                      description={article.data.description}
+                      category={article.data.category}
+                      readingTime={article.data.readingTime}
+                      publishDate={article.data.publishDate}
+                    />
+                  </div>
+                ))
+              }
+            </div>
           </div>
 
           <div class="education-filter__group education-filter__group--videos">
@@ -108,10 +126,38 @@ const articles = (await getCollection('articles')).sort(
   }
 
   .education-filter__group--articles {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-5);
     margin-bottom: var(--space-10);
+  }
+
+  .education-filter__topic-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-8);
+  }
+
+  .education-filter__topic-tabs label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-subtle);
+    border: 1px solid var(--color-border-hairline);
+    border-radius: var(--radius-full);
+    padding: var(--space-1) var(--space-4);
+    cursor: pointer;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .education-filter__topic-tabs label:hover {
+    color: var(--color-text);
+  }
+
+  .education-filter__articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
   }
 
   .education-filter__group--videos {
@@ -131,6 +177,28 @@ const articles = (await getCollection('articles')).sort(
 
   #filter-content-video:checked ~ .education-filter__grid .education-filter__group--articles,
   #filter-content-article:checked ~ .education-filter__grid .education-filter__group--videos {
+    display: none;
+  }
+
+  /* Topic filter (articles only) — same CSS-only pattern */
+  #filter-topic-all:checked ~ .education-filter__grid .education-filter__topic-tabs label[for='filter-topic-all'],
+  #filter-topic-0:checked ~ .education-filter__grid .education-filter__topic-tabs label[for='filter-topic-0'],
+  #filter-topic-1:checked ~ .education-filter__grid .education-filter__topic-tabs label[for='filter-topic-1'],
+  #filter-topic-2:checked ~ .education-filter__grid .education-filter__topic-tabs label[for='filter-topic-2'],
+  #filter-topic-3:checked ~ .education-filter__grid .education-filter__topic-tabs label[for='filter-topic-3'],
+  #filter-topic-4:checked ~ .education-filter__grid .education-filter__topic-tabs label[for='filter-topic-4'],
+  #filter-topic-5:checked ~ .education-filter__grid .education-filter__topic-tabs label[for='filter-topic-5'] {
+    color: var(--tone-accent-hover);
+    border-color: var(--tone-accent);
+    background: var(--tone-accent-soft);
+  }
+
+  #filter-topic-0:checked ~ .education-filter__grid .education-filter__articles-grid .education-filter__item:not(.cat-0),
+  #filter-topic-1:checked ~ .education-filter__grid .education-filter__articles-grid .education-filter__item:not(.cat-1),
+  #filter-topic-2:checked ~ .education-filter__grid .education-filter__articles-grid .education-filter__item:not(.cat-2),
+  #filter-topic-3:checked ~ .education-filter__grid .education-filter__articles-grid .education-filter__item:not(.cat-3),
+  #filter-topic-4:checked ~ .education-filter__grid .education-filter__articles-grid .education-filter__item:not(.cat-4),
+  #filter-topic-5:checked ~ .education-filter__grid .education-filter__articles-grid .education-filter__item:not(.cat-5) {
     display: none;
   }
 </style>
