@@ -1,0 +1,135 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import SectionTitle from '../components/common/SectionTitle.astro';
+import Icon from '../components/common/Icon.astro';
+import CtaSection from '../components/common/CtaSection.astro';
+import type { IconName } from '../components/common/Icon.astro';
+
+const values: { icon: IconName; title: string; description: string }[] = [
+  {
+    icon: 'target',
+    title: 'کیفیت',
+    description: 'هر بخش از کد همان‌قدر برایمان مهم است که ظاهر نهایی کار؛ چون کیفیت فنی، مستقیماً روی پایداری کسب‌وکار شما اثر می‌گذارد.',
+  },
+  {
+    icon: 'layers',
+    title: 'سادگی',
+    description: 'راهکاری را ارائه می‌دهیم که واقعاً لازم است، نه پیچیده‌ترین راه‌حل ممکن. ابزار درست، همیشه ابزار پیچیده‌تر نیست.',
+  },
+  {
+    icon: 'code',
+    title: 'توسعه اختصاصی',
+    description: 'به‌جای تحمیل یک قالب آماده به کسب‌وکار شما، نرم‌افزار را حول فرآیند واقعی‌تان طراحی می‌کنیم.',
+  },
+  {
+    icon: 'compass',
+    title: 'حل مسئله',
+    description: 'قبل از فکر کردن به تکنولوژی، روی فهمیدن مسئله وقت می‌گذاریم؛ چون بهترین کد هم جواب مسئله اشتباه را نمی‌دهد.',
+  },
+  {
+    icon: 'refresh',
+    title: 'همکاری بلندمدت',
+    description: 'پروژه برای ما با تحویل تمام نمی‌شود. ترجیح می‌دهیم همراه رشد کسب‌وکار شما، نرم‌افزار هم رشد کند.',
+  },
+];
+---
+
+<MainLayout
+  title="درباره ما"
+  description="هوشیوا را دو توسعه‌دهنده با تمرکز بر ساخت نرم‌افزارهای کاربردی و قابل توسعه راه‌اندازی کرده‌اند. با نگاه ما به کیفیت، سادگی و همکاری بلندمدت آشنا شوید."
+  path="/about"
+>
+  <section class="section about-hero">
+    <div class="container">
+      <SectionTitle as="h1" eyebrow="درباره ما" title="داستان هوشیوا" align="center" />
+      <div class="about-story">
+        <p>
+          هوشیوا را دو توسعه‌دهنده راه‌اندازی کرده‌اند که پیش از آن، مدت‌ها روی پروژه‌های نرم‌افزاری واقعی برای
+          کسب‌وکارهای مختلف کار کرده بودند. در همان تجربه‌ها بود که یک الگوی تکراری را دیدیم: بسیاری از کسب‌وکارها
+          مجبور بودند فرآیندهای کاری‌شان را با نرم‌افزارهای آماده و عمومی تطبیق دهند، درحالی‌که باید برعکس این
+          اتفاق می‌افتاد.
+        </p>
+        <p>
+          هوشیوا از همین نقطه شکل گرفت؛ تیمی کوچک که به‌جای فروش یک محصول ثابت به همه، برای هر کسب‌وکار،
+          راهکاری متناسب با نیاز واقعی همان کسب‌وکار طراحی و توسعه می‌دهد. از طراحی سایت گرفته تا نرم‌افزارهای
+          اختصاصی و سامانه‌های مدیریتی.
+        </p>
+        <p>
+          هنوز یک تیم کوچک هستیم و همین موضوع را به یک مزیت تبدیل کرده‌ایم؛ روی هر پروژه از نزدیک کار می‌کنیم،
+          تصمیم‌ها سریع گرفته می‌شوند و ارتباط مستقیمی با کسانی دارید که واقعاً روی نرم‌افزار شما کار می‌کنند.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section values">
+    <div class="container">
+      <SectionTitle eyebrow="نگاه ما" title="اصولی که در هر پروژه رعایت می‌کنیم" />
+      <div class="values__grid">
+        {
+          values.map((value) => (
+            <div class="values__item" data-reveal>
+              <div class="values__icon">
+                <Icon name={value.icon} size={22} />
+              </div>
+              <h3>{value.title}</h3>
+              <p>{value.description}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CtaSection
+    title="دوست داریم درباره کسب‌وکار شما بشنویم"
+    description="اگر ایده یا نیازی دارید که هنوز شکل نگرفته، همین حالا می‌توانید با ما در میان بگذارید."
+  />
+</MainLayout>
+
+<style>
+  .about-story {
+    max-width: 720px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-normal);
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  .values__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .values__item {
+    padding: var(--space-8);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .values__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: var(--color-primary-soft);
+    color: var(--color-primary-hover);
+    margin-bottom: var(--space-5);
+  }
+
+  .values__item h3 {
+    margin-bottom: var(--space-3);
+  }
+
+  .values__item p {
+    font-size: var(--font-size-sm);
+  }
+</style>

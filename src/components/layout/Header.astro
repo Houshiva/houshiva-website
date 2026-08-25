@@ -1,0 +1,219 @@
+---
+import Logo from '../illustrations/Logo.astro';
+import Button from '../common/Button.astro';
+import Icon from '../common/Icon.astro';
+import { mainNav } from '../../data/navigation';
+
+const currentPath = Astro.url.pathname;
+
+function isActive(href: string) {
+  return href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+}
+---
+
+<header class="header">
+  <div class="container header__inner">
+    <a href="/" class="header__logo" aria-label="هوشیوا — صفحه اصلی">
+      <Logo size={30} />
+    </a>
+
+    <nav class="header__nav" aria-label="منوی اصلی">
+      <ul>
+        {
+          mainNav.map((link) => (
+            <li>
+              <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="header__actions">
+      <Button href="/contact" size="md">درخواست مشاوره</Button>
+      <button
+        class="header__toggle"
+        id="nav-toggle"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        aria-label="باز کردن منو"
+      >
+        <Icon name="menu" size={22} class="header__toggle-icon header__toggle-icon--menu" />
+        <Icon name="close" size={22} class="header__toggle-icon header__toggle-icon--close" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobile-nav" data-state="closed">
+  <nav aria-label="منوی موبایل">
+    <ul>
+      {
+        mainNav.map((link) => (
+          <li>
+            <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  <Button href="/contact" size="lg" class="mobile-nav__cta">درخواست مشاوره</Button>
+</div>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    background: color-mix(in srgb, var(--color-background) 88%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border-hairline);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--space-4);
+  }
+
+  .header__logo {
+    display: flex;
+  }
+
+  .header__nav ul {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  .header__nav a {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    transition: color var(--transition-fast);
+  }
+
+  .header__nav a:hover,
+  .header__nav a[aria-current='page'] {
+    color: var(--color-text);
+  }
+
+  .header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .header__toggle {
+    display: none;
+    padding: var(--space-2);
+    color: var(--color-text);
+    border-radius: var(--radius-sm);
+  }
+
+  .header__toggle :global(.header__toggle-icon--close) {
+    display: none;
+  }
+
+  .header__toggle[aria-expanded='true'] :global(.header__toggle-icon--menu) {
+    display: none;
+  }
+
+  .header__toggle[aria-expanded='true'] :global(.header__toggle-icon--close) {
+    display: block;
+  }
+
+  .mobile-nav {
+    display: none;
+  }
+
+  @media (max-width: 860px) {
+    .header__nav {
+      display: none;
+    }
+
+    .header__actions :global(.btn) {
+      display: none;
+    }
+
+    .header__toggle {
+      display: inline-flex;
+    }
+
+    .mobile-nav {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+      position: fixed;
+      inset: 0;
+      top: 66px;
+      padding: var(--space-8) var(--container-padding);
+      background: var(--color-background);
+      transform: translateY(-8px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity var(--transition-base),
+        transform var(--transition-base),
+        visibility var(--transition-base);
+    }
+
+    .mobile-nav[data-state='open'] {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .mobile-nav ul {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    .mobile-nav a {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text);
+    }
+
+    .mobile-nav :global(.mobile-nav__cta) {
+      width: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-nav {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const panel = document.getElementById('mobile-nav');
+
+  if (toggle && panel) {
+    toggle.addEventListener('click', () => {
+      const isOpen = panel.dataset.state === 'open';
+      panel.dataset.state = isOpen ? 'closed' : 'open';
+      toggle.setAttribute('aria-expanded', String(!isOpen));
+      toggle.setAttribute('aria-label', isOpen ? 'باز کردن منو' : 'بستن منو');
+      document.body.style.overflow = isOpen ? '' : 'hidden';
+    });
+
+    panel.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        panel.dataset.state = 'closed';
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+</script>

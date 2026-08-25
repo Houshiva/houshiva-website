@@ -1,0 +1,104 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import SectionTitle from '../components/common/SectionTitle.astro';
+import ProjectDetailCard from '../components/portfolio/ProjectDetailCard.astro';
+import CtaSection from '../components/common/CtaSection.astro';
+import { projects, projectCategories } from '../data/projects';
+
+const categories = Object.entries(projectCategories);
+---
+
+<MainLayout
+  title="نمونه‌کارهای هوشیوا"
+  description="مجموعه‌ای از پروژه‌های اجراشده هوشیوا در طراحی سایت، فروشگاه اینترنتی، نرم‌افزار اختصاصی، سیستم‌های مدیریتی و داشبورد."
+  path="/portfolio"
+>
+  <section class="section portfolio-page">
+    <div class="container">
+      <SectionTitle
+        as="h1"
+        eyebrow="نمونه‌کارها"
+        title="پروژه‌هایی که ساخته‌ایم"
+        description="هر پروژه، مسئله مشخصی از یک کسب‌وکار واقعی را حل کرده است. می‌توانید بر اساس نوع پروژه فیلتر کنید."
+      />
+
+      <div class="portfolio-filter">
+        <input type="radio" name="portfolio-filter" id="filter-all" class="visually-hidden" checked />
+        {categories.map(([key]) => (
+          <input type="radio" name="portfolio-filter" id={`filter-${key}`} class="visually-hidden" />
+        ))}
+
+        <div class="portfolio-filter__tabs" role="tablist" aria-label="فیلتر نمونه‌کارها بر اساس دسته‌بندی">
+          <label for="filter-all">همه</label>
+          {categories.map(([key, label]) => <label for={`filter-${key}`}>{label}</label>)}
+        </div>
+
+        <div class="portfolio-filter__grid">
+          {
+            projects.map((project) => (
+              <div class:list={['portfolio-filter__item', `cat-${project.category}`]} id={project.slug}>
+                <ProjectDetailCard project={project} />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaSection />
+</MainLayout>
+
+<style>
+  .portfolio-filter__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-10);
+  }
+
+  .portfolio-filter__tabs label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: var(--space-2) var(--space-5);
+    cursor: pointer;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .portfolio-filter__tabs label:hover {
+    border-color: var(--color-primary);
+    color: var(--color-text);
+  }
+
+  .portfolio-filter__grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  /* Active tab styling — driven purely by :has(), no JavaScript required */
+  #filter-all:checked ~ .portfolio-filter__tabs label[for='filter-all'],
+  #filter-website:checked ~ .portfolio-filter__tabs label[for='filter-website'],
+  #filter-store:checked ~ .portfolio-filter__tabs label[for='filter-store'],
+  #filter-software:checked ~ .portfolio-filter__tabs label[for='filter-software'],
+  #filter-management-system:checked ~ .portfolio-filter__tabs label[for='filter-management-system'],
+  #filter-dashboard:checked ~ .portfolio-filter__tabs label[for='filter-dashboard'] {
+    color: var(--color-primary-hover);
+    border-color: var(--color-primary);
+    background: var(--color-primary-soft);
+  }
+
+  #filter-website:checked ~ .portfolio-filter__grid .portfolio-filter__item:not(.cat-website),
+  #filter-store:checked ~ .portfolio-filter__grid .portfolio-filter__item:not(.cat-store),
+  #filter-software:checked ~ .portfolio-filter__grid .portfolio-filter__item:not(.cat-software),
+  #filter-management-system:checked ~ .portfolio-filter__grid .portfolio-filter__item:not(.cat-management-system),
+  #filter-dashboard:checked ~ .portfolio-filter__grid .portfolio-filter__item:not(.cat-dashboard) {
+    display: none;
+  }
+</style>

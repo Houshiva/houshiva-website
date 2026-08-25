@@ -1,0 +1,139 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import SectionTitle from '../components/common/SectionTitle.astro';
+import ContactForm from '../components/contact/ContactForm.astro';
+import SocialLinks from '../components/common/SocialLinks.astro';
+import Icon from '../components/common/Icon.astro';
+import { site } from '../data/site';
+---
+
+<MainLayout
+  title="تماس با ما"
+  description="برای دریافت مشاوره رایگان و شروع پروژه، از طریق فرم زیر با تیم هوشیوا در ارتباط باشید یا مستقیماً تماس بگیرید."
+  path="/contact"
+>
+  <section class="section contact-page">
+    <div class="container">
+      <SectionTitle
+        as="h1"
+        eyebrow="تماس با ما"
+        title="بگویید به چه چیزی نیاز دارید"
+        description="فرم زیر را پر کنید یا مستقیماً از راه‌های ارتباطی کنار صفحه با ما تماس بگیرید."
+      />
+
+      <div class="contact-page__grid">
+        <div class="contact-page__form">
+          <ContactForm />
+        </div>
+
+        <aside class="contact-page__info">
+          <div class="contact-info-card">
+            <h3>راه‌های ارتباطی</h3>
+            <ul>
+              <li>
+                <Icon name="mail" size={18} />
+                <a href={`mailto:${site.contact.email}`} class="ltr">{site.contact.email}</a>
+              </li>
+              {
+                site.contact.phones.map((phone) => (
+                  <li>
+                    <Icon name="phone" size={18} />
+                    <div>
+                      <a href={`tel:${phone.href}`} class="ltr">{phone.number}</a>
+                      <span>{phone.label}</span>
+                    </div>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+
+          <div class="contact-info-card">
+            <h3>ما را دنبال کنید</h3>
+            <SocialLinks />
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  .contact-page__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: var(--space-10);
+    align-items: start;
+  }
+
+  .contact-page__form {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-10);
+  }
+
+  .contact-page__info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .contact-info-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+  }
+
+  .contact-info-card h3 {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-5);
+  }
+
+  .contact-info-card ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .contact-info-card li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    color: var(--color-primary-hover);
+  }
+
+  .contact-info-card li div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .contact-info-card a {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+  }
+
+  .contact-info-card a:hover {
+    color: var(--color-primary-hover);
+  }
+
+  .contact-info-card li span {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+  }
+
+  @media (max-width: 860px) {
+    .contact-page__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-page__form {
+      padding: var(--space-6);
+    }
+  }
+</style>

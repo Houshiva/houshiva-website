@@ -1,0 +1,126 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import Icon from '../../components/common/Icon.astro';
+import CtaSection from '../../components/common/CtaSection.astro';
+import { priceCategories } from '../../data/priceItems';
+---
+
+<MainLayout
+  title="قیمت لحظه‌ای طلا، ارز و خودرو"
+  description="صفحه قیمت روز طلا، سکه، ارز و خودرو — به‌زودی از یک منبع رسمی به‌روزرسانی زنده متصل می‌شود."
+  path="/tools/prices"
+  breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'قیمت‌ها', path: '/tools/prices' }]}
+>
+  <article class="section tool-page">
+    <div class="container container--narrow">
+      <a href="/tools" class="tool-page__back">
+        <Icon name="chevron-start" size={16} />
+        بازگشت به ابزارها
+      </a>
+
+      <h1 class="text-balance">قیمت لحظه‌ای طلا، ارز و خودرو</h1>
+      <p class="tool-page__lead">
+        این صفحه آماده اتصال به یک منبع قیمت زنده است. تا اتصال نهایی، برای اینکه عددی نادرست یا گمراه‌کننده نمایش
+        ندهیم، مقادیر به‌صورت «به‌زودی» نشان داده می‌شوند.
+      </p>
+
+      {
+        priceCategories.map((category) => (
+          <div class="price-card" data-reveal>
+            <h2>{category.label}</h2>
+            <ul>
+              {category.items.map((item) => (
+                <li>
+                  <span>{item}</span>
+                  <span class="price-card__value">به‌زودی</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </article>
+
+  <CtaSection
+    title="می‌خواهید قیمت‌ها همیشه لحظه‌ای و دقیق باشند؟"
+    description="اتصال این صفحه به یک منبع قیمت معتبر و به‌روزرسانی خودکار، دقیقاً از همان جنس کاری است که برای مشتریانمان انجام می‌دهیم."
+  />
+</MainLayout>
+
+<style>
+  .tool-page {
+    padding-bottom: var(--space-16);
+  }
+
+  .tool-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .tool-page__back:hover {
+    color: var(--color-primary-hover);
+  }
+
+  .tool-page__back :global(svg) {
+    transform: scaleX(-1);
+  }
+
+  .tool-page h1 {
+    margin-bottom: var(--space-4);
+  }
+
+  .tool-page__lead {
+    font-size: var(--font-size-base);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-8);
+  }
+
+  .price-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6) var(--space-8);
+    margin-bottom: var(--space-6);
+  }
+
+  .price-card h2 {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-4);
+  }
+
+  .price-card ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .price-card li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--color-border-hairline);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+  }
+
+  .price-card li:first-child {
+    border-top: none;
+  }
+
+  .price-card__value {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-subtle);
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: var(--space-1) var(--space-3);
+  }
+</style>

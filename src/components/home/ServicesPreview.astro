@@ -1,0 +1,27 @@
+---
+import SectionTitle from '../common/SectionTitle.astro';
+import ServiceCard from '../services/ServiceCard.astro';
+import { services } from '../../data/services';
+---
+
+<section class="section services-preview">
+  <div class="container">
+    <SectionTitle
+      eyebrow="خدمات"
+      title="راهکارهایی متناسب با کسب‌وکار شما"
+      description="از طراحی سایت تا سامانه‌های مدیریتی اختصاصی؛ هر راهکار بر اساس نیاز واقعی کسب‌وکار شما طراحی می‌شود، نه یک قالب آماده."
+    />
+
+    <div class="services-preview__grid">
+      {services.map((service) => <ServiceCard service={service} />)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .services-preview__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-6);
+  }
+</style>

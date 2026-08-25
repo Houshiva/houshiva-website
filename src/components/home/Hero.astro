@@ -1,0 +1,121 @@
+---
+import Button from '../common/Button.astro';
+import Icon from '../common/Icon.astro';
+import HeroIllustration from '../illustrations/HeroIllustration.astro';
+---
+
+<section class="hero">
+  <div class="container hero__inner">
+    <div class="hero__content">
+      <span class="hero__eyebrow">
+        <Icon name="spark" size={16} />
+        شرکت نرم‌افزاری هوشیوا
+      </span>
+
+      <h1 class="text-balance">راهکارهای نرم‌افزاری برای رشد هوشمند کسب‌وکار شما</h1>
+
+      <p class="hero__lead text-balance">
+        طراحی و توسعه وب‌سایت، نرم‌افزارهای اختصاصی و سامانه‌های مدیریتی متناسب با نیاز واقعی کسب‌وکار شما.
+      </p>
+
+      <div class="hero__actions">
+        <Button href="/contact" size="lg">مشاوره رایگان</Button>
+        <Button href="/portfolio" variant="ghost" size="lg">مشاهده نمونه‌کارها</Button>
+      </div>
+
+      <dl class="hero__stats">
+        <div>
+          <dt>حوزه فعالیت</dt>
+          <dd>وب، نرم‌افزار، سامانه‌های مدیریتی</dd>
+        </div>
+        <div>
+          <dt>رویکرد</dt>
+          <dd>توسعه اختصاصی و قابل‌توسعه</dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="hero__visual" aria-hidden="false">
+      <HeroIllustration />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: var(--space-16) var(--space-20);
+  }
+
+  .hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-16);
+  }
+
+  .hero__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-hover);
+    background: var(--color-primary-soft);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-6);
+  }
+
+  .hero__content h1 {
+    margin-bottom: var(--space-6);
+  }
+
+  .hero__lead {
+    font-size: var(--font-size-lg);
+    max-width: 46ch;
+    margin-bottom: var(--space-8);
+  }
+
+  .hero__actions {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-12);
+  }
+
+  .hero__stats {
+    display: flex;
+    gap: var(--space-10);
+    flex-wrap: wrap;
+  }
+
+  .hero__stats dt {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-1);
+  }
+
+  .hero__stats dd {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+  }
+
+  .hero__visual {
+    width: 100%;
+    max-width: 520px;
+    margin-inline: auto;
+  }
+
+  @media (max-width: 960px) {
+    .hero__inner {
+      grid-template-columns: 1fr;
+      gap: var(--space-12);
+    }
+
+    .hero__visual {
+      order: -1;
+      max-width: 380px;
+    }
+  }
+</style>

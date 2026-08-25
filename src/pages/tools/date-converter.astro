@@ -1,0 +1,241 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import Icon from '../../components/common/Icon.astro';
+import CtaSection from '../../components/common/CtaSection.astro';
+---
+
+<MainLayout
+  title="تبدیل تاریخ شمسی و میلادی"
+  description="ابزار رایگان تبدیل آنی تاریخ بین گاه‌شمار شمسی (جلالی) و میلادی، همراه با نام روز هفته."
+  path="/tools/date-converter"
+  breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'تبدیل تاریخ', path: '/tools/date-converter' }]}
+>
+  <article class="section tool-page">
+    <div class="container container--narrow">
+      <a href="/tools" class="tool-page__back">
+        <Icon name="chevron-start" size={16} />
+        بازگشت به ابزارها
+      </a>
+
+      <h1 class="text-balance">تبدیل تاریخ شمسی و میلادی</h1>
+      <p class="tool-page__lead">تاریخ را در هرکدام از دو بخش وارد کنید؛ بخش دیگر و روز هفته به‌صورت خودکار به‌روزرسانی می‌شود.</p>
+
+      <div class="date-tool" data-date-tool>
+        <div class="date-tool__group">
+          <h2>تاریخ شمسی</h2>
+          <div class="date-tool__fields">
+            <label>
+              <span>روز</span>
+              <input type="number" min="1" max="31" data-jd />
+            </label>
+            <label>
+              <span>ماه</span>
+              <input type="number" min="1" max="12" data-jm />
+            </label>
+            <label>
+              <span>سال</span>
+              <input type="number" min="1" max="3178" data-jy />
+            </label>
+          </div>
+        </div>
+
+        <div class="date-tool__divider" aria-hidden="true">
+          <Icon name="refresh" size={20} />
+        </div>
+
+        <div class="date-tool__group">
+          <h2>تاریخ میلادی</h2>
+          <div class="date-tool__fields">
+            <label>
+              <span>روز</span>
+              <input type="number" min="1" max="31" data-gd />
+            </label>
+            <label>
+              <span>ماه</span>
+              <input type="number" min="1" max="12" data-gm />
+            </label>
+            <label>
+              <span>سال</span>
+              <input type="number" min="1" max="3000" data-gy />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <p class="date-tool__result" data-date-result aria-live="polite"></p>
+    </div>
+  </article>
+
+  <CtaSection />
+</MainLayout>
+
+<style>
+  .tool-page {
+    padding-bottom: var(--space-16);
+  }
+
+  .tool-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .tool-page__back:hover {
+    color: var(--color-primary-hover);
+  }
+
+  .tool-page__back :global(svg) {
+    transform: scaleX(-1);
+  }
+
+  .tool-page h1 {
+    margin-bottom: var(--space-4);
+  }
+
+  .tool-page__lead {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-10);
+  }
+
+  .date-tool {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--space-6);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+  }
+
+  .date-tool__group h2 {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-4);
+  }
+
+  .date-tool__fields {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-3);
+  }
+
+  .date-tool__fields label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+  }
+
+  .date-tool__fields input {
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    text-align: center;
+  }
+
+  .date-tool__fields input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+  .date-tool__divider {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary-soft);
+    color: var(--color-primary-hover);
+  }
+
+  .date-tool__result {
+    margin-top: var(--space-8);
+    text-align: center;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+  }
+
+  @media (max-width: 720px) {
+    .date-tool {
+      grid-template-columns: 1fr;
+    }
+
+    .date-tool__divider {
+      justify-self: center;
+      transform: rotate(90deg);
+    }
+  }
+</style>
+
+<script>
+  import { toJalaali, toGregorian, isValidJalaaliDate } from 'jalaali-js';
+
+  function initDateTool() {
+    const root = document.querySelector<HTMLElement>('[data-date-tool]');
+    const result = document.querySelector<HTMLElement>('[data-date-result]');
+    if (!root || !result) return;
+
+    const jd = root.querySelector<HTMLInputElement>('[data-jd]')!;
+    const jm = root.querySelector<HTMLInputElement>('[data-jm]')!;
+    const jy = root.querySelector<HTMLInputElement>('[data-jy]')!;
+    const gd = root.querySelector<HTMLInputElement>('[data-gd]')!;
+    const gm = root.querySelector<HTMLInputElement>('[data-gm]')!;
+    const gy = root.querySelector<HTMLInputElement>('[data-gy]')!;
+
+    function showResult(gy: number, gm: number, gd: number) {
+      const weekday = new Date(gy, gm - 1, gd).toLocaleDateString('fa-IR', { weekday: 'long' });
+      result!.textContent = `روز هفته: ${weekday}`;
+    }
+
+    function fromJalali() {
+      const y = Number(jy.value);
+      const m = Number(jm.value);
+      const d = Number(jd.value);
+      if (!isValidJalaaliDate(y, m, d)) return;
+      const g = toGregorian(y, m, d);
+      gy.value = String(g.gy);
+      gm.value = String(g.gm);
+      gd.value = String(g.gd);
+      showResult(g.gy, g.gm, g.gd);
+    }
+
+    function fromGregorian() {
+      const y = Number(gy.value);
+      const m = Number(gm.value);
+      const d = Number(gd.value);
+      if (!y || !m || !d) return;
+      const j = toJalaali(y, m, d);
+      jy.value = String(j.jy);
+      jm.value = String(j.jm);
+      jd.value = String(j.jd);
+      showResult(y, m, d);
+    }
+
+    [jy, jm, jd].forEach((el) => el.addEventListener('input', fromJalali));
+    [gy, gm, gd].forEach((el) => el.addEventListener('input', fromGregorian));
+
+    const today = new Date();
+    const todayJalali = toJalaali(today);
+    jy.value = String(todayJalali.jy);
+    jm.value = String(todayJalali.jm);
+    jd.value = String(todayJalali.jd);
+    gy.value = String(today.getFullYear());
+    gm.value = String(today.getMonth() + 1);
+    gd.value = String(today.getDate());
+    showResult(today.getFullYear(), today.getMonth() + 1, today.getDate());
+  }
+
+  document.addEventListener('astro:page-load', initDateTool);
+</script>

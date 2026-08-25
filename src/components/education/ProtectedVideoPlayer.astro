@@ -1,0 +1,167 @@
+---
+import ProjectCover from '../illustrations/ProjectCover.astro';
+import Icon from '../common/Icon.astro';
+import type { Video } from '../../data/videos';
+
+export interface Props {
+  video: Video;
+}
+
+const { video } = Astro.props;
+const hasSource = Boolean(video.videoUrl);
+---
+
+<div class="video-player" data-video-player>
+  <div class="video-player__frame">
+    <div class="video-player__cover" data-video-cover>
+      <ProjectCover variant={video.poster} />
+      <div class="video-player__overlay">
+        {
+          hasSource ? (
+            <button type="button" class="video-player__play" data-video-play aria-label={`پخش ویدیو: ${video.title}`}>
+              <Icon name="play" size={30} />
+            </button>
+          ) : (
+            <span class="video-player__soon">به‌زودی در دسترس قرار می‌گیرد</span>
+          )
+        }
+      </div>
+      <span class="video-player__duration">{video.duration}</span>
+    </div>
+
+    {
+      hasSource && (
+        <video
+          class="video-player__video"
+          data-video-el
+          hidden
+          src={video.videoUrl}
+          controls
+          controlslist="nodownload noremoteplayback noplaybackrate"
+          disablepictureinpicture
+          playsinline
+          preload="metadata"
+        />
+      )
+    }
+  </div>
+
+  {hasSource && <p class="video-player__notice">این ویدیو فقط برای مشاهده آنلاین در سایت هوشیوا در دسترس است.</p>}
+</div>
+
+<style>
+  .video-player__frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+
+  .video-player__cover {
+    position: absolute;
+    inset: 0;
+  }
+
+  .video-player__cover :global(svg:first-child) {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .video-player__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(0deg, rgba(10, 10, 16, 0.55), rgba(10, 10, 16, 0.15));
+  }
+
+  .video-player__play {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 76px;
+    height: 76px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary);
+    color: var(--color-text-on-primary);
+    box-shadow: var(--shadow-glow-primary);
+    transition:
+      transform var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .video-player__play :global(svg) {
+    margin-inline-start: 3px;
+  }
+
+  .video-player__play:hover {
+    background: var(--color-primary-hover);
+    transform: scale(1.06);
+  }
+
+  .video-player__soon {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+    background: color-mix(in srgb, var(--color-background) 70%, transparent);
+    padding: var(--space-2) var(--space-5);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border-strong);
+  }
+
+  .video-player__duration {
+    position: absolute;
+    bottom: var(--space-3);
+    inset-inline-end: var(--space-3);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+    background: rgba(10, 10, 16, 0.75);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-sm);
+  }
+
+  .video-player__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+  }
+
+  .video-player__video[hidden] {
+    display: none;
+  }
+
+  .video-player__notice {
+    margin-top: var(--space-3);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-video-player]').forEach((player) => {
+    const cover = player.querySelector<HTMLElement>('[data-video-cover]');
+    const playBtn = player.querySelector<HTMLButtonElement>('[data-video-play]');
+    const video = player.querySelector<HTMLVideoElement>('[data-video-el]');
+
+    if (!video) return;
+
+    // Best-effort deterrent only — a client-rendered <video> can never be made
+    // fully un-downloadable without server-side DRM. This just removes the
+    // easy/casual paths (native download button, right-click save, drag-out).
+    video.addEventListener('contextmenu', (e) => e.preventDefault());
+    video.addEventListener('dragstart', (e) => e.preventDefault());
+
+    playBtn?.addEventListener('click', () => {
+      cover?.setAttribute('hidden', '');
+      video.hidden = false;
+      video.play();
+    });
+  });
+</script>

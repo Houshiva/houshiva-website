@@ -1,0 +1,187 @@
+---
+import Button from '../common/Button.astro';
+
+const projectTypes = [
+  'طراحی سایت',
+  'فروشگاه اینترنتی',
+  'نرم‌افزار اختصاصی',
+  'سیستم حسابداری',
+  'سیستم صندوق (POS)',
+  'CRM',
+  'مدیریت انبار',
+  'اتوماسیون کسب‌وکار',
+  'داشبورد مدیریتی',
+  'اتصال سامانه‌ها (API)',
+  'هنوز مشخص نیست / نیاز به مشاوره دارم',
+];
+---
+
+<div class="contact-form-wrap">
+  <form id="contact-form" class="contact-form" novalidate>
+    <div class="contact-form__row">
+      <label for="name">نام و نام‌خانوادگی <span aria-hidden="true">*</span></label>
+      <input type="text" id="name" name="name" autocomplete="name" placeholder="مثلاً علی محمدی" required />
+    </div>
+
+    <div class="contact-form__row">
+      <label for="phone">شماره تماس <span aria-hidden="true">*</span></label>
+      <input
+        type="tel"
+        id="phone"
+        name="phone"
+        class="ltr"
+        inputmode="tel"
+        autocomplete="tel"
+        placeholder="0912xxxxxxx"
+        required
+      />
+    </div>
+
+    <div class="contact-form__row">
+      <label for="business">نام کسب‌وکار</label>
+      <input type="text" id="business" name="business" autocomplete="organization" placeholder="نام شرکت یا برند شما" />
+    </div>
+
+    <div class="contact-form__row">
+      <label for="project-type">نوع پروژه <span aria-hidden="true">*</span></label>
+      <select id="project-type" name="projectType" required>
+        <option value="" disabled selected>یک گزینه را انتخاب کنید</option>
+        {projectTypes.map((type) => <option value={type}>{type}</option>)}
+      </select>
+    </div>
+
+    <div class="contact-form__row contact-form__row--full">
+      <label for="description">توضیحات <span aria-hidden="true">*</span></label>
+      <textarea id="description" name="description" rows="5" required
+        placeholder="کمی درباره نیاز خود، فرآیند فعلی و آنچه به دنبال آن هستید بنویسید."></textarea>
+    </div>
+
+    <div class="contact-form__row contact-form__row--full">
+      <Button type="submit" size="lg" class="contact-form__submit">ارسال درخواست</Button>
+      <p class="contact-form__note">پس از ارسال، تیم هوشیوا در اسرع وقت با شما تماس می‌گیرد.</p>
+    </div>
+  </form>
+
+  <div id="contact-success" class="contact-success" hidden>
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9.5" />
+      <path d="M8 12.5 11 15.5 16 9" />
+    </svg>
+    <h3>درخواست شما ثبت شد</h3>
+    <p>از اینکه هوشیوا را برای همکاری در نظر گرفتید سپاسگزاریم. به‌زودی از طریق شماره تماسی که وارد کردید با شما تماس می‌گیریم.</p>
+  </div>
+</div>
+
+<style>
+  .contact-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+
+  .contact-form[hidden] {
+    display: none;
+  }
+
+  .contact-form__row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .contact-form__row--full {
+    grid-column: 1 / -1;
+  }
+
+  label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+  }
+
+  label span {
+    color: var(--color-primary-hover);
+  }
+
+  input,
+  select,
+  textarea {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    transition: border-color var(--transition-fast);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-text-subtle);
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+  input:invalid:not(:placeholder-shown),
+  textarea:invalid:not(:placeholder-shown) {
+    border-color: var(--color-danger);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .contact-form__row--full :global(.contact-form__submit) {
+    width: fit-content;
+  }
+
+  .contact-form__note {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+    margin-top: var(--space-3);
+  }
+
+  .contact-success {
+    text-align: center;
+    padding: var(--space-16) var(--space-8);
+    color: var(--color-success);
+  }
+
+  .contact-success h3 {
+    color: var(--color-text);
+    margin-block: var(--space-4) var(--space-2);
+  }
+
+  .contact-success p {
+    max-width: 46ch;
+    margin-inline: auto;
+  }
+
+  @media (max-width: 640px) {
+    .contact-form {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const success = document.getElementById('contact-success');
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    form.hidden = true;
+    success?.removeAttribute('hidden');
+    success?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+</script>

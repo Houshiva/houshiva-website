@@ -1,0 +1,184 @@
+---
+import Icon from '../common/Icon.astro';
+import type { Service } from '../../data/services';
+
+export interface Props {
+  service: Service;
+  reversed?: boolean;
+}
+
+const { service, reversed = false } = Astro.props;
+---
+
+<article
+  class="service-detail"
+  id={service.slug}
+  class:list={{ 'service-detail--reversed': reversed }}
+  data-reveal
+>
+  <div class="service-detail__intro">
+    <div class="service-detail__icon">
+      <Icon name={service.icon as any} size={30} />
+    </div>
+    <h2>{service.title}</h2>
+    <p class="service-detail__description">{service.description}</p>
+
+    <h3 class="service-detail__subheading">مناسب چه کسب‌وکارهایی است</h3>
+    <ul class="service-detail__tags">
+      {service.suitableFor.map((item) => <li>{item}</li>)}
+    </ul>
+
+    <a href="/contact" class="service-detail__cta">
+      مشاوره درباره {service.title}
+      <Icon name="chevron-start" size={16} />
+    </a>
+  </div>
+
+  <div class="service-detail__lists">
+    <div class="service-detail__card">
+      <h3>مزایا</h3>
+      <ul>
+        {
+          service.benefits.map((benefit) => (
+            <li>
+              <Icon name="check" size={16} />
+              <span>{benefit}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="service-detail__card">
+      <h3>امکانات</h3>
+      <ul>
+        {
+          service.features.map((feature) => (
+            <li>
+              <Icon name="check" size={16} />
+              <span>{feature}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</article>
+
+<style>
+  .service-detail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-12);
+    padding-block: var(--space-16);
+    border-top: 1px solid var(--color-border-hairline);
+    scroll-margin-top: 100px;
+  }
+
+  .service-detail--reversed {
+    direction: ltr;
+  }
+
+  .service-detail--reversed > * {
+    direction: rtl;
+  }
+
+  .service-detail__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    border-radius: var(--radius-md);
+    background: var(--color-primary-soft);
+    color: var(--color-primary-hover);
+    margin-bottom: var(--space-5);
+  }
+
+  .service-detail__intro h2 {
+    margin-bottom: var(--space-4);
+  }
+
+  .service-detail__description {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-8);
+  }
+
+  .service-detail__subheading {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
+  }
+
+  .service-detail__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-8);
+  }
+
+  .service-detail__tags li {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: var(--space-1) var(--space-4);
+  }
+
+  .service-detail__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-hover);
+  }
+
+  .service-detail__lists {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .service-detail__card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6) var(--space-8);
+  }
+
+  .service-detail__card h3 {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-4);
+  }
+
+  .service-detail__card ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .service-detail__card li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+  }
+
+  .service-detail__card li :global(svg) {
+    flex-shrink: 0;
+    margin-top: 3px;
+    color: var(--color-success);
+  }
+
+  @media (max-width: 860px) {
+    .service-detail,
+    .service-detail--reversed {
+      grid-template-columns: 1fr;
+      direction: rtl;
+    }
+  }
+</style>

@@ -1,0 +1,51 @@
+---
+import SectionTitle from '../common/SectionTitle.astro';
+import Button from '../common/Button.astro';
+import ProjectCard from '../portfolio/ProjectCard.astro';
+import { projects } from '../../data/projects';
+
+const featured = projects.slice(0, 3);
+---
+
+<section class="section portfolio-preview">
+  <div class="container">
+    <div class="portfolio-preview__header">
+      <SectionTitle
+        eyebrow="نمونه‌کارها"
+        title="نمونه‌ای از پروژه‌های اجراشده"
+        description="هر پروژه با یک نیاز مشخص شروع می‌شود و با راهکاری متناسب با همان نیاز به پایان می‌رسد."
+      />
+      <Button href="/portfolio" variant="secondary">مشاهده همه نمونه‌کارها</Button>
+    </div>
+
+    <div class="portfolio-preview__grid">
+      {featured.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .portfolio-preview__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-8);
+  }
+
+  .portfolio-preview__header :global(.section-title) {
+    margin-bottom: var(--space-8);
+  }
+
+  .portfolio-preview__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
+  }
+
+  @media (max-width: 720px) {
+    .portfolio-preview__header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

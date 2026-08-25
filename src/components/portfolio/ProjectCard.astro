@@ -1,0 +1,100 @@
+---
+import ProjectCover from '../illustrations/ProjectCover.astro';
+import Icon from '../common/Icon.astro';
+import { projectCategories, type Project } from '../../data/projects';
+
+export interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<article class="project-card" data-reveal>
+  <div class="project-card__cover">
+    <ProjectCover variant={project.cover as any} />
+  </div>
+  <div class="project-card__body">
+    <span class="project-card__category">{projectCategories[project.category]}</span>
+    <h3>{project.title}</h3>
+    <p>{project.shortDescription}</p>
+    <ul class="project-card__tech">
+      {project.technologies.map((tech) => <li>{tech}</li>)}
+    </ul>
+    <a href={`/portfolio#${project.slug}`} class="project-card__link">
+      مشاهده جزئیات پروژه
+      <Icon name="chevron-start" size={16} />
+    </a>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition:
+      border-color var(--transition-base),
+      transform var(--transition-base);
+  }
+
+  .project-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-4px);
+  }
+
+  .project-card__cover {
+    aspect-ratio: 400 / 240;
+  }
+
+  .project-card__cover :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .project-card__body {
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .project-card__category {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-hover);
+  }
+
+  .project-card__body p {
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-2);
+  }
+
+  .project-card__tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .project-card__tech li {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: var(--space-1) var(--space-3);
+  }
+
+  .project-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-hover);
+  }
+</style>

@@ -1,0 +1,99 @@
+---
+import SectionTitle from '../common/SectionTitle.astro';
+import Icon from '../common/Icon.astro';
+import type { IconName } from '../common/Icon.astro';
+
+const points: { icon: IconName; title: string; description: string }[] = [
+  {
+    icon: 'code',
+    title: 'توسعه اختصاصی',
+    description: 'به‌جای تطبیق کسب‌وکار شما با یک نرم‌افزار آماده، نرم‌افزار را بر اساس فرآیند واقعی شما می‌سازیم.',
+  },
+  {
+    icon: 'target',
+    title: 'طراحی متناسب با نیاز واقعی',
+    description: 'پیش از نوشتن هر خط کد، نیاز و فرآیند کاری شما را بررسی می‌کنیم تا راهکار درست طراحی شود.',
+  },
+  {
+    icon: 'layers',
+    title: 'معماری قابل توسعه',
+    description: 'کدی می‌نویسیم که در آینده بدون بازنویسی از صفر، بتوان قابلیت‌های جدید به آن اضافه کرد.',
+  },
+  {
+    icon: 'compass',
+    title: 'تجربه در پروژه‌های واقعی',
+    description: 'تمرکز ما حل مسئله واقعی کسب‌وکار است، نه صرفاً پیاده‌سازی یک ایده روی کاغذ.',
+  },
+  {
+    icon: 'spark',
+    title: 'استفاده هوشمندانه از تکنولوژی',
+    description: 'از تکنولوژی متناسب با نیاز هر پروژه استفاده می‌کنیم، نه هر ابزاری که صرفاً مد روز است.',
+  },
+  {
+    icon: 'refresh',
+    title: 'پشتیبانی و توسعه مستمر',
+    description: 'کار ما با تحویل پروژه تمام نمی‌شود؛ همراه با رشد کسب‌وکار شما، نرم‌افزار هم توسعه پیدا می‌کند.',
+  },
+];
+---
+
+<section class="section why">
+  <div class="container">
+    <SectionTitle
+      eyebrow="چرا هوشیوا"
+      title="نگاهمان به همکاری با شما"
+      description="این‌ها اصولی هستند که واقعاً در کار روزمره ما رعایت می‌شوند، نه فقط شعار."
+    />
+
+    <div class="why__grid">
+      {
+        points.map((point) => (
+          <div class="why__item" data-reveal>
+            <div class="why__icon">
+              <Icon name={point.icon} size={22} />
+            </div>
+            <div>
+              <h3>{point.title}</h3>
+              <p>{point.description}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .why__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-8) var(--space-10);
+  }
+
+  .why__item {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .why__icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-primary-hover);
+  }
+
+  .why__item h3 {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-2);
+  }
+
+  .why__item p {
+    font-size: var(--font-size-sm);
+  }
+</style>

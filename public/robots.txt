@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://houshiva.ir/sitemap-index.xml

@@ -1,0 +1,206 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import Icon from '../../components/common/Icon.astro';
+import CtaSection from '../../components/common/CtaSection.astro';
+---
+
+<MainLayout
+  title="محاسبه‌گر اقساط وام"
+  description="محاسبه رایگان قسط ماهانه، مجموع بازپرداخت و سود کل وام بر اساس مبلغ، نرخ سود سالانه و مدت بازپرداخت."
+  path="/tools/loan-calculator"
+  breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'محاسبه‌گر اقساط', path: '/tools/loan-calculator' }]}
+>
+  <article class="section tool-page">
+    <div class="container container--narrow">
+      <a href="/tools" class="tool-page__back">
+        <Icon name="chevron-start" size={16} />
+        بازگشت به ابزارها
+      </a>
+
+      <h1 class="text-balance">محاسبه‌گر اقساط وام</h1>
+      <p class="tool-page__lead">مبلغ وام، نرخ سود سالانه و مدت بازپرداخت را وارد کنید تا قسط ماهانه محاسبه شود.</p>
+
+      <div class="loan-tool">
+        <div class="loan-tool__fields">
+          <label>
+            <span>مبلغ وام (تومان)</span>
+            <input type="number" min="0" step="1000000" value="100000000" data-loan-amount />
+          </label>
+          <label>
+            <span>نرخ سود سالانه (٪)</span>
+            <input type="number" min="0" max="100" step="0.5" value="18" data-loan-rate />
+          </label>
+          <label>
+            <span>مدت بازپرداخت (ماه)</span>
+            <input type="number" min="1" max="360" step="1" value="24" data-loan-months />
+          </label>
+        </div>
+
+        <div class="loan-tool__results">
+          <div class="loan-tool__result">
+            <span>قسط ماهانه</span>
+            <strong data-loan-installment>—</strong>
+          </div>
+          <div class="loan-tool__result">
+            <span>مجموع بازپرداخت</span>
+            <strong data-loan-total>—</strong>
+          </div>
+          <div class="loan-tool__result">
+            <span>مجموع سود</span>
+            <strong data-loan-interest>—</strong>
+          </div>
+        </div>
+      </div>
+
+      <p class="loan-tool__note">این محاسبه بر اساس روش اقساط مساوی (ساده) است و صرفاً جنبه راهنما دارد؛ نرخ و شرایط واقعی را از بانک یا مؤسسه مالی خود استعلام بگیرید.</p>
+    </div>
+  </article>
+
+  <CtaSection />
+</MainLayout>
+
+<style>
+  .tool-page {
+    padding-bottom: var(--space-16);
+  }
+
+  .tool-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .tool-page__back:hover {
+    color: var(--color-primary-hover);
+  }
+
+  .tool-page__back :global(svg) {
+    transform: scaleX(-1);
+  }
+
+  .tool-page h1 {
+    margin-bottom: var(--space-4);
+  }
+
+  .tool-page__lead {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-10);
+  }
+
+  .loan-tool {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+  }
+
+  .loan-tool__fields {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+  }
+
+  .loan-tool__fields label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+  }
+
+  .loan-tool__fields input {
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+  }
+
+  .loan-tool__fields input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+  .loan-tool__results {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border-hairline);
+  }
+
+  .loan-tool__result {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    text-align: center;
+    background: var(--color-primary-soft);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+  }
+
+  .loan-tool__result span {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+  }
+
+  .loan-tool__result strong {
+    font-size: var(--font-size-lg);
+    color: var(--color-text);
+  }
+
+  .loan-tool__note {
+    margin-top: var(--space-6);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+  }
+
+  @media (max-width: 640px) {
+    .loan-tool__fields,
+    .loan-tool__results {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  function toman(n: number): string {
+    return `${Math.round(n).toLocaleString('fa-IR')} تومان`;
+  }
+
+  function initLoanTool() {
+    const amount = document.querySelector<HTMLInputElement>('[data-loan-amount]');
+    const rate = document.querySelector<HTMLInputElement>('[data-loan-rate]');
+    const months = document.querySelector<HTMLInputElement>('[data-loan-months]');
+    const installmentOut = document.querySelector<HTMLElement>('[data-loan-installment]');
+    const totalOut = document.querySelector<HTMLElement>('[data-loan-total]');
+    const interestOut = document.querySelector<HTMLElement>('[data-loan-interest]');
+    if (!amount || !rate || !months || !installmentOut || !totalOut || !interestOut) return;
+
+    function update() {
+      const principal = Number(amount!.value) || 0;
+      const annualRate = Number(rate!.value) || 0;
+      const n = Math.max(1, Number(months!.value) || 1);
+      const r = annualRate / 100 / 12;
+
+      const installment = r === 0 ? principal / n : (principal * r) / (1 - Math.pow(1 + r, -n));
+      const total = installment * n;
+      const interest = total - principal;
+
+      installmentOut!.textContent = toman(installment);
+      totalOut!.textContent = toman(total);
+      interestOut!.textContent = toman(interest);
+    }
+
+    [amount, rate, months].forEach((el) => el.addEventListener('input', update));
+    update();
+  }
+
+  document.addEventListener('astro:page-load', initLoanTool);
+</script>

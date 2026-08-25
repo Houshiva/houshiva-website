@@ -1,0 +1,70 @@
+---
+import SectionTitle from '../common/SectionTitle.astro';
+
+const steps = [
+  { title: 'آشنایی و مشاوره', description: 'شنیدن نیاز شما و بررسی اولیه امکان‌پذیری پروژه.' },
+  { title: 'بررسی نیازها', description: 'بررسی دقیق‌تر فرآیندها و مستندسازی نیازمندی‌ها.' },
+  { title: 'تحلیل و طراحی', description: 'طراحی معماری فنی و رابط کاربری متناسب با نیاز شما.' },
+  { title: 'توسعه', description: 'پیاده‌سازی مرحله‌به‌مرحله همراه با گزارش پیشرفت منظم.' },
+  { title: 'تست', description: 'بررسی کامل عملکرد و رفع ایرادهای احتمالی پیش از تحویل.' },
+  { title: 'استقرار', description: 'راه‌اندازی نهایی و انتقال نرم‌افزار به محیط واقعی.' },
+  { title: 'پشتیبانی و توسعه', description: 'پشتیبانی مستمر و افزودن قابلیت‌های جدید در طول زمان.' },
+];
+---
+
+<section class="section process">
+  <div class="container">
+    <SectionTitle
+      eyebrow="فرآیند همکاری"
+      title="از ایده تا اجرا، مرحله‌به‌مرحله"
+      align="center"
+    />
+
+    <ol class="process__list">
+      {
+        steps.map((step, index) => (
+          <li class="process__item" data-reveal>
+            <span class="process__index">{String(index + 1).padStart(2, '0')}</span>
+            <div class="process__body">
+              <h3>{step.title}</h3>
+              <p>{step.description}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .process__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-8);
+    counter-reset: step;
+    position: relative;
+  }
+
+  .process__item {
+    padding-top: var(--space-6);
+    border-top: 2px solid var(--color-border);
+    position: relative;
+  }
+
+  .process__index {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary-hover);
+    margin-bottom: var(--space-3);
+  }
+
+  .process__body h3 {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-2);
+  }
+
+  .process__body p {
+    font-size: var(--font-size-sm);
+  }
+</style>

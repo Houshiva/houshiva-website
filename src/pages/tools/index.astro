@@ -1,0 +1,42 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import SectionTitle from '../../components/common/SectionTitle.astro';
+import ToolCard from '../../components/tools/ToolCard.astro';
+import CtaSection from '../../components/common/CtaSection.astro';
+import { tools } from '../../data/tools';
+---
+
+<MainLayout
+  title="ابزارهای رایگان"
+  description="ابزارهای کاربردی و رایگان هوشیوا: تبدیل تاریخ شمسی و میلادی، تبدیل عدد به حروف، محاسبه‌گر اقساط وام و قیمت لحظه‌ای طلا و ارز."
+  path="/tools"
+>
+  <section class="section tools-page">
+    <div class="container">
+      <SectionTitle
+        as="h1"
+        eyebrow="ابزارها"
+        title="چند ابزار کاربردی، رایگان و بدون نیاز به ثبت‌نام"
+        description="این ابزارها را برای استفاده روزمره خودمان و کاربران ساختیم؛ کاملاً رایگان و بدون نیاز به حساب کاربری."
+        align="center"
+      />
+
+      <div class="tools-page__grid">
+        {tools.map((tool) => <ToolCard tool={tool} />)}
+      </div>
+    </div>
+  </section>
+
+  <CtaSection
+    title="به یک ابزار یا سامانه اختصاصی نیاز دارید؟"
+    description="اگر این ابزارها فقط بخشی از چیزی است که کسب‌وکارتان نیاز دارد، برایتان یک راهکار اختصاصی می‌سازیم."
+  />
+</MainLayout>
+
+<style>
+  .tools-page__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-6);
+  }
+</style>

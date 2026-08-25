@@ -1,0 +1,73 @@
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('/fonts/vazirmatn/Vazirmatn-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text);
+}
+
+h1 {
+  font-size: var(--font-size-5xl);
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: var(--font-size-4xl);
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+h4 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+p {
+  color: var(--color-text-muted);
+}
+
+small {
+  font-size: var(--font-size-sm);
+}
+
+strong {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+/* Brand name / English fragments stay LTR inside RTL flow */
+.ltr,
+[lang='en'] {
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-family: 'Vazirmatn', 'Segoe UI', sans-serif;
+}
+
+code,
+pre {
+  font-family: 'Consolas', 'Vazirmatn', monospace;
+  direction: ltr;
+  unicode-bidi: isolate;
+}

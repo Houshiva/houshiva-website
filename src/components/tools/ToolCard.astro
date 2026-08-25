@@ -1,0 +1,75 @@
+---
+import Icon from '../common/Icon.astro';
+import type { Tool } from '../../data/tools';
+
+export interface Props {
+  tool: Tool;
+}
+
+const { tool } = Astro.props;
+---
+
+<a href={`/tools/${tool.slug}`} class="tool-card" data-reveal>
+  <div class="tool-card__icon">
+    <Icon name={tool.icon} size={26} />
+  </div>
+  <h3>{tool.title}</h3>
+  <p>{tool.description}</p>
+  <span class="tool-card__link">
+    استفاده از ابزار
+    <Icon name="chevron-start" size={16} />
+  </span>
+</a>
+
+<style>
+  .tool-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--space-8);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition:
+      border-color var(--transition-base),
+      transform var(--transition-base),
+      box-shadow var(--transition-base);
+  }
+
+  .tool-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .tool-card__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-md);
+    background: var(--color-primary-soft);
+    color: var(--color-primary-hover);
+    margin-bottom: var(--space-5);
+  }
+
+  .tool-card h3 {
+    margin-bottom: var(--space-3);
+  }
+
+  .tool-card p {
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-5);
+    flex-grow: 1;
+  }
+
+  .tool-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-hover);
+  }
+</style>

@@ -1,0 +1,129 @@
+---
+import { getCollection } from 'astro:content';
+import MainLayout from '../../layouts/MainLayout.astro';
+import SectionTitle from '../../components/common/SectionTitle.astro';
+import ArticleCard from '../../components/education/ArticleCard.astro';
+import VideoCard from '../../components/education/VideoCard.astro';
+import CtaSection from '../../components/common/CtaSection.astro';
+import { videos } from '../../data/videos';
+
+const articles = (await getCollection('articles')).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+---
+
+<MainLayout
+  title="آموزش"
+  description="مقالات و ویدیوهای آموزشی هوشیوا درباره نرم‌افزار، حسابداری، فروشگاه‌داری و مدیریت کسب‌وکار — برای تصمیم‌گیری بهتر درباره دیجیتالی‌کردن کسب‌وکارتان."
+  path="/education"
+>
+  <section class="section education-page">
+    <div class="container">
+      <SectionTitle
+        as="h1"
+        eyebrow="آموزش"
+        title="مطالبی که به تصمیم‌گیری شما کمک می‌کند"
+        description="مقاله و ویدیوهای کوتاه درباره نرم‌افزار و مدیریت کسب‌وکار؛ نوشته‌شده بر اساس تجربه واقعی پروژه‌ها، نه برای پر کردن صفحه."
+        data-reveal
+      />
+
+      <div class="education-filter">
+        <input type="radio" name="education-filter" id="filter-content-all" class="visually-hidden" checked />
+        <input type="radio" name="education-filter" id="filter-content-article" class="visually-hidden" />
+        <input type="radio" name="education-filter" id="filter-content-video" class="visually-hidden" />
+
+        <div class="education-filter__tabs">
+          <label for="filter-content-all">همه</label>
+          <label for="filter-content-article">مقاله</label>
+          <label for="filter-content-video">ویدیو</label>
+        </div>
+
+        <div class="education-filter__grid">
+          <div class="education-filter__group education-filter__group--articles">
+            {
+              articles.map((article) => (
+                <div class="education-filter__item cat-article" data-reveal>
+                  <ArticleCard
+                    slug={article.id}
+                    title={article.data.title}
+                    description={article.data.description}
+                    category={article.data.category}
+                    readingTime={article.data.readingTime}
+                    publishDate={article.data.publishDate}
+                  />
+                </div>
+              ))
+            }
+          </div>
+
+          <div class="education-filter__group education-filter__group--videos">
+            {
+              videos.map((video) => (
+                <div class="education-filter__item cat-video" data-reveal>
+                  <VideoCard video={video} />
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaSection />
+</MainLayout>
+
+<style>
+  .education-filter__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-10);
+  }
+
+  .education-filter__tabs label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: var(--space-2) var(--space-5);
+    cursor: pointer;
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .education-filter__tabs label:hover {
+    border-color: var(--color-primary);
+    color: var(--color-text);
+  }
+
+  .education-filter__group--articles {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    margin-bottom: var(--space-10);
+  }
+
+  .education-filter__group--videos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
+  }
+
+  /* Active tab + filtering — CSS-only, no JavaScript */
+  #filter-content-all:checked ~ .education-filter__tabs label[for='filter-content-all'],
+  #filter-content-article:checked ~ .education-filter__tabs label[for='filter-content-article'],
+  #filter-content-video:checked ~ .education-filter__tabs label[for='filter-content-video'] {
+    color: var(--color-primary-hover);
+    border-color: var(--color-primary);
+    background: var(--color-primary-soft);
+  }
+
+  #filter-content-video:checked ~ .education-filter__grid .education-filter__group--articles,
+  #filter-content-article:checked ~ .education-filter__grid .education-filter__group--videos {
+    display: none;
+  }
+</style>

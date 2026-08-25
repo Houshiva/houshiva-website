@@ -1,0 +1,97 @@
+---
+import Icon from '../common/Icon.astro';
+
+export interface Props {
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  readingTime: string;
+  publishDate: Date;
+}
+
+const { slug, title, description, category, readingTime, publishDate } = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' }).format(
+  publishDate
+);
+---
+
+<article class="article-card">
+  <div class="article-card__icon">
+    <Icon name="book" size={22} />
+  </div>
+  <div class="article-card__body">
+    <span class="article-card__category">{category}</span>
+    <h3><a href={`/education/${slug}`}>{title}</a></h3>
+    <p>{description}</p>
+    <div class="article-card__meta">
+      <span>{formattedDate}</span>
+      <span aria-hidden="true">·</span>
+      <span>{readingTime} مطالعه</span>
+    </div>
+  </div>
+</article>
+
+<style>
+  .article-card {
+    display: flex;
+    gap: var(--space-5);
+    padding: var(--space-6);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition:
+      border-color var(--transition-base),
+      transform var(--transition-base);
+  }
+
+  .article-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-3px);
+  }
+
+  .article-card__icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: var(--color-primary-soft);
+    color: var(--color-primary-hover);
+  }
+
+  .article-card__category {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-hover);
+  }
+
+  .article-card h3 {
+    font-size: var(--font-size-lg);
+    margin-block: var(--space-2) var(--space-2);
+  }
+
+  .article-card h3 a {
+    color: var(--color-text);
+    transition: color var(--transition-fast);
+  }
+
+  .article-card h3 a:hover {
+    color: var(--color-primary-hover);
+  }
+
+  .article-card p {
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-3);
+  }
+
+  .article-card__meta {
+    display: flex;
+    gap: var(--space-2);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+  }
+</style>

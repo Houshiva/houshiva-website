@@ -1,0 +1,152 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { site } from '../data/site';
+import '../styles/global.css';
+
+export interface Breadcrumb {
+  label: string;
+  path: string;
+}
+
+export interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  noindex?: boolean;
+  ogType?: 'website' | 'article' | 'video.other';
+  ogImage?: string;
+  ogImageAlt?: string;
+  structuredData?: Record<string, unknown>[];
+  breadcrumbs?: Breadcrumb[];
+}
+
+const {
+  title,
+  description,
+  path = '/',
+  noindex = false,
+  ogType = 'website',
+  ogImage = '/og-image.png',
+  ogImageAlt = 'هوشیوا — راهکارهای نرم‌افزاری برای رشد هوشمند کسب‌وکار',
+  structuredData = [],
+  breadcrumbs,
+} = Astro.props;
+
+const pageTitle = path === '/' ? title : `${title} | هوشیوا`;
+const canonicalUrl = new URL(path, site.url).toString();
+const ogImageUrl = new URL(ogImage, site.url).toString();
+
+const resolvedBreadcrumbs: Breadcrumb[] = breadcrumbs ?? (path === '/' ? [] : [{ label: title, path }]);
+
+const breadcrumbSchema =
+  resolvedBreadcrumbs.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'صفحه اصلی', item: site.url },
+          ...resolvedBreadcrumbs.map((crumb, index) => ({
+            '@type': 'ListItem',
+            position: index + 2,
+            name: crumb.label,
+            item: new URL(crumb.path, site.url).toString(),
+          })),
+        ],
+      }
+    : null;
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'هوشیوا',
+  alternateName: 'Houshiva',
+  url: site.url,
+  logo: new URL('/favicon.svg', site.url).toString(),
+  description: site.description,
+  email: site.contact.email,
+  telephone: site.contact.phones[0]?.href,
+  sameAs: site.social.map((s) => s.url),
+};
+
+const allSchemas = [organizationSchema, ...(breadcrumbSchema ? [breadcrumbSchema] : []), ...structuredData];
+---
+
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0a0a10" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="هوشیوا" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="هوشیوا" />
+    <meta property="og:locale" content="fa_IR" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+
+    {
+      allSchemas.map((schema) => (
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+      ))
+    }
+
+    <ClientRouter />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">رفتن به محتوای اصلی</a>
+    <Header transition:persist />
+    <main id="main-content" transition:name="main-content" transition:animate="none">
+      <slot />
+    </main>
+    <Footer transition:persist />
+
+    <script>
+      function initReveal() {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        document.documentElement.classList.add('js-reveal');
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }
+        );
+
+        document.querySelectorAll('[data-reveal]:not(.is-visible)').forEach((el, i) => {
+          (el as HTMLElement).style.setProperty('--reveal-delay', `${Math.min(i % 6, 5) * 70}ms`);
+          observer.observe(el);
+        });
+      }
+
+      document.addEventListener('astro:page-load', initReveal);
+    </script>
+  </body>
+</html>

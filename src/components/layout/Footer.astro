@@ -1,0 +1,164 @@
+---
+import Logo from '../illustrations/Logo.astro';
+import SocialLinks from '../common/SocialLinks.astro';
+import Icon from '../common/Icon.astro';
+import { site } from '../../data/site';
+import { footerNav } from '../../data/navigation';
+import { services } from '../../data/services';
+
+const year = new Date().getFullYear();
+const featuredServices = services.slice(0, 6);
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__about">
+      <Logo size={28} />
+      <p>{site.description}</p>
+      <SocialLinks />
+    </div>
+
+    <div class="footer__col">
+      <h3>صفحات</h3>
+      <ul>
+        {
+          footerNav.pages.map((link) => (
+            <li>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="footer__col">
+      <h3>خدمات</h3>
+      <ul>
+        {
+          featuredServices.map((service) => (
+            <li>
+              <a href={`/services#${service.slug}`}>{service.title}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="footer__col">
+      <h3>اطلاعات تماس</h3>
+      <ul class="footer__contact">
+        <li>
+          <a href={`mailto:${site.contact.email}`} class="ltr">
+            <Icon name="mail" size={18} />
+            {site.contact.email}
+          </a>
+        </li>
+        {
+          site.contact.phones.map((phone) => (
+            <li>
+              <a href={`tel:${phone.href}`} class="ltr">
+                <Icon name="phone" size={18} />
+                {phone.number}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer__bottom">
+    <p>© {year} هوشیوا. تمامی حقوق محفوظ است.</p>
+    <p class="ltr">HOUSHIVA</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--color-border-hairline);
+    background: var(--color-background-alt);
+    padding-block: var(--space-20) var(--space-8);
+  }
+
+  .footer__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: var(--space-12);
+    padding-bottom: var(--space-16);
+  }
+
+  .footer__about {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    max-width: 320px;
+  }
+
+  .footer__about p {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+  }
+
+  .footer__col h3 {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    margin-bottom: var(--space-5);
+  }
+
+  .footer__col ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .footer__col a {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    transition: color var(--transition-fast);
+  }
+
+  .footer__col a:hover {
+    color: var(--color-primary-hover);
+  }
+
+  .footer__contact a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .footer__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border-hairline);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+  }
+
+  @media (max-width: 860px) {
+    .footer__inner {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-10);
+    }
+
+    .footer__about {
+      grid-column: 1 / -1;
+      max-width: none;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .footer__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .footer__bottom {
+      flex-direction: column;
+      gap: var(--space-2);
+      align-items: flex-start;
+    }
+  }
+</style>

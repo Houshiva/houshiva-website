@@ -1,0 +1,46 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import SectionTitle from '../components/common/SectionTitle.astro';
+import ServiceDetail from '../components/services/ServiceDetail.astro';
+import CtaSection from '../components/common/CtaSection.astro';
+import { services } from '../data/services';
+---
+
+<MainLayout
+  title="خدمات هوشیوا"
+  description="طراحی سایت، فروشگاه اینترنتی، نرم‌افزار اختصاصی، حسابداری، صندوق فروش، CRM، مدیریت انبار، اتوماسیون، داشبورد مدیریتی و اتصال سامانه‌ها — خدمات کامل هوشیوا برای کسب‌وکار شما."
+  path="/services"
+>
+  <section class="section services-hero">
+    <div class="container">
+      <SectionTitle
+        as="h1"
+        eyebrow="خدمات"
+        title="هر راهکار، طراحی‌شده برای همان مسئله‌ای که دارید"
+        description="از یک وب‌سایت معرفی خدمات تا سامانه‌های مدیریتی چندبخشی؛ در ادامه می‌توانید جزئیات هر خدمت، مزایا و مناسب بودن آن برای کسب‌وکارتان را ببینید."
+        align="center"
+      />
+    </div>
+  </section>
+
+  <section class="services-list">
+    <div class="container">
+      {services.map((service, index) => <ServiceDetail service={service} reversed={index % 2 === 1} />)}
+    </div>
+  </section>
+
+  <CtaSection
+    title="نمی‌دانید کدام راهکار مناسب شماست؟"
+    description="کافی است نیاز خود را برایمان توضیح دهید؛ در جلسه مشاوره رایگان، مناسب‌ترین راهکار را با هم مشخص می‌کنیم."
+  />
+</MainLayout>
+
+<style>
+  .services-hero {
+    padding-bottom: 0;
+  }
+
+  .services-list {
+    padding-bottom: var(--space-16);
+  }
+</style>

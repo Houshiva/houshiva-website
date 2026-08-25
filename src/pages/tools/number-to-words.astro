@@ -1,0 +1,182 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import Icon from '../../components/common/Icon.astro';
+import CtaSection from '../../components/common/CtaSection.astro';
+---
+
+<MainLayout
+  title="تبدیل عدد به حروف"
+  description="ابزار رایگان تبدیل عدد و مبلغ به حروف فارسی؛ مناسب برای نوشتن فاکتور، چک و قرارداد."
+  path="/tools/number-to-words"
+  breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'عدد به حروف', path: '/tools/number-to-words' }]}
+>
+  <article class="section tool-page">
+    <div class="container container--narrow">
+      <a href="/tools" class="tool-page__back">
+        <Icon name="chevron-start" size={16} />
+        بازگشت به ابزارها
+      </a>
+
+      <h1 class="text-balance">تبدیل عدد به حروف</h1>
+      <p class="tool-page__lead">عدد یا مبلغ را وارد کنید تا بلافاصله معادل آن به حروف فارسی نمایش داده شود.</p>
+
+      <div class="n2w">
+        <div class="n2w__input-row">
+          <label for="n2w-input" class="visually-hidden">عدد</label>
+          <input id="n2w-input" type="number" inputmode="numeric" placeholder="مثلاً 1250000" data-n2w-input />
+          <select data-n2w-unit aria-label="واحد پول">
+            <option value="">بدون واحد</option>
+            <option value="تومان">تومان</option>
+            <option value="ریال">ریال</option>
+          </select>
+        </div>
+
+        <div class="n2w__result">
+          <p data-n2w-output>صفر</p>
+          <button type="button" class="n2w__copy" data-n2w-copy aria-label="کپی متن">
+            <Icon name="copy" size={16} />
+            <span data-n2w-copy-label>کپی</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <CtaSection />
+</MainLayout>
+
+<style>
+  .tool-page {
+    padding-bottom: var(--space-16);
+  }
+
+  .tool-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .tool-page__back:hover {
+    color: var(--color-primary-hover);
+  }
+
+  .tool-page__back :global(svg) {
+    transform: scaleX(-1);
+  }
+
+  .tool-page h1 {
+    margin-bottom: var(--space-4);
+  }
+
+  .tool-page__lead {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-10);
+  }
+
+  .n2w {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+  }
+
+  .n2w__input-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+
+  .n2w__input-row input,
+  .n2w__input-row select {
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+  }
+
+  .n2w__input-row input:focus,
+  .n2w__input-row select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+  .n2w__result {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    background: var(--color-primary-soft);
+    border-radius: var(--radius-md);
+    padding: var(--space-5) var(--space-6);
+    min-height: 32px;
+  }
+
+  .n2w__result p {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+  }
+
+  .n2w__copy {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-hover);
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 560px) {
+    .n2w__input-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  import { numberToPersianWords } from '../../lib/numberToWords';
+
+  function initNumberToWords() {
+    const input = document.querySelector<HTMLInputElement>('[data-n2w-input]');
+    const unit = document.querySelector<HTMLSelectElement>('[data-n2w-unit]');
+    const output = document.querySelector<HTMLElement>('[data-n2w-output]');
+    const copyBtn = document.querySelector<HTMLButtonElement>('[data-n2w-copy]');
+    if (!input || !unit || !output) return;
+
+    function update() {
+      const value = Number(input!.value || 0);
+      const words = numberToPersianWords(value);
+      output!.textContent = unit!.value ? `${words} ${unit!.value}` : words;
+    }
+
+    input.addEventListener('input', update);
+    unit.addEventListener('change', update);
+
+    const copyLabel = copyBtn?.querySelector('[data-n2w-copy-label]');
+    copyBtn?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(output!.textContent ?? '');
+        if (copyLabel) {
+          copyLabel.textContent = 'کپی شد';
+          setTimeout(() => {
+            copyLabel.textContent = 'کپی';
+          }, 1500);
+        }
+      } catch {
+        /* clipboard API unavailable — silently ignore */
+      }
+    });
+
+    update();
+  }
+
+  document.addEventListener('astro:page-load', initNumberToWords);
+</script>
