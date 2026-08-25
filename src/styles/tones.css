@@ -1,0 +1,20 @@
+/*
+  Page-level color identity. Wrapping a page's content in .tone-teal or
+  .tone-gold overrides the --tone-* indirection tokens (see variables.css),
+  which every icon chip / hover border / CTA button / illustration reads
+  from — so a whole page recolors without touching each component.
+*/
+
+.tone-teal {
+  --tone-accent: var(--color-accent-secondary);
+  --tone-accent-hover: color-mix(in srgb, var(--color-accent-secondary) 85%, white);
+  --tone-accent-soft: rgba(90, 209, 201, 0.14);
+  --tone-glow: 0 0 0 1px rgba(90, 209, 201, 0.18), 0 12px 40px -12px rgba(90, 209, 201, 0.45);
+}
+
+.tone-gold {
+  --tone-accent: var(--color-accent-gold);
+  --tone-accent-hover: color-mix(in srgb, var(--color-accent-gold) 85%, white);
+  --tone-accent-soft: rgba(232, 185, 117, 0.14);
+  --tone-glow: 0 0 0 1px rgba(232, 185, 117, 0.18), 0 12px 40px -12px rgba(232, 185, 117, 0.45);
+}

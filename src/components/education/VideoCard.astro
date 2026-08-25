@@ -37,7 +37,7 @@ const { video } = Astro.props;
   }
 
   .video-card:hover {
-    border-color: var(--color-primary);
+    border-color: var(--tone-accent);
     transform: translateY(-4px);
   }
 
@@ -74,7 +74,7 @@ const { video } = Astro.props;
   }
 
   .video-card:hover .video-card__play {
-    background: var(--color-primary);
+    background: var(--tone-accent);
     transform: scale(1.08);
   }
 
@@ -99,7 +99,7 @@ const { video } = Astro.props;
   .video-card__category {
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-primary-hover);
+    color: var(--tone-accent-hover);
   }
 
   .video-card__body p {
@@ -112,6 +112,6 @@ const { video } = Astro.props;
   }
 
   .video-card__body h3 a:hover {
-    color: var(--color-primary-hover);
+    color: var(--tone-accent-hover);
   }
 </style>

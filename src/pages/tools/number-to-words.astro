@@ -10,7 +10,7 @@ import CtaSection from '../../components/common/CtaSection.astro';
   path="/tools/number-to-words"
   breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'عدد به حروف', path: '/tools/number-to-words' }]}
 >
-  <article class="section tool-page">
+  <article class="section tool-page tone-teal">
     <div class="container container--narrow">
       <a href="/tools" class="tool-page__back">
         <Icon name="chevron-start" size={16} />
@@ -42,7 +42,7 @@ import CtaSection from '../../components/common/CtaSection.astro';
     </div>
   </article>
 
-  <CtaSection />
+  <CtaSection class="tone-teal" />
 </MainLayout>
 
 <style>
@@ -61,7 +61,7 @@ import CtaSection from '../../components/common/CtaSection.astro';
   }
 
   .tool-page__back:hover {
-    color: var(--color-primary-hover);
+    color: var(--tone-accent-hover);
   }
 
   .tool-page__back :global(svg) {
@@ -104,7 +104,7 @@ import CtaSection from '../../components/common/CtaSection.astro';
   .n2w__input-row input:focus,
   .n2w__input-row select:focus {
     outline: none;
-    border-color: var(--color-primary);
+    border-color: var(--tone-accent);
   }
 
   .n2w__result {
@@ -112,7 +112,7 @@ import CtaSection from '../../components/common/CtaSection.astro';
     align-items: center;
     justify-content: space-between;
     gap: var(--space-4);
-    background: var(--color-primary-soft);
+    background: var(--tone-accent-soft);
     border-radius: var(--radius-md);
     padding: var(--space-5) var(--space-6);
     min-height: 32px;
@@ -130,7 +130,7 @@ import CtaSection from '../../components/common/CtaSection.astro';
     gap: var(--space-2);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-primary-hover);
+    color: var(--tone-accent-hover);
     flex-shrink: 0;
   }
 

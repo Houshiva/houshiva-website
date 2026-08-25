@@ -1,13 +1,15 @@
 ---
 import Icon from '../common/Icon.astro';
+import { toneVars, type Tone } from '../../lib/tones';
 import type { Service } from '../../data/services';
 
 export interface Props {
   service: Service;
   reversed?: boolean;
+  tone?: Tone;
 }
 
-const { service, reversed = false } = Astro.props;
+const { service, reversed = false, tone = 'violet' } = Astro.props;
 ---
 
 <article
@@ -15,6 +17,7 @@ const { service, reversed = false } = Astro.props;
   id={service.slug}
   class:list={{ 'service-detail--reversed': reversed }}
   data-reveal
+  style={toneVars(tone)}
 >
   <div class="service-detail__intro">
     <div class="service-detail__icon">
@@ -90,8 +93,8 @@ const { service, reversed = false } = Astro.props;
     width: 58px;
     height: 58px;
     border-radius: var(--radius-md);
-    background: var(--color-primary-soft);
-    color: var(--color-primary-hover);
+    background: var(--tone-accent-soft);
+    color: var(--tone-accent-hover);
     margin-bottom: var(--space-5);
   }
 
@@ -131,7 +134,7 @@ const { service, reversed = false } = Astro.props;
     align-items: center;
     gap: var(--space-2);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-primary-hover);
+    color: var(--tone-accent-hover);
   }
 
   .service-detail__lists {

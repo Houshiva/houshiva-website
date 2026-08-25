@@ -54,13 +54,13 @@ const isExternal = href?.startsWith('http');
   }
 
   .btn--primary {
-    background: var(--color-primary);
+    background: var(--tone-accent);
     color: var(--color-text-on-primary);
   }
 
   .btn--primary:hover {
-    background: var(--color-primary-hover);
-    box-shadow: var(--shadow-glow-primary);
+    background: var(--tone-accent-hover);
+    box-shadow: var(--tone-glow);
   }
 
   .btn--secondary {
@@ -71,7 +71,7 @@ const isExternal = href?.startsWith('http');
 
   .btn--secondary:hover {
     background: var(--color-surface-hover);
-    border-color: var(--color-primary);
+    border-color: var(--tone-accent);
   }
 
   .btn--ghost {
@@ -81,7 +81,7 @@ const isExternal = href?.startsWith('http');
   }
 
   .btn--ghost:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary-hover);
+    border-color: var(--tone-accent);
+    color: var(--tone-accent-hover);
   }
 </style>

@@ -3,6 +3,8 @@ import MainLayout from '../layouts/MainLayout.astro';
 import SectionTitle from '../components/common/SectionTitle.astro';
 import Icon from '../components/common/Icon.astro';
 import CtaSection from '../components/common/CtaSection.astro';
+import GradientMesh from '../components/common/GradientMesh.astro';
+import { toneForIndex, toneVars } from '../lib/tones';
 import type { IconName } from '../components/common/Icon.astro';
 
 const values: { icon: IconName; title: string; description: string }[] = [
@@ -40,6 +42,7 @@ const values: { icon: IconName; title: string; description: string }[] = [
   path="/about"
 >
   <section class="section about-hero">
+    <GradientMesh variant="hero" />
     <div class="container">
       <SectionTitle as="h1" eyebrow="درباره ما" title="داستان هوشیوا" align="center" />
       <div class="about-story">
@@ -62,13 +65,13 @@ const values: { icon: IconName; title: string; description: string }[] = [
     </div>
   </section>
 
-  <section class="section values">
+  <section class="section section--alt values">
     <div class="container">
       <SectionTitle eyebrow="نگاه ما" title="اصولی که در هر پروژه رعایت می‌کنیم" />
       <div class="values__grid">
         {
-          values.map((value) => (
-            <div class="values__item" data-reveal>
+          values.map((value, index) => (
+            <div class="values__item" data-reveal style={toneVars(toneForIndex(index))}>
               <div class="values__icon">
                 <Icon name={value.icon} size={22} />
               </div>
@@ -88,6 +91,11 @@ const values: { icon: IconName; title: string; description: string }[] = [
 </MainLayout>
 
 <style>
+  .about-hero {
+    position: relative;
+    z-index: 0;
+  }
+
   .about-story {
     max-width: 720px;
     margin-inline: auto;
@@ -120,8 +128,8 @@ const values: { icon: IconName; title: string; description: string }[] = [
     width: 48px;
     height: 48px;
     border-radius: var(--radius-md);
-    background: var(--color-primary-soft);
-    color: var(--color-primary-hover);
+    background: var(--tone-accent-soft);
+    color: var(--tone-accent-hover);
     margin-bottom: var(--space-5);
   }
 

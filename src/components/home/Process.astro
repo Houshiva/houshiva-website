@@ -1,5 +1,6 @@
 ---
 import SectionTitle from '../common/SectionTitle.astro';
+import { toneForIndex, toneVars } from '../../lib/tones';
 
 const steps = [
   { title: 'آشنایی و مشاوره', description: 'شنیدن نیاز شما و بررسی اولیه امکان‌پذیری پروژه.' },
@@ -23,7 +24,7 @@ const steps = [
     <ol class="process__list">
       {
         steps.map((step, index) => (
-          <li class="process__item" data-reveal>
+          <li class="process__item" data-reveal style={toneVars(toneForIndex(index))}>
             <span class="process__index">{String(index + 1).padStart(2, '0')}</span>
             <div class="process__body">
               <h3>{step.title}</h3>
@@ -55,7 +56,7 @@ const steps = [
     display: block;
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
-    color: var(--color-primary-hover);
+    color: var(--tone-accent-hover);
     margin-bottom: var(--space-3);
   }
 

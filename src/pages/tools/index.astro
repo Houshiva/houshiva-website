@@ -3,6 +3,7 @@ import MainLayout from '../../layouts/MainLayout.astro';
 import SectionTitle from '../../components/common/SectionTitle.astro';
 import ToolCard from '../../components/tools/ToolCard.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import { toneForIndex } from '../../lib/tones';
 import { tools } from '../../data/tools';
 ---
 
@@ -22,7 +23,7 @@ import { tools } from '../../data/tools';
       />
 
       <div class="tools-page__grid">
-        {tools.map((tool) => <ToolCard tool={tool} />)}
+        {tools.map((tool, index) => <ToolCard tool={tool} tone={toneForIndex(index)} />)}
       </div>
     </div>
   </section>

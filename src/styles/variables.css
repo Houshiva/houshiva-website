@@ -34,6 +34,14 @@
   --color-accent-secondary: #5ad1c9;
   --color-accent-gold: #e8b975;
 
+  /* Tone indirection — components read --tone-* so a wrapping .tone-teal /
+     .tone-gold class can recolor a whole page subtree without prop-drilling.
+     Defaults alias the brand violet, so untoned pages are unchanged. */
+  --tone-accent: var(--color-primary);
+  --tone-accent-hover: var(--color-primary-hover);
+  --tone-accent-soft: var(--color-primary-soft);
+  --tone-glow: var(--shadow-glow-primary);
+
   /* Color — feedback */
   --color-success: #3dd68c;
   --color-success-soft: rgba(61, 214, 140, 0.14);

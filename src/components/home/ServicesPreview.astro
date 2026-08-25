@@ -1,6 +1,7 @@
 ---
 import SectionTitle from '../common/SectionTitle.astro';
 import ServiceCard from '../services/ServiceCard.astro';
+import { toneForIndex } from '../../lib/tones';
 import { services } from '../../data/services';
 ---
 
@@ -13,7 +14,7 @@ import { services } from '../../data/services';
     />
 
     <div class="services-preview__grid">
-      {services.map((service) => <ServiceCard service={service} />)}
+      {services.map((service, index) => <ServiceCard service={service} tone={toneForIndex(index)} />)}
     </div>
   </div>
 </section>

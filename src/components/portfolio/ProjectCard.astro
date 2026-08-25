@@ -1,16 +1,18 @@
 ---
 import ProjectCover from '../illustrations/ProjectCover.astro';
 import Icon from '../common/Icon.astro';
+import { toneVars, type Tone } from '../../lib/tones';
 import { projectCategories, type Project } from '../../data/projects';
 
 export interface Props {
   project: Project;
+  tone?: Tone;
 }
 
-const { project } = Astro.props;
+const { project, tone = 'violet' } = Astro.props;
 ---
 
-<article class="project-card" data-reveal>
+<article class="project-card" data-reveal style={toneVars(tone)}>
   <div class="project-card__cover">
     <ProjectCover variant={project.cover as any} />
   </div>
@@ -42,7 +44,7 @@ const { project } = Astro.props;
   }
 
   .project-card:hover {
-    border-color: var(--color-primary);
+    border-color: var(--tone-accent);
     transform: translateY(-4px);
   }
 
@@ -65,7 +67,7 @@ const { project } = Astro.props;
   .project-card__category {
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-primary-hover);
+    color: var(--tone-accent-hover);
   }
 
   .project-card__body p {
@@ -95,6 +97,6 @@ const { project } = Astro.props;
     gap: var(--space-1);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-primary-hover);
+    color: var(--tone-accent-hover);
   }
 </style>

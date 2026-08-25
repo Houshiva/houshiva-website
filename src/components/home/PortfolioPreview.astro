@@ -2,12 +2,13 @@
 import SectionTitle from '../common/SectionTitle.astro';
 import Button from '../common/Button.astro';
 import ProjectCard from '../portfolio/ProjectCard.astro';
+import { toneForIndex } from '../../lib/tones';
 import { projects } from '../../data/projects';
 
 const featured = projects.slice(0, 3);
 ---
 
-<section class="section portfolio-preview">
+<section class="section section--alt portfolio-preview">
   <div class="container">
     <div class="portfolio-preview__header">
       <SectionTitle
@@ -19,7 +20,7 @@ const featured = projects.slice(0, 3);
     </div>
 
     <div class="portfolio-preview__grid">
-      {featured.map((project) => <ProjectCard project={project} />)}
+      {featured.map((project, index) => <ProjectCard project={project} tone={toneForIndex(index)} />)}
     </div>
   </div>
 </section>

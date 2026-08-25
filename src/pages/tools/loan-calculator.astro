@@ -10,7 +10,7 @@ import CtaSection from '../../components/common/CtaSection.astro';
   path="/tools/loan-calculator"
   breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'محاسبه‌گر اقساط', path: '/tools/loan-calculator' }]}
 >
-  <article class="section tool-page">
+  <article class="section tool-page tone-gold">
     <div class="container container--narrow">
       <a href="/tools" class="tool-page__back">
         <Icon name="chevron-start" size={16} />
@@ -56,7 +56,7 @@ import CtaSection from '../../components/common/CtaSection.astro';
     </div>
   </article>
 
-  <CtaSection />
+  <CtaSection class="tone-gold" />
 </MainLayout>
 
 <style>
@@ -75,7 +75,7 @@ import CtaSection from '../../components/common/CtaSection.astro';
   }
 
   .tool-page__back:hover {
-    color: var(--color-primary-hover);
+    color: var(--tone-accent-hover);
   }
 
   .tool-page__back :global(svg) {
@@ -124,7 +124,7 @@ import CtaSection from '../../components/common/CtaSection.astro';
 
   .loan-tool__fields input:focus {
     outline: none;
-    border-color: var(--color-primary);
+    border-color: var(--tone-accent);
   }
 
   .loan-tool__results {
@@ -140,7 +140,7 @@ import CtaSection from '../../components/common/CtaSection.astro';
     flex-direction: column;
     gap: var(--space-2);
     text-align: center;
-    background: var(--color-primary-soft);
+    background: var(--tone-accent-soft);
     border-radius: var(--radius-md);
     padding: var(--space-5);
   }

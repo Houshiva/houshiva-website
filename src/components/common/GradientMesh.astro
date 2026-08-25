@@ -1,0 +1,80 @@
+---
+/**
+ * Ambient CSS-only color wash — no images needed. Reads --tone-accent (see
+ * tones.css) plus a second hue for a blended, non-flat backdrop. Drop
+ * behind a hero/intro/CTA section; the section itself needs `position:
+ * relative` for the blobs to anchor to it.
+ */
+export interface Props {
+  variant?: 'hero' | 'cta';
+  secondary?: string;
+}
+
+const { variant = 'hero', secondary = 'var(--color-accent-gold)' } = Astro.props;
+---
+
+<div class:list={['gradient-mesh', `gradient-mesh--${variant}`]} style={{ '--mesh-secondary': secondary }} aria-hidden="true">
+</div>
+
+<style>
+  .gradient-mesh {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .gradient-mesh::before,
+  .gradient-mesh::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.28;
+  }
+
+  .gradient-mesh--hero::before {
+    width: 46vw;
+    height: 46vw;
+    max-width: 560px;
+    max-height: 560px;
+    top: -12%;
+    inset-inline-end: -8%;
+    background: var(--tone-accent);
+  }
+
+  .gradient-mesh--hero::after {
+    width: 34vw;
+    height: 34vw;
+    max-width: 420px;
+    max-height: 420px;
+    bottom: -14%;
+    inset-inline-start: -6%;
+    background: var(--mesh-secondary);
+    opacity: 0.2;
+  }
+
+  .gradient-mesh--cta::before {
+    width: 60%;
+    height: 140%;
+    top: -20%;
+    inset-inline-start: -10%;
+    background: var(--tone-accent);
+  }
+
+  .gradient-mesh--cta::after {
+    width: 45%;
+    height: 120%;
+    top: -10%;
+    inset-inline-end: -10%;
+    background: var(--mesh-secondary);
+    opacity: 0.18;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gradient-mesh {
+      opacity: 0.7;
+    }
+  }
+</style>

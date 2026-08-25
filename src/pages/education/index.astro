@@ -5,6 +5,7 @@ import SectionTitle from '../../components/common/SectionTitle.astro';
 import ArticleCard from '../../components/education/ArticleCard.astro';
 import VideoCard from '../../components/education/VideoCard.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import GradientMesh from '../../components/common/GradientMesh.astro';
 import { videos } from '../../data/videos';
 
 const articles = (await getCollection('articles')).sort(
@@ -17,7 +18,8 @@ const articles = (await getCollection('articles')).sort(
   description="مقالات و ویدیوهای آموزشی هوشیوا درباره نرم‌افزار، حسابداری، فروشگاه‌داری و مدیریت کسب‌وکار — برای تصمیم‌گیری بهتر درباره دیجیتالی‌کردن کسب‌وکارتان."
   path="/education"
 >
-  <section class="section education-page">
+  <section class="section education-page tone-teal">
+    <GradientMesh variant="hero" secondary="var(--color-primary)" />
     <div class="container">
       <SectionTitle
         as="h1"
@@ -70,10 +72,15 @@ const articles = (await getCollection('articles')).sort(
     </div>
   </section>
 
-  <CtaSection />
+  <CtaSection class="tone-teal" />
 </MainLayout>
 
 <style>
+  .education-page {
+    position: relative;
+    z-index: 0;
+  }
+
   .education-filter__tabs {
     display: flex;
     flex-wrap: wrap;
@@ -96,7 +103,7 @@ const articles = (await getCollection('articles')).sort(
   }
 
   .education-filter__tabs label:hover {
-    border-color: var(--color-primary);
+    border-color: var(--tone-accent);
     color: var(--color-text);
   }
 
@@ -117,9 +124,9 @@ const articles = (await getCollection('articles')).sort(
   #filter-content-all:checked ~ .education-filter__tabs label[for='filter-content-all'],
   #filter-content-article:checked ~ .education-filter__tabs label[for='filter-content-article'],
   #filter-content-video:checked ~ .education-filter__tabs label[for='filter-content-video'] {
-    color: var(--color-primary-hover);
-    border-color: var(--color-primary);
-    background: var(--color-primary-soft);
+    color: var(--tone-accent-hover);
+    border-color: var(--tone-accent);
+    background: var(--tone-accent-soft);
   }
 
   #filter-content-video:checked ~ .education-filter__grid .education-filter__group--articles,

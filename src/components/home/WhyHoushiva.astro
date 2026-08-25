@@ -1,6 +1,7 @@
 ---
 import SectionTitle from '../common/SectionTitle.astro';
 import Icon from '../common/Icon.astro';
+import { toneForIndex, toneVars } from '../../lib/tones';
 import type { IconName } from '../common/Icon.astro';
 
 const points: { icon: IconName; title: string; description: string }[] = [
@@ -37,7 +38,7 @@ const points: { icon: IconName; title: string; description: string }[] = [
 ];
 ---
 
-<section class="section why">
+<section class="section section--alt why">
   <div class="container">
     <SectionTitle
       eyebrow="چرا هوشیوا"
@@ -47,8 +48,8 @@ const points: { icon: IconName; title: string; description: string }[] = [
 
     <div class="why__grid">
       {
-        points.map((point) => (
-          <div class="why__item" data-reveal>
+        points.map((point, index) => (
+          <div class="why__item" data-reveal style={toneVars(toneForIndex(index))}>
             <div class="why__icon">
               <Icon name={point.icon} size={22} />
             </div>
@@ -85,7 +86,7 @@ const points: { icon: IconName; title: string; description: string }[] = [
     border-radius: var(--radius-md);
     background: var(--color-surface);
     border: 1px solid var(--color-border);
-    color: var(--color-primary-hover);
+    color: var(--tone-accent-hover);
   }
 
   .why__item h3 {

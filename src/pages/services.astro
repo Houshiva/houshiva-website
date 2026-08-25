@@ -3,6 +3,8 @@ import MainLayout from '../layouts/MainLayout.astro';
 import SectionTitle from '../components/common/SectionTitle.astro';
 import ServiceDetail from '../components/services/ServiceDetail.astro';
 import CtaSection from '../components/common/CtaSection.astro';
+import GradientMesh from '../components/common/GradientMesh.astro';
+import { toneForIndex } from '../lib/tones';
 import { services } from '../data/services';
 ---
 
@@ -12,6 +14,7 @@ import { services } from '../data/services';
   path="/services"
 >
   <section class="section services-hero">
+    <GradientMesh variant="hero" />
     <div class="container">
       <SectionTitle
         as="h1"
@@ -25,7 +28,11 @@ import { services } from '../data/services';
 
   <section class="services-list">
     <div class="container">
-      {services.map((service, index) => <ServiceDetail service={service} reversed={index % 2 === 1} />)}
+      {
+        services.map((service, index) => (
+          <ServiceDetail service={service} reversed={index % 2 === 1} tone={toneForIndex(index)} />
+        ))
+      }
     </div>
   </section>
 
@@ -37,6 +44,8 @@ import { services } from '../data/services';
 
 <style>
   .services-hero {
+    position: relative;
+    z-index: 0;
     padding-bottom: 0;
   }
 

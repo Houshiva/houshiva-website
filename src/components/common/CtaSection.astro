@@ -1,9 +1,12 @@
 ---
+import GradientMesh from './GradientMesh.astro';
+
 export interface Props {
   title?: string;
   description?: string;
   buttonLabel?: string;
   buttonHref?: string;
+  class?: string;
 }
 
 const {
@@ -11,11 +14,13 @@ const {
   description = 'کافی است نیاز خود را برای ما شرح دهید؛ در اولین جلسه مشاوره، مسیر رسیدن به راهکار مناسب را با هم بررسی می‌کنیم.',
   buttonLabel = 'درخواست مشاوره',
   buttonHref = '/contact',
+  class: className,
 } = Astro.props;
 ---
 
-<section class="cta">
+<section class:list={['cta', className]}>
   <div class="container cta__inner">
+    <GradientMesh variant="cta" />
     <h2 class="text-balance">{title}</h2>
     <p class="text-balance">{description}</p>
     <a href={buttonHref} class="cta__button">{buttonLabel}</a>
@@ -28,6 +33,8 @@ const {
   }
 
   .cta__inner {
+    position: relative;
+    z-index: 0;
     text-align: center;
     max-width: 640px;
     margin-inline: auto;
@@ -35,6 +42,7 @@ const {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-xl);
+    overflow: hidden;
   }
 
   .cta h2 {
@@ -50,7 +58,7 @@ const {
     align-items: center;
     justify-content: center;
     padding: var(--space-4) var(--space-10);
-    background: var(--color-primary);
+    background: var(--tone-accent);
     color: var(--color-text-on-primary);
     font-weight: var(--font-weight-semibold);
     border-radius: var(--radius-full);
@@ -60,8 +68,8 @@ const {
   }
 
   .cta__button:hover {
-    background: var(--color-primary-hover);
-    box-shadow: var(--shadow-glow-primary);
+    background: var(--tone-accent-hover);
+    box-shadow: var(--tone-glow);
   }
 
   @media (max-width: 720px) {

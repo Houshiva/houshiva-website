@@ -1,15 +1,17 @@
 ---
 import Icon from '../common/Icon.astro';
+import { toneVars, type Tone } from '../../lib/tones';
 import type { Service } from '../../data/services';
 
 export interface Props {
   service: Service;
+  tone?: Tone;
 }
 
-const { service } = Astro.props;
+const { service, tone = 'violet' } = Astro.props;
 ---
 
-<article class="service-card" id={service.slug} data-reveal>
+<article class="service-card" id={service.slug} data-reveal style={toneVars(tone)}>
   <div class="service-card__icon">
     <Icon name={service.icon as any} size={26} />
   </div>
@@ -37,7 +39,7 @@ const { service } = Astro.props;
   }
 
   .service-card:hover {
-    border-color: var(--color-primary);
+    border-color: var(--tone-accent);
     transform: translateY(-4px);
     box-shadow: var(--shadow-md);
   }
@@ -49,8 +51,8 @@ const { service } = Astro.props;
     width: 52px;
     height: 52px;
     border-radius: var(--radius-md);
-    background: var(--color-primary-soft);
-    color: var(--color-primary-hover);
+    background: var(--tone-accent-soft);
+    color: var(--tone-accent-hover);
     margin-bottom: var(--space-5);
   }
 
@@ -70,7 +72,7 @@ const { service } = Astro.props;
     gap: var(--space-1);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-primary-hover);
+    color: var(--tone-accent-hover);
   }
 
   .service-card__link :global(svg) {

@@ -45,6 +45,11 @@
   padding-block: var(--space-24);
 }
 
+.section--alt {
+  background: var(--color-background-alt);
+  border-block: 1px solid var(--color-border-hairline);
+}
+
 @media (max-width: 720px) {
   .section {
     padding-block: var(--space-16);

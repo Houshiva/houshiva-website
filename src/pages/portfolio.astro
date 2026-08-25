@@ -3,6 +3,8 @@ import MainLayout from '../layouts/MainLayout.astro';
 import SectionTitle from '../components/common/SectionTitle.astro';
 import ProjectDetailCard from '../components/portfolio/ProjectDetailCard.astro';
 import CtaSection from '../components/common/CtaSection.astro';
+import GradientMesh from '../components/common/GradientMesh.astro';
+import { toneForIndex } from '../lib/tones';
 import { projects, projectCategories } from '../data/projects';
 
 const categories = Object.entries(projectCategories);
@@ -13,7 +15,8 @@ const categories = Object.entries(projectCategories);
   description="مجموعه‌ای از پروژه‌های اجراشده هوشیوا در طراحی سایت، فروشگاه اینترنتی، نرم‌افزار اختصاصی، سیستم‌های مدیریتی و داشبورد."
   path="/portfolio"
 >
-  <section class="section portfolio-page">
+  <section class="section portfolio-page tone-gold">
+    <GradientMesh variant="hero" secondary="var(--color-primary)" />
     <div class="container">
       <SectionTitle
         as="h1"
@@ -35,9 +38,9 @@ const categories = Object.entries(projectCategories);
 
         <div class="portfolio-filter__grid">
           {
-            projects.map((project) => (
+            projects.map((project, index) => (
               <div class:list={['portfolio-filter__item', `cat-${project.category}`]} id={project.slug}>
-                <ProjectDetailCard project={project} />
+                <ProjectDetailCard project={project} tone={toneForIndex(index)} />
               </div>
             ))
           }
@@ -46,10 +49,15 @@ const categories = Object.entries(projectCategories);
     </div>
   </section>
 
-  <CtaSection />
+  <CtaSection class="tone-gold" />
 </MainLayout>
 
 <style>
+  .portfolio-page {
+    position: relative;
+    z-index: 0;
+  }
+
   .portfolio-filter__tabs {
     display: flex;
     flex-wrap: wrap;
@@ -72,7 +80,7 @@ const categories = Object.entries(projectCategories);
   }
 
   .portfolio-filter__tabs label:hover {
-    border-color: var(--color-primary);
+    border-color: var(--tone-accent);
     color: var(--color-text);
   }
 
@@ -89,9 +97,9 @@ const categories = Object.entries(projectCategories);
   #filter-software:checked ~ .portfolio-filter__tabs label[for='filter-software'],
   #filter-management-system:checked ~ .portfolio-filter__tabs label[for='filter-management-system'],
   #filter-dashboard:checked ~ .portfolio-filter__tabs label[for='filter-dashboard'] {
-    color: var(--color-primary-hover);
-    border-color: var(--color-primary);
-    background: var(--color-primary-soft);
+    color: var(--tone-accent-hover);
+    border-color: var(--tone-accent);
+    background: var(--tone-accent-soft);
   }
 
   #filter-website:checked ~ .portfolio-filter__grid .portfolio-filter__item:not(.cat-website),
