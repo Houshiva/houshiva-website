@@ -1,55 +1,120 @@
 ---
 /**
- * Hero visual: a plain-language business dashboard mockup, shown on a
- * browser window and a phone side by side — something a shop owner or
- * accountant recognizes immediately as "software for my business,
- * everywhere I need it." No code, no developer jargon.
+ * Hero visual: a plain-language mockup that cycles through three real
+ * Houshiva services (sales, accounting, POS) inside one browser window —
+ * a small product tour instead of a single static screenshot. Pattern
+ * borrowed from how Linear/Notion/Framer show their product in motion
+ * rather than a frozen dashboard image.
  */
 import Icon from '../common/Icon.astro';
 
 const chartBars = [38, 58, 48, 72, 62, 88, 78];
+
+const tabs = [
+  { id: 'sales', label: 'فروش', icon: 'trending-up' as const },
+  { id: 'accounting', label: 'حسابداری', icon: 'cash' as const },
+  { id: 'pos', label: 'صندوق', icon: 'pos' as const },
+];
 ---
 
 <div class="biz-mock">
   <div class="biz-mock__glow" aria-hidden="true"></div>
 
-  <div class="biz-mock__browser" role="img" aria-label="نمایی از یک داشبورد مدیریت فروش با آمار فروش امروز، نمودار هفتگی و سفارش‌های اخیر">
+  <div class="biz-mock__browser">
     <div class="biz-mock__titlebar">
-      <span class="biz-mock__dot biz-mock__dot--1"></span>
-      <span class="biz-mock__dot biz-mock__dot--2"></span>
-      <span class="biz-mock__dot biz-mock__dot--3"></span>
-      <span class="biz-mock__url">داشبورد فروش</span>
+      <span class="biz-mock__dot" aria-hidden="true"></span>
+      <span class="biz-mock__dot" aria-hidden="true"></span>
+      <span class="biz-mock__dot" aria-hidden="true"></span>
+
+      <div class="biz-mock__tabs">
+        {
+          tabs.map((tab, i) => (
+            <button type="button" class:list={['biz-mock__tab', { 'is-active': i === 0 }]} data-scene-btn={tab.id}>
+              <Icon name={tab.icon} size={14} />
+              <span>{tab.label}</span>
+            </button>
+          ))
+        }
+      </div>
     </div>
 
     <div class="biz-mock__screen">
-      <div class="biz-mock__stat">
-        <div>
-          <span class="biz-mock__stat-label">فروش امروز</span>
-          <strong class="biz-mock__stat-value" data-count-to="12540000" data-suffix=" تومان">۰ تومان</strong>
+      <div class="biz-mock__scene is-active" data-scene="sales">
+        <div class="biz-mock__stat">
+          <div>
+            <span class="biz-mock__stat-label">فروش امروز</span>
+            <strong class="biz-mock__stat-value" data-count-to="12540000" data-suffix=" تومان">۰ تومان</strong>
+          </div>
+          <span class="biz-mock__badge">۱۸٪ ⬆</span>
         </div>
-        <span class="biz-mock__badge">۱۸٪ ⬆</span>
+
+        <div class="biz-mock__chart" aria-hidden="true">
+          {chartBars.map((h, i) => <span style={{ '--h': `${h}%`, '--i': i }}></span>)}
+        </div>
+
+        <ul class="biz-mock__list">
+          <li>
+            <span class="biz-mock__list-icon"><Icon name="cart" size={16} /></span>
+            <span class="biz-mock__list-text">سفارش جدید ثبت شد</span>
+            <span class="biz-mock__list-value">۴۵۰,۰۰۰ تومان</span>
+          </li>
+          <li>
+            <span class="biz-mock__list-icon biz-mock__list-icon--warn"><Icon name="warehouse" size={16} /></span>
+            <span class="biz-mock__list-text">موجودی رو به اتمام</span>
+            <span class="biz-mock__list-value">۳ عدد باقی‌مانده</span>
+          </li>
+        </ul>
       </div>
 
-      <div class="biz-mock__chart" aria-hidden="true">
-        {chartBars.map((h, i) => <span style={{ '--h': `${h}%`, '--i': i }}></span>)}
+      <div class="biz-mock__scene" data-scene="accounting" aria-hidden="true">
+        <div class="biz-mock__stat">
+          <div>
+            <span class="biz-mock__stat-label">مانده حساب</span>
+            <strong class="biz-mock__stat-value" data-count-to="8200000" data-suffix=" تومان">۰ تومان</strong>
+          </div>
+        </div>
+
+        <ul class="biz-mock__invoices">
+          <li>
+            <span class="biz-mock__invoice-id">فاکتور #۱۰۲۱</span>
+            <span class="biz-mock__invoice-amount">۲,۴۰۰,۰۰۰ تومان</span>
+            <span class="biz-mock__status biz-mock__status--paid">پرداخت‌شده</span>
+          </li>
+          <li>
+            <span class="biz-mock__invoice-id">فاکتور #۱۰۲۲</span>
+            <span class="biz-mock__invoice-amount">۳,۸۰۰,۰۰۰ تومان</span>
+            <span class="biz-mock__status biz-mock__status--pending">در انتظار</span>
+          </li>
+          <li>
+            <span class="biz-mock__invoice-id">فاکتور #۱۰۲۳</span>
+            <span class="biz-mock__invoice-amount">۲,۰۰۰,۰۰۰ تومان</span>
+            <span class="biz-mock__status biz-mock__status--paid">پرداخت‌شده</span>
+          </li>
+        </ul>
       </div>
 
-      <ul class="biz-mock__list">
-        <li>
-          <span class="biz-mock__list-icon"><Icon name="cart" size={16} /></span>
-          <span class="biz-mock__list-text">سفارش جدید ثبت شد</span>
-          <span class="biz-mock__list-value">۴۵۰,۰۰۰ تومان</span>
-        </li>
-        <li>
-          <span class="biz-mock__list-icon biz-mock__list-icon--warn"><Icon name="warehouse" size={16} /></span>
-          <span class="biz-mock__list-text">موجودی رو به اتمام</span>
-          <span class="biz-mock__list-value">۳ عدد باقی‌مانده</span>
-        </li>
-      </ul>
+      <div class="biz-mock__scene" data-scene="pos" aria-hidden="true">
+        <div class="biz-mock__receipt">
+          <div class="biz-mock__receipt-head">
+            <span>فروشگاه شما</span>
+            <span class="biz-mock__receipt-date">امروز، ۱۴:۳۲</span>
+          </div>
+          <ul class="biz-mock__receipt-items">
+            <li><span>پیراهن آبی × ۲</span><span>۱,۲۰۰,۰۰۰</span></li>
+            <li><span>کفش اسپرت × ۱</span><span>۲,۵۰۰,۰۰۰</span></li>
+            <li><span>کلاه × ۱</span><span>۳۵۰,۰۰۰</span></li>
+          </ul>
+          <div class="biz-mock__receipt-total">
+            <span>مبلغ قابل پرداخت</span>
+            <strong class="biz-mock__stat-value" data-count-to="4050000" data-suffix=" تومان">۰ تومان</strong>
+          </div>
+          <span class="biz-mock__badge">پرداخت موفق ✓</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="biz-mock__phone" role="img" aria-label="همان داشبورد فروش، روی صفحه موبایل">
+  <div class="biz-mock__phone" role="img" aria-label="همان نرم‌افزار، روی صفحه موبایل">
     <div class="biz-mock__phone-notch"></div>
     <div class="biz-mock__phone-screen">
       <span class="biz-mock__phone-label">فروش امروز</span>
@@ -89,7 +154,7 @@ const chartBars = [38, 58, 48, 72, 62, 88, 78];
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    padding: var(--space-3) var(--space-5);
+    padding: var(--space-3) var(--space-4);
     border-bottom: 1px solid var(--color-border-hairline);
     background: var(--color-background-alt);
   }
@@ -99,16 +164,63 @@ const chartBars = [38, 58, 48, 72, 62, 88, 78];
     height: 8px;
     border-radius: 50%;
     background: var(--color-border-strong);
+    flex-shrink: 0;
   }
 
-  .biz-mock__url {
+  .biz-mock__tabs {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
     margin-inline-start: var(--space-2);
+    overflow-x: auto;
+  }
+
+  .biz-mock__tab {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    flex-shrink: 0;
     font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
     color: var(--color-text-subtle);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    transition:
+      color var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .biz-mock__tab:hover {
+    color: var(--color-text);
+  }
+
+  .biz-mock__tab.is-active {
+    color: var(--tone-accent-hover);
+    background: var(--tone-accent-soft);
   }
 
   .biz-mock__screen {
+    position: relative;
+    min-height: 336px;
+  }
+
+  .biz-mock__scene {
+    position: absolute;
+    inset: 0;
     padding: var(--space-6);
+    opacity: 0;
+    transform: translateY(6px);
+    pointer-events: none;
+    transition:
+      opacity 0.45s ease,
+      transform 0.45s ease;
+  }
+
+  .biz-mock__scene.is-active {
+    position: relative;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
   }
 
   .biz-mock__stat {
@@ -205,6 +317,97 @@ const chartBars = [38, 58, 48, 72, 62, 88, 78];
     color: var(--color-text-subtle);
   }
 
+  /* accounting scene */
+  .biz-mock__invoices {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border-hairline);
+  }
+
+  .biz-mock__invoices li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--font-size-sm);
+  }
+
+  .biz-mock__invoice-id {
+    color: var(--color-text-muted);
+  }
+
+  .biz-mock__invoice-amount {
+    flex-grow: 1;
+    text-align: end;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+  }
+
+  .biz-mock__status {
+    flex-shrink: 0;
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-semibold);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-full);
+  }
+
+  .biz-mock__status--paid {
+    color: var(--color-success);
+    background: var(--color-success-soft);
+  }
+
+  .biz-mock__status--pending {
+    color: var(--color-accent-gold);
+    background: rgba(232, 185, 117, 0.14);
+  }
+
+  /* pos scene */
+  .biz-mock__receipt-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    margin-bottom: var(--space-4);
+  }
+
+  .biz-mock__receipt-date {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-text-subtle);
+  }
+
+  .biz-mock__receipt-items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px dashed var(--color-border-strong);
+    margin-bottom: var(--space-4);
+  }
+
+  .biz-mock__receipt-items li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+
+  .biz-mock__receipt-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-5);
+  }
+
+  .biz-mock__receipt-total span {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+  }
+
   .biz-mock__phone {
     position: absolute;
     bottom: calc(-1 * var(--space-6));
@@ -276,10 +479,19 @@ const chartBars = [38, 58, 48, 72, 62, 88, 78];
       animation: none;
       transform: scaleY(1);
     }
+
+    .biz-mock__scene {
+      transition: opacity 0.2s ease;
+      transform: none;
+    }
   }
 
   @media (max-width: 640px) {
     .biz-mock__phone {
+      display: none;
+    }
+
+    .biz-mock__tab span {
       display: none;
     }
   }
@@ -289,12 +501,14 @@ const chartBars = [38, 58, 48, 72, 62, 88, 78];
   function animateCount(el: HTMLElement) {
     const target = Number(el.dataset.countTo ?? '0');
     const suffix = el.dataset.suffix ?? '';
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduceMotion) {
       el.textContent = `${target.toLocaleString('fa-IR')}${suffix}`;
       return;
     }
 
-    const duration = 1100;
+    const duration = 900;
     const start = performance.now();
 
     function tick(now: number) {
@@ -308,5 +522,64 @@ const chartBars = [38, 58, 48, 72, 62, 88, 78];
     requestAnimationFrame(tick);
   }
 
-  document.querySelectorAll<HTMLElement>('[data-count-to]').forEach(animateCount);
+  function restartBarAnimations(scene: HTMLElement) {
+    scene.querySelectorAll<HTMLElement>('.biz-mock__chart span').forEach((bar) => {
+      bar.style.animation = 'none';
+      void bar.offsetWidth;
+      bar.style.animation = '';
+    });
+  }
+
+  function initBizMock() {
+    const root = document.querySelector<HTMLElement>('.biz-mock');
+    if (!root) return;
+
+    const scenes = Array.from(root.querySelectorAll<HTMLElement>('.biz-mock__scene'));
+    const tabButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-scene-btn]'));
+    if (scenes.length === 0) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let current = 0;
+    let timer: ReturnType<typeof setInterval> | undefined;
+
+    function activate(index: number) {
+      current = (index + scenes.length) % scenes.length;
+      scenes.forEach((scene, i) => {
+        const active = i === current;
+        scene.classList.toggle('is-active', active);
+        scene.setAttribute('aria-hidden', String(!active));
+      });
+      tabButtons.forEach((btn, i) => btn.classList.toggle('is-active', i === current));
+
+      const activeScene = scenes[current];
+      activeScene.querySelectorAll<HTMLElement>('[data-count-to]').forEach(animateCount);
+      restartBarAnimations(activeScene);
+    }
+
+    function stopRotation() {
+      if (timer) clearInterval(timer);
+      timer = undefined;
+    }
+
+    function startRotation() {
+      if (reduceMotion) return;
+      stopRotation();
+      timer = setInterval(() => activate(current + 1), 4500);
+    }
+
+    tabButtons.forEach((btn, i) => {
+      btn.addEventListener('click', () => {
+        activate(i);
+        startRotation();
+      });
+    });
+
+    root.addEventListener('mouseenter', stopRotation);
+    root.addEventListener('mouseleave', startRotation);
+
+    activate(0);
+    startRotation();
+  }
+
+  document.addEventListener('astro:page-load', initBizMock);
 </script>
