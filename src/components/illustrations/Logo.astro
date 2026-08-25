@@ -1,8 +1,6 @@
 ---
 /**
- * Houshiva mark: a "radar sweep" glyph — a ring with one highlighted arc and a
- * lead dot, echoing the brand meaning (هوشیوا = alert / vigilant / aware).
- * Built from plain circle geometry, no external asset.
+ * Houshiva mark: official brand logo (H + S monogram in a hexagon).
  */
 export interface Props {
   size?: number;
@@ -14,28 +12,13 @@ const { size = 32, withWordmark = true, class: className } = Astro.props;
 ---
 
 <span class:list={['logo', className]}>
-  <svg
+  <img
+    src="/brand/houshiva-logo.png"
     width={size}
-    height={size}
-    viewBox="0 0 32 32"
-    fill="none"
-    aria-hidden="true"
-    focusable="false"
+    height={Math.round(size * 1.134)}
+    alt="هوشیوا"
     class="logo__mark"
-  >
-    <circle cx="16" cy="16" r="11" stroke="var(--color-border-strong)" stroke-width="2.2" />
-    <circle
-      cx="16"
-      cy="16"
-      r="11"
-      stroke="var(--color-primary)"
-      stroke-width="2.6"
-      stroke-linecap="round"
-      stroke-dasharray="42 100"
-      transform="rotate(-90 16 16)"
-    />
-    <circle cx="16" cy="5" r="1.8" fill="var(--color-primary)" />
-  </svg>
+  />
   {withWordmark && <span class="logo__wordmark">هوشیوا</span>}
 </span>
 
@@ -48,6 +31,7 @@ const { size = 32, withWordmark = true, class: className } = Astro.props;
 
   .logo__mark {
     flex-shrink: 0;
+    display: block;
   }
 
   .logo__wordmark {

@@ -63,7 +63,7 @@ const organizationSchema = {
   name: 'هوشیوا',
   alternateName: 'Houshiva',
   url: site.url,
-  logo: new URL('/favicon.svg', site.url).toString(),
+  logo: new URL('/brand/houshiva-logo.png', site.url).toString(),
   description: site.description,
   email: site.contact.email,
   telephone: site.contact.phones[0]?.href,
@@ -80,7 +80,7 @@ const allSchemas = [organizationSchema, ...(breadcrumbSchema ? [breadcrumbSchema
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0a0a10" />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonicalUrl} />
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
