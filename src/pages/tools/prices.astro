@@ -3,6 +3,46 @@ import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
 import { priceCategories } from '../../data/priceItems';
+
+interface BrsApiEntry {
+  symbol: string;
+  price: number;
+  date: string;
+  time: string;
+}
+
+interface BrsApiResponse {
+  gold?: BrsApiEntry[];
+  currency?: BrsApiEntry[];
+}
+
+const priceBySymbol = new Map<string, number>();
+let lastUpdated: string | null = null;
+
+const brsApiKey = import.meta.env.BRSAPI_KEY;
+
+if (brsApiKey) {
+  try {
+    const response = await fetch(`https://Api.BrsApi.ir/Market/Gold_Currency.php?key=${brsApiKey}`);
+    if (response.ok) {
+      const data: BrsApiResponse = await response.json();
+      const entries = [...(data.gold ?? []), ...(data.currency ?? [])];
+      for (const entry of entries) {
+        priceBySymbol.set(entry.symbol, Math.round(entry.price));
+      }
+      lastUpdated = entries[0] ? `${entries[0].date} - ${entries[0].time}` : null;
+    }
+  } catch {
+    // در دسترس نبودن API در زمان build؛ مقادیر روی «به‌زودی» می‌مانند.
+  }
+}
+
+function formatPrice(symbol?: string): string | null {
+  if (!symbol) return null;
+  const price = priceBySymbol.get(symbol);
+  if (price === undefined) return null;
+  return `${price.toLocaleString('fa-IR')} تومان`;
+}
 ---
 
 <MainLayout
@@ -18,23 +58,29 @@ import { priceCategories } from '../../data/priceItems';
         بازگشت به ابزارها
       </a>
 
-      <h1 class="text-balance">قیمت لحظه‌ای طلا، ارز و خودرو</h1>
+      <h1 class="text-balance">قیمت طلا، ارز و خودرو</h1>
       <p class="tool-page__lead">
-        این صفحه آماده اتصال به یک منبع قیمت زنده است. تا اتصال نهایی، برای اینکه عددی نادرست یا گمراه‌کننده نمایش
-        ندهیم، مقادیر به‌صورت «به‌زودی» نشان داده می‌شوند.
+        قیمت طلا، سکه و ارز به‌صورت دوره‌ای (هر ۱ تا ۲ ساعت) به‌روزرسانی می‌شود. برای قیمت خودرو هنوز منبع رسمی و
+        رایگانی پیدا نکرده‌ایم، برای همین فعلاً «به‌زودی» نشان داده می‌شود تا عددی نادرست نمایش ندهیم.
       </p>
+      {lastUpdated && <p class="tool-page__updated">آخرین به‌روزرسانی: {lastUpdated}</p>}
 
       {
         priceCategories.map((category) => (
           <div class="price-card" data-reveal>
             <h2>{category.label}</h2>
             <ul>
-              {category.items.map((item) => (
-                <li>
-                  <span>{item}</span>
-                  <span class="price-card__value">به‌زودی</span>
-                </li>
-              ))}
+              {category.items.map((item) => {
+                const value = formatPrice(item.symbol);
+                return (
+                  <li>
+                    <span>{item.label}</span>
+                    <span class:list={['price-card__value', { 'price-card__value--live': value }]}>
+                      {value ?? 'به‌زودی'}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))
@@ -64,7 +110,7 @@ import { priceCategories } from '../../data/priceItems';
   }
 
   .tool-page__back:hover {
-    color: var(--color-primary-hover);
+    color: var(--tone-accent-hover);
   }
 
   .tool-page__back :global(svg) {
@@ -77,6 +123,12 @@ import { priceCategories } from '../../data/priceItems';
 
   .tool-page__lead {
     font-size: var(--font-size-base);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-4);
+  }
+
+  .tool-page__updated {
+    font-size: var(--font-size-xs);
     color: var(--color-text-subtle);
     margin-bottom: var(--space-8);
   }
@@ -122,5 +174,11 @@ import { priceCategories } from '../../data/priceItems';
     border: 1px solid var(--color-border);
     border-radius: var(--radius-full);
     padding: var(--space-1) var(--space-3);
+  }
+
+  .price-card__value--live {
+    color: var(--color-success);
+    background: color-mix(in srgb, var(--color-success) 12%, transparent);
+    border-color: color-mix(in srgb, var(--color-success) 35%, transparent);
   }
 </style>

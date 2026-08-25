@@ -59,6 +59,9 @@ const projectTypes = [
     <div class="contact-form__row contact-form__row--full">
       <Button type="submit" size="lg" class="contact-form__submit">ارسال درخواست</Button>
       <p class="contact-form__note">پس از ارسال، تیم هوشیوا در اسرع وقت با شما تماس می‌گیرد.</p>
+      <p id="contact-error" class="contact-form__error" hidden>
+        ارسال درخواست با خطا مواجه شد. لطفاً دوباره تلاش کنید یا از راه‌های ارتباطی دیگر با ما در تماس باشید.
+      </p>
     </div>
   </form>
 
@@ -124,7 +127,7 @@ const projectTypes = [
   select:focus,
   textarea:focus {
     outline: none;
-    border-color: var(--color-primary);
+    border-color: var(--tone-accent);
   }
 
   input:invalid:not(:placeholder-shown),
@@ -145,6 +148,16 @@ const projectTypes = [
     font-size: var(--font-size-xs);
     color: var(--color-text-subtle);
     margin-top: var(--space-3);
+  }
+
+  .contact-form__error {
+    font-size: var(--font-size-xs);
+    color: var(--color-danger);
+    margin-top: var(--space-2);
+  }
+
+  .contact-form__error[hidden] {
+    display: none;
   }
 
   .contact-success {
@@ -171,17 +184,51 @@ const projectTypes = [
 </style>
 
 <script>
+  const WEB3FORMS_ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
+
   const form = document.getElementById('contact-form') as HTMLFormElement | null;
   const success = document.getElementById('contact-success');
+  const errorMessage = document.getElementById('contact-error');
+  const submitButton = form?.querySelector<HTMLButtonElement>('.contact-form__submit');
 
-  form?.addEventListener('submit', (event) => {
+  form?.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
     }
-    form.hidden = true;
-    success?.removeAttribute('hidden');
-    success?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    errorMessage?.setAttribute('hidden', '');
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'در حال ارسال...';
+    }
+
+    const payload = Object.fromEntries(new FormData(form));
+    payload.access_key = WEB3FORMS_ACCESS_KEY;
+    payload.subject = 'درخواست مشاوره جدید از سایت هوشیوا';
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
+
+      if (result.success) {
+        form.hidden = true;
+        success?.removeAttribute('hidden');
+        success?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        throw new Error(result.message ?? 'submission failed');
+      }
+    } catch {
+      errorMessage?.removeAttribute('hidden');
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = 'ارسال درخواست';
+      }
+    }
   });
 </script>
