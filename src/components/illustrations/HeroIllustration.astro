@@ -1,115 +1,258 @@
 ---
 /**
- * Custom hero visual: a central dashboard card connected to satellite
- * business-system nodes — visualizes what Houshiva actually does
- * (unifying a company's software systems), instead of a generic laptop/code stock image.
+ * Hero visual: a code-editor mockup instead of the generic "dashboard with
+ * orbiting feature icons" pattern every template/AI-generated SaaS site
+ * uses. Houshiva builds custom software, so the hero shows that literally —
+ * a project defined as code, typed out live.
  */
-import Icon from '../common/Icon.astro';
+interface Token {
+  text: string;
+  cls?: 'kw' | 'fn' | 'prop' | 'str' | 'bool';
+}
 
-const satellites = [
-  { icon: 'cart' as const, x: 78, y: 108 },
-  { icon: 'users' as const, x: 522, y: 96 },
-  { icon: 'warehouse' as const, x: 66, y: 418 },
-  { icon: 'calculator' as const, x: 534, y: 404 },
+type Line = Token[];
+
+const lines: Line[] = [
+  [
+    { text: 'const', cls: 'kw' },
+    { text: ' project ' },
+    { text: '=' },
+    { text: ' ' },
+    { text: 'defineProject', cls: 'fn' },
+    { text: '({' },
+  ],
+  [
+    { text: '  ' },
+    { text: 'business', cls: 'prop' },
+    { text: ': ' },
+    { text: "'کسب‌وکار شما'", cls: 'str' },
+    { text: ',' },
+  ],
+  [
+    { text: '  ' },
+    { text: 'approach', cls: 'prop' },
+    { text: ': ' },
+    { text: "'اختصاصی، نه قالب آماده'", cls: 'str' },
+    { text: ',' },
+  ],
+  [
+    { text: '  ' },
+    { text: 'stack', cls: 'prop' },
+    { text: ': [' },
+    { text: "'وب'", cls: 'str' },
+    { text: ', ' },
+    { text: "'نرم‌افزار'", cls: 'str' },
+    { text: ', ' },
+    { text: "'سامانه مدیریتی'", cls: 'str' },
+    { text: '],' },
+  ],
+  [
+    { text: '  ' },
+    { text: 'timeline', cls: 'prop' },
+    { text: ': ' },
+    { text: "'متناسب با نیاز شما'", cls: 'str' },
+    { text: ',' },
+  ],
+  [
+    { text: '  ' },
+    { text: 'ready', cls: 'prop' },
+    { text: ': ' },
+    { text: 'true', cls: 'bool' },
+    { text: ',' },
+  ],
+  [{ text: '});' }],
+  [],
+  [{ text: 'export default', cls: 'kw' }, { text: ' project;' }],
 ];
-
-const cardCenter = { x: 300, y: 262 };
 ---
 
-<svg
-  class="hero-illustration"
-  viewBox="0 0 600 520"
-  fill="none"
-  role="img"
-  aria-label="نمایی انتزاعی از داشبورد مدیریتی هوشیوا و اتصال آن به سامانه‌های کسب‌وکار"
->
-  <defs>
-    <radialGradient id="hero-glow" cx="50%" cy="46%" r="55%">
-      <stop offset="0%" stop-color="var(--tone-accent)" stop-opacity="0.3" />
-      <stop offset="60%" stop-color="var(--color-accent-gold)" stop-opacity="0.12" />
-      <stop offset="100%" stop-color="var(--tone-accent)" stop-opacity="0" />
-    </radialGradient>
-  </defs>
+<div class="code-window">
+  <div class="code-window__glow" aria-hidden="true"></div>
+  <div class="code-window__frame" role="img" aria-label="نمایی از یک پروژه نرم‌افزاری هوشیوا، تعریف‌شده به‌صورت کد: کسب‌وکار شما، رویکرد اختصاصی، آماده اجرا">
+    <div class="code-window__titlebar">
+      <span class="code-window__dot"></span>
+      <span class="code-window__filename">houshiva.project.ts</span>
+    </div>
 
-  <circle cx={cardCenter.x} cy={cardCenter.y} r="230" fill="url(#hero-glow)" />
+    <pre class="code-window__body" aria-hidden="true"><code>{
+      lines.map((line, i) => (
+        <span class="code-line" style={{ '--i': i }}>
+          {line.length === 0
+            ? ' '
+            : line.map((token) => (token.cls ? <span class={`tok-${token.cls}`}>{token.text}</span> : token.text))}
+          {i === lines.length - 1 && <span class="code-window__cursor" />}
+        </span>
+      ))
+    }</code></pre>
 
-  {
-    satellites.map((node) => (
-      <line
-        x1={cardCenter.x}
-        y1={cardCenter.y}
-        x2={node.x}
-        y2={node.y}
-        stroke="var(--color-border-strong)"
-        stroke-width="1.5"
-        stroke-dasharray="3 7"
-        stroke-linecap="round"
-      />
-    ))
-  }
-
-  <!-- central dashboard card -->
-  <g>
-    <rect
-      x="180"
-      y="142"
-      width="240"
-      height="240"
-      rx="24"
-      fill="var(--color-surface)"
-      stroke="var(--color-border)"
-    />
-    <rect x="204" y="172" width="72" height="10" rx="5" fill="var(--color-text-subtle)" opacity="0.6" />
-    <circle cx="392" cy="177" r="7" fill="var(--color-accent-gold)" />
-
-    <rect x="204" y="200" width="112" height="30" rx="15" fill="var(--tone-accent-soft)" />
-    <rect x="218" y="211" width="52" height="8" rx="4" fill="var(--tone-accent)" opacity="0.7" />
-
-    <rect x="204" y="304" width="16" height="58" rx="4" fill="var(--tone-accent-soft)" />
-    <rect x="230" y="284" width="16" height="78" rx="4" fill="var(--tone-accent)" />
-    <rect x="256" y="296" width="16" height="66" rx="4" fill="var(--color-accent-gold)" opacity="0.5" />
-    <rect x="282" y="266" width="16" height="96" rx="4" fill="var(--tone-accent)" />
-    <rect x="308" y="290" width="16" height="72" rx="4" fill="var(--color-accent-gold)" opacity="0.5" />
-    <rect x="334" y="276" width="16" height="86" rx="4" fill="var(--tone-accent)" />
-  </g>
-
-  {
-    satellites.map((node, i) => (
-      <g transform={`translate(${node.x - 26}, ${node.y - 26})`}>
-        <g class="hero-illustration__node" style={{ '--float-delay': `${i * -1.5}s` }}>
-          <rect width="52" height="52" rx="16" fill="var(--color-surface-elevated)" stroke="var(--color-border)" />
-          <g transform="translate(14 14)" style={{ color: i % 2 === 0 ? 'var(--tone-accent-hover)' : 'var(--color-accent-gold)' }}>
-            <Icon name={node.icon} size={24} />
-          </g>
-        </g>
-      </g>
-    ))
-  }
-</svg>
+    <div class="code-window__statusbar">
+      <span class="code-window__status-dot"></span>
+      در حال ساخت راهکار شما
+    </div>
+  </div>
+</div>
 
 <style>
-  .hero-illustration {
+  .code-window {
+    position: relative;
     width: 100%;
-    height: auto;
+    min-width: 0;
   }
 
-  .hero-illustration__node {
-    animation: float 6s ease-in-out infinite;
-    animation-delay: var(--float-delay, 0s);
+  .code-window__glow {
+    position: absolute;
+    inset: -15%;
+    background: radial-gradient(circle at 45% 35%, var(--tone-accent) 0%, transparent 60%);
+    opacity: 0.22;
+    filter: blur(48px);
+    z-index: -1;
   }
 
-  @keyframes float {
-    0%,
-    100% {
+  .code-window__frame {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+
+  .code-window__titlebar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    border-bottom: 1px solid var(--color-border-hairline);
+    background: var(--color-background-alt);
+  }
+
+  .code-window__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--tone-accent);
+  }
+
+  .code-window__filename {
+    font-size: var(--font-size-xs);
+    font-family: 'Consolas', 'Vazirmatn', monospace;
+    direction: ltr;
+    unicode-bidi: isolate;
+    color: var(--color-text-subtle);
+  }
+
+  .code-window__body {
+    margin: 0;
+    padding: var(--space-6) var(--space-5);
+    font-size: 0.9rem;
+    line-height: 1.9;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  @media (max-width: 480px) {
+    .code-window__body {
+      font-size: 0.75rem;
+      padding: var(--space-5) var(--space-4);
+    }
+  }
+
+  .code-line {
+    display: block;
+    white-space: pre;
+    opacity: 0;
+    animation: code-line-in 0.4s ease-out forwards;
+    animation-delay: calc(var(--i) * 140ms + 200ms);
+  }
+
+  .tok-kw {
+    color: var(--tone-accent-hover);
+  }
+
+  .tok-fn {
+    color: var(--color-text);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .tok-prop {
+    color: var(--color-text-muted);
+  }
+
+  .tok-str {
+    color: var(--color-accent-gold);
+  }
+
+  .tok-bool {
+    color: var(--color-accent-secondary);
+  }
+
+  .code-window__cursor {
+    display: inline-block;
+    width: 7px;
+    height: 1.1em;
+    margin-inline-start: 3px;
+    background: var(--tone-accent);
+    vertical-align: text-bottom;
+    animation: code-cursor-blink 1s step-end infinite;
+  }
+
+  .code-window__statusbar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    border-top: 1px solid var(--color-border-hairline);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+  }
+
+  .code-window__status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-success);
+    box-shadow: 0 0 0 3px var(--color-success-soft);
+    animation: code-status-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes code-line-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  @keyframes code-cursor-blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
     50% {
-      transform: translateY(-8px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes code-status-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 3px var(--color-success-soft);
+    }
+    50% {
+      box-shadow: 0 0 0 6px transparent;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-illustration__node {
+    .code-line {
+      opacity: 1;
+      animation: none;
+    }
+
+    .code-window__cursor,
+    .code-window__status-dot {
       animation: none;
     }
   }

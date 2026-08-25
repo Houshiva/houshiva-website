@@ -25,16 +25,10 @@ import HeroIllustration from '../illustrations/HeroIllustration.astro';
         <Button href="/portfolio" variant="ghost" size="lg">مشاهده نمونه‌کارها</Button>
       </div>
 
-      <dl class="hero__stats">
-        <div>
-          <dt>حوزه فعالیت</dt>
-          <dd>وب، نرم‌افزار، سامانه‌های مدیریتی</dd>
-        </div>
-        <div>
-          <dt>رویکرد</dt>
-          <dd>توسعه اختصاصی و قابل‌توسعه</dd>
-        </div>
-      </dl>
+      <ul class="hero__trust">
+        <li><Icon name="check" size={16} />کد اختصاصی، بدون قالب آماده</li>
+        <li><Icon name="check" size={16} />ارتباط مستقیم با تیم فنی، بدون واسطه</li>
+      </ul>
     </div>
 
     <div class="hero__visual" aria-hidden="false">
@@ -87,33 +81,36 @@ import HeroIllustration from '../illustrations/HeroIllustration.astro';
     margin-bottom: var(--space-12);
   }
 
-  .hero__stats {
+  .hero__trust {
     display: flex;
-    gap: var(--space-10);
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: var(--space-3);
   }
 
-  .hero__stats dt {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-subtle);
-    margin-bottom: var(--space-1);
-  }
-
-  .hero__stats dd {
+  .hero__trust li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text);
+    color: var(--color-text-muted);
+  }
+
+  .hero__trust :global(svg) {
+    flex-shrink: 0;
+    color: var(--color-success);
   }
 
   .hero__visual {
     width: 100%;
     max-width: 520px;
     margin-inline: auto;
+    overflow: hidden;
   }
 
   @media (max-width: 960px) {
     .hero__inner {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       gap: var(--space-12);
     }
 
