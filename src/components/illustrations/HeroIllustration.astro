@@ -1,114 +1,83 @@
 ---
 /**
- * Hero visual: a code-editor mockup instead of the generic "dashboard with
- * orbiting feature icons" pattern every template/AI-generated SaaS site
- * uses. Houshiva builds custom software, so the hero shows that literally —
- * a project defined as code, typed out live.
+ * Hero visual: a plain-language business dashboard mockup, shown on a
+ * browser window and a phone side by side — something a shop owner or
+ * accountant recognizes immediately as "software for my business,
+ * everywhere I need it." No code, no developer jargon.
  */
-interface Token {
-  text: string;
-  cls?: 'kw' | 'fn' | 'prop' | 'str' | 'bool';
-}
+import Icon from '../common/Icon.astro';
 
-type Line = Token[];
-
-const lines: Line[] = [
-  [
-    { text: 'const', cls: 'kw' },
-    { text: ' project ' },
-    { text: '=' },
-    { text: ' ' },
-    { text: 'defineProject', cls: 'fn' },
-    { text: '({' },
-  ],
-  [
-    { text: '  ' },
-    { text: 'business', cls: 'prop' },
-    { text: ': ' },
-    { text: "'کسب‌وکار شما'", cls: 'str' },
-    { text: ',' },
-  ],
-  [
-    { text: '  ' },
-    { text: 'approach', cls: 'prop' },
-    { text: ': ' },
-    { text: "'اختصاصی، نه قالب آماده'", cls: 'str' },
-    { text: ',' },
-  ],
-  [
-    { text: '  ' },
-    { text: 'stack', cls: 'prop' },
-    { text: ': [' },
-    { text: "'وب'", cls: 'str' },
-    { text: ', ' },
-    { text: "'نرم‌افزار'", cls: 'str' },
-    { text: ', ' },
-    { text: "'سامانه مدیریتی'", cls: 'str' },
-    { text: '],' },
-  ],
-  [
-    { text: '  ' },
-    { text: 'timeline', cls: 'prop' },
-    { text: ': ' },
-    { text: "'متناسب با نیاز شما'", cls: 'str' },
-    { text: ',' },
-  ],
-  [
-    { text: '  ' },
-    { text: 'ready', cls: 'prop' },
-    { text: ': ' },
-    { text: 'true', cls: 'bool' },
-    { text: ',' },
-  ],
-  [{ text: '});' }],
-  [],
-  [{ text: 'export default', cls: 'kw' }, { text: ' project;' }],
-];
+const chartBars = [38, 58, 48, 72, 62, 88, 78];
 ---
 
-<div class="code-window">
-  <div class="code-window__glow" aria-hidden="true"></div>
-  <div class="code-window__frame" role="img" aria-label="نمایی از یک پروژه نرم‌افزاری هوشیوا، تعریف‌شده به‌صورت کد: کسب‌وکار شما، رویکرد اختصاصی، آماده اجرا">
-    <div class="code-window__titlebar">
-      <span class="code-window__dot"></span>
-      <span class="code-window__filename">houshiva.project.ts</span>
+<div class="biz-mock">
+  <div class="biz-mock__glow" aria-hidden="true"></div>
+
+  <div class="biz-mock__browser" role="img" aria-label="نمایی از یک داشبورد مدیریت فروش با آمار فروش امروز، نمودار هفتگی و سفارش‌های اخیر">
+    <div class="biz-mock__titlebar">
+      <span class="biz-mock__dot biz-mock__dot--1"></span>
+      <span class="biz-mock__dot biz-mock__dot--2"></span>
+      <span class="biz-mock__dot biz-mock__dot--3"></span>
+      <span class="biz-mock__url">داشبورد فروش</span>
     </div>
 
-    <pre class="code-window__body" aria-hidden="true"><code>{
-      lines.map((line, i) => (
-        <span class="code-line" style={{ '--i': i }}>
-          {line.length === 0
-            ? ' '
-            : line.map((token) => (token.cls ? <span class={`tok-${token.cls}`}>{token.text}</span> : token.text))}
-          {i === lines.length - 1 && <span class="code-window__cursor" />}
-        </span>
-      ))
-    }</code></pre>
+    <div class="biz-mock__screen">
+      <div class="biz-mock__stat">
+        <div>
+          <span class="biz-mock__stat-label">فروش امروز</span>
+          <strong class="biz-mock__stat-value" data-count-to="12540000" data-suffix=" تومان">۰ تومان</strong>
+        </div>
+        <span class="biz-mock__badge">۱۸٪ ⬆</span>
+      </div>
 
-    <div class="code-window__statusbar">
-      <span class="code-window__status-dot"></span>
-      در حال ساخت راهکار شما
+      <div class="biz-mock__chart" aria-hidden="true">
+        {chartBars.map((h, i) => <span style={{ '--h': `${h}%`, '--i': i }}></span>)}
+      </div>
+
+      <ul class="biz-mock__list">
+        <li>
+          <span class="biz-mock__list-icon"><Icon name="cart" size={16} /></span>
+          <span class="biz-mock__list-text">سفارش جدید ثبت شد</span>
+          <span class="biz-mock__list-value">۴۵۰,۰۰۰ تومان</span>
+        </li>
+        <li>
+          <span class="biz-mock__list-icon biz-mock__list-icon--warn"><Icon name="warehouse" size={16} /></span>
+          <span class="biz-mock__list-text">موجودی رو به اتمام</span>
+          <span class="biz-mock__list-value">۳ عدد باقی‌مانده</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="biz-mock__phone" role="img" aria-label="همان داشبورد فروش، روی صفحه موبایل">
+    <div class="biz-mock__phone-notch"></div>
+    <div class="biz-mock__phone-screen">
+      <span class="biz-mock__phone-label">فروش امروز</span>
+      <strong class="biz-mock__phone-value">۱۲,۵۴۰,۰۰۰</strong>
+      <div class="biz-mock__phone-chart" aria-hidden="true">
+        {chartBars.slice(0, 5).map((h, i) => <span style={{ '--h': `${h}%`, '--i': i }}></span>)}
+      </div>
     </div>
   </div>
 </div>
 
 <style>
-  .code-window {
+  .biz-mock {
     position: relative;
     width: 100%;
     min-width: 0;
   }
 
-  .code-window__glow {
+  .biz-mock__glow {
     position: absolute;
     inset: -15%;
-    background: radial-gradient(circle at 45% 35%, var(--tone-accent) 0%, transparent 60%);
+    background: radial-gradient(circle at 40% 30%, var(--tone-accent) 0%, transparent 60%);
     opacity: 0.22;
     filter: blur(48px);
     z-index: -1;
   }
 
-  .code-window__frame {
+  .biz-mock__browser {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
@@ -116,7 +85,7 @@ const lines: Line[] = [
     overflow: hidden;
   }
 
-  .code-window__titlebar {
+  .biz-mock__titlebar {
     display: flex;
     align-items: center;
     gap: var(--space-2);
@@ -125,135 +94,219 @@ const lines: Line[] = [
     background: var(--color-background-alt);
   }
 
-  .code-window__dot {
-    width: 9px;
-    height: 9px;
+  .biz-mock__dot {
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: var(--tone-accent);
+    background: var(--color-border-strong);
   }
 
-  .code-window__filename {
+  .biz-mock__url {
+    margin-inline-start: var(--space-2);
     font-size: var(--font-size-xs);
-    font-family: 'Consolas', 'Vazirmatn', monospace;
-    direction: ltr;
-    unicode-bidi: isolate;
     color: var(--color-text-subtle);
   }
 
-  .code-window__body {
-    margin: 0;
-    padding: var(--space-6) var(--space-5);
-    font-size: 0.9rem;
-    line-height: 1.9;
-    max-width: 100%;
-    overflow-x: auto;
+  .biz-mock__screen {
+    padding: var(--space-6);
   }
 
-  @media (max-width: 480px) {
-    .code-window__body {
-      font-size: 0.75rem;
-      padding: var(--space-5) var(--space-4);
-    }
+  .biz-mock__stat {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: var(--space-6);
   }
 
-  .code-line {
+  .biz-mock__stat-label {
     display: block;
-    white-space: pre;
-    opacity: 0;
-    animation: code-line-in 0.4s ease-out forwards;
-    animation-delay: calc(var(--i) * 140ms + 200ms);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-1);
   }
 
-  .tok-kw {
+  .biz-mock__stat-value {
+    font-size: var(--font-size-2xl);
+    color: var(--color-text);
+  }
+
+  .biz-mock__badge {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-success);
+    background: var(--color-success-soft);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+  }
+
+  .biz-mock__chart {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-2);
+    height: 84px;
+    margin-bottom: var(--space-6);
+  }
+
+  .biz-mock__chart span {
+    flex: 1;
+    height: var(--h);
+    border-radius: 6px 6px 2px 2px;
+    background: var(--tone-accent-soft);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    animation: biz-bar-grow 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--i) * 90ms + 150ms);
+  }
+
+  .biz-mock__chart span:nth-child(odd) {
+    background: var(--tone-accent);
+  }
+
+  .biz-mock__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border-hairline);
+  }
+
+  .biz-mock__list li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--font-size-sm);
+  }
+
+  .biz-mock__list-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: var(--radius-sm);
+    background: var(--tone-accent-soft);
     color: var(--tone-accent-hover);
   }
 
-  .tok-fn {
-    color: var(--color-text);
-    font-weight: var(--font-weight-semibold);
-  }
-
-  .tok-prop {
-    color: var(--color-text-muted);
-  }
-
-  .tok-str {
+  .biz-mock__list-icon--warn {
+    background: rgba(232, 185, 117, 0.14);
     color: var(--color-accent-gold);
   }
 
-  .tok-bool {
-    color: var(--color-accent-secondary);
+  .biz-mock__list-text {
+    flex-grow: 1;
+    color: var(--color-text-muted);
   }
 
-  .code-window__cursor {
-    display: inline-block;
-    width: 7px;
-    height: 1.1em;
-    margin-inline-start: 3px;
-    background: var(--tone-accent);
-    vertical-align: text-bottom;
-    animation: code-cursor-blink 1s step-end infinite;
-  }
-
-  .code-window__statusbar {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-3) var(--space-5);
-    border-top: 1px solid var(--color-border-hairline);
+  .biz-mock__list-value {
+    flex-shrink: 0;
     font-size: var(--font-size-xs);
     color: var(--color-text-subtle);
   }
 
-  .code-window__status-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--color-success);
-    box-shadow: 0 0 0 3px var(--color-success-soft);
-    animation: code-status-pulse 2s ease-in-out infinite;
+  .biz-mock__phone {
+    position: absolute;
+    bottom: calc(-1 * var(--space-6));
+    inset-inline-end: -108px;
+    width: 120px;
+    background: var(--color-surface-elevated);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 22px;
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-3) var(--space-3) var(--space-4);
   }
 
-  @keyframes code-line-in {
-    from {
-      opacity: 0;
-      transform: translateY(4px);
-    }
+  .biz-mock__phone-notch {
+    width: 28px;
+    height: 4px;
+    border-radius: var(--radius-full);
+    background: var(--color-border-strong);
+    margin: 0 auto var(--space-3);
+  }
+
+  .biz-mock__phone-screen {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .biz-mock__phone-label {
+    font-size: 0.6rem;
+    color: var(--color-text-subtle);
+  }
+
+  .biz-mock__phone-value {
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+  }
+
+  .biz-mock__phone-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 32px;
+  }
+
+  .biz-mock__phone-chart span {
+    flex: 1;
+    height: var(--h);
+    border-radius: 3px 3px 1px 1px;
+    background: var(--tone-accent-soft);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    animation: biz-bar-grow 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--i) * 90ms + 500ms);
+  }
+
+  .biz-mock__phone-chart span:nth-child(odd) {
+    background: var(--tone-accent);
+  }
+
+  @keyframes biz-bar-grow {
     to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes code-cursor-blink {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0;
-    }
-  }
-
-  @keyframes code-status-pulse {
-    0%,
-    100% {
-      box-shadow: 0 0 0 3px var(--color-success-soft);
-    }
-    50% {
-      box-shadow: 0 0 0 6px transparent;
+      transform: scaleY(1);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .code-line {
-      opacity: 1;
+    .biz-mock__chart span,
+    .biz-mock__phone-chart span {
       animation: none;
+      transform: scaleY(1);
     }
+  }
 
-    .code-window__cursor,
-    .code-window__status-dot {
-      animation: none;
+  @media (max-width: 640px) {
+    .biz-mock__phone {
+      display: none;
     }
   }
 </style>
+
+<script>
+  function animateCount(el: HTMLElement) {
+    const target = Number(el.dataset.countTo ?? '0');
+    const suffix = el.dataset.suffix ?? '';
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      el.textContent = `${target.toLocaleString('fa-IR')}${suffix}`;
+      return;
+    }
+
+    const duration = 1100;
+    const start = performance.now();
+
+    function tick(now: number) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = Math.round(target * eased);
+      el.textContent = `${value.toLocaleString('fa-IR')}${suffix}`;
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-count-to]').forEach(animateCount);
+</script>
