@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+import ArticleCard from './ArticleCard.astro';
+
+export interface Props {
+  currentSlug: string;
+  currentCategory: string;
+}
+
+const { currentSlug, currentCategory } = Astro.props;
+
+const allArticles = await getCollection('articles');
+const others = allArticles.filter((a) => a.id !== currentSlug);
+const sameCategory = others.filter((a) => a.data.category === currentCategory);
+const rest = others.filter((a) => a.data.category !== currentCategory);
+const suggestions = [...sameCategory, ...rest].slice(0, 3);
+---
+
+{
+  suggestions.length > 0 && (
+    <section class="related-articles">
+      <h2>ادامه مطالعه</h2>
+      <div class="related-articles__grid">
+        {suggestions.map((article) => (
+          <ArticleCard
+            slug={article.id}
+            title={article.data.title}
+            description={article.data.description}
+            category={article.data.category}
+            readingTime={article.data.readingTime}
+            publishDate={article.data.publishDate}
+            coverImage={article.data.coverImage}
+          />
+        ))}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .related-articles {
+    margin-top: var(--space-16);
+    padding-top: var(--space-10);
+    border-top: 1px solid var(--color-border-hairline);
+  }
+
+  .related-articles h2 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--space-6);
+  }
+
+  .related-articles__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-6);
+  }
+</style>
