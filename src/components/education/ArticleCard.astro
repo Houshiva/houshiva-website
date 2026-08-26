@@ -1,6 +1,6 @@
 ---
 import ArticleCover from '../illustrations/ArticleCover.astro';
-import { iconForCategory } from '../../data/articleCategories';
+import type { ImageMetadata } from 'astro';
 
 export interface Props {
   slug: string;
@@ -9,9 +9,10 @@ export interface Props {
   category: string;
   readingTime: string;
   publishDate: Date;
+  coverImage: ImageMetadata;
 }
 
-const { slug, title, description, category, readingTime, publishDate } = Astro.props;
+const { slug, title, description, category, readingTime, publishDate, coverImage } = Astro.props;
 
 const formattedDate = new Intl.DateTimeFormat('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' }).format(
   publishDate
@@ -20,7 +21,7 @@ const formattedDate = new Intl.DateTimeFormat('fa-IR', { year: 'numeric', month:
 
 <article class="article-card" data-reveal>
   <a href={`/education/${slug}`} class="article-card__cover" aria-hidden="true" tabindex="-1">
-    <ArticleCover icon={iconForCategory(category)} />
+    <ArticleCover image={coverImage} alt={title} />
   </a>
   <div class="article-card__body">
     <span class="article-card__category">{category}</span>
@@ -55,6 +56,10 @@ const formattedDate = new Intl.DateTimeFormat('fa-IR', { year: 'numeric', month:
   .article-card__cover {
     display: block;
     aspect-ratio: 400 / 160;
+  }
+
+  .article-card:hover .article-card__cover :global(.article-cover__img) {
+    transform: scale(1.04);
   }
 
   .article-card__body {

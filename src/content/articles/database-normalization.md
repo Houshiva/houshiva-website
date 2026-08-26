@@ -4,6 +4,8 @@ description: "با یک مثال ساده از یک فروشگاه، نشان م
 category: "پایگاه‌داده و SQL"
 publishDate: 2026-07-15
 readingTime: "۵ دقیقه"
+icon: "database"
+coverImage: "../../assets/education/database-normalization.jpg"
 ---
 
 نرمال‌سازی (Normalization) یکی از آن مفاهیمی است که اسمش پیچیده به‌نظر می‌رسد اما ایده‌ی پشتش کاملاً منطقی و ساده است: هر داده باید فقط در یک جا ذخیره شود، نه در چند جای مختلف و تکراری.

@@ -69,6 +69,7 @@ const articles = (await getCollection('articles')).sort(
                       category={article.data.category}
                       readingTime={article.data.readingTime}
                       publishDate={article.data.publishDate}
+                      coverImage={article.data.coverImage}
                     />
                   </div>
                 ))
