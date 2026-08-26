@@ -2,6 +2,7 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import RelatedTools from '../../components/tools/RelatedTools.astro';
 import { toolSchema } from '../../lib/seo';
 
 const title = 'کارت ویزیت دیجیتال';
@@ -111,6 +112,8 @@ const description = 'ساخت رایگان کارت ویزیت دیجیتال ب
       </div>
     </div>
   </article>
+
+  <RelatedTools exclude="business-card" />
 
   <CtaSection
     title="می‌خواهید یک وب‌سایت شخصی یا معرفی کسب‌وکار هم داشته باشید؟"

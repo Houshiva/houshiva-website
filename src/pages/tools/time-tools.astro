@@ -2,6 +2,7 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import RelatedTools from '../../components/tools/RelatedTools.astro';
 import { toolSchema } from '../../lib/seo';
 
 const title = 'ابزار زمان و ساعت جهانی';
@@ -134,6 +135,8 @@ const zones = [
       </section>
     </div>
   </article>
+
+  <RelatedTools exclude="time-tools" />
 
   <CtaSection />
 </MainLayout>

@@ -2,6 +2,7 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import RelatedTools from '../../components/tools/RelatedTools.astro';
 import { toolSchema } from '../../lib/seo';
 
 const title = 'محاسبه‌گر اقساط وام';
@@ -60,6 +61,8 @@ const description = 'محاسبه رایگان قسط ماهانه، مجموع 
       <p class="loan-tool__note">این محاسبه بر اساس روش اقساط مساوی (ساده) است و صرفاً جنبه راهنما دارد؛ نرخ و شرایط واقعی را از بانک یا مؤسسه مالی خود استعلام بگیرید.</p>
     </div>
   </article>
+
+  <RelatedTools exclude="loan-calculator" />
 
   <CtaSection class="tone-gold" />
 </MainLayout>

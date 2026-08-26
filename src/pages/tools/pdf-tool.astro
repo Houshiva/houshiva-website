@@ -2,6 +2,7 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import RelatedTools from '../../components/tools/RelatedTools.astro';
 import { toolSchema } from '../../lib/seo';
 
 const title = 'ابزار PDF (ادغام، جدا کردن و ویرایش صفحات)';
@@ -74,6 +75,8 @@ const description =
       </template>
     </div>
   </article>
+
+  <RelatedTools exclude="pdf-tool" />
 
   <CtaSection />
 </MainLayout>

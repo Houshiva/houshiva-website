@@ -2,6 +2,7 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import RelatedTools from '../../components/tools/RelatedTools.astro';
 import { priceCategories } from '../../data/priceItems';
 
 interface BrsApiEntry {
@@ -87,6 +88,8 @@ function formatPrice(symbol?: string): string | null {
       }
     </div>
   </article>
+
+  <RelatedTools exclude="prices" />
 
   <CtaSection
     title="می‌خواهید قیمت‌ها همیشه لحظه‌ای و دقیق باشند؟"

@@ -2,6 +2,7 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import RelatedTools from '../../components/tools/RelatedTools.astro';
 import { toolSchema } from '../../lib/seo';
 
 const title = 'کارت دعوت جشن و عروسی';
@@ -116,6 +117,8 @@ const description = 'ساخت رایگان کارت دعوت زیبا برای �
       </div>
     </div>
   </article>
+
+  <RelatedTools exclude="event-card" />
 
   <CtaSection
     title="برای رویدادتان یک صفحه یا سایت اختصاصی هم می‌خواهید؟"
