@@ -1,0 +1,23 @@
+name: Rebuild prices page
+
+on:
+  schedule:
+    # بازه معاملات: ۱۱:۰۰ تا ۲۱:۰۰ به‌وقت ایران (UTC+3:30) = ۰۷:۳۰ تا ۱۷:۳۰ UTC، هر ۱۵ دقیقه
+    - cron: "30,45 7 * * *"
+    - cron: "0,15,30,45 8-16 * * *"
+    - cron: "0,15,30 17 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy hook
+        env:
+          DEPLOY_HOOK_URL: ${{ secrets.DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$DEPLOY_HOOK_URL" ]; then
+            echo "DEPLOY_HOOK_URL secret تنظیم نشده — وقتی هاستینگ مشخص شد، build hook رو توی Settings > Secrets > Actions به اسم DEPLOY_HOOK_URL اضافه کن."
+            exit 0
+          fi
+          curl -fsS -X POST "$DEPLOY_HOOK_URL"
