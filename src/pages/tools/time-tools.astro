@@ -2,6 +2,11 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import { toolSchema } from '../../lib/seo';
+
+const title = 'ابزار زمان و ساعت جهانی';
+const description =
+  'ساعت لحظه‌ای کشورهای مختلف، تبدیل منطقه زمانی، تبدیل Timestamp به تاریخ و محاسبه اختلاف زمانی بین دو کشور — رایگان و آنی.';
 
 const zones = [
   { label: 'تهران', zone: 'Asia/Tehran' },
@@ -20,10 +25,11 @@ const zones = [
 ---
 
 <MainLayout
-  title="ابزار زمان و ساعت جهانی"
-  description="ساعت لحظه‌ای کشورهای مختلف، تبدیل منطقه زمانی، تبدیل Timestamp به تاریخ و محاسبه اختلاف زمانی بین دو کشور — رایگان و آنی."
+  title={title}
+  description={description}
   path="/tools/time-tools"
   breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'ابزار زمان', path: '/tools/time-tools' }]}
+  structuredData={[toolSchema(title, description, '/tools/time-tools')]}
 >
   <article class="section tool-page">
     <div class="container container--narrow">

@@ -2,13 +2,18 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import { toolSchema } from '../../lib/seo';
+
+const title = 'تبدیل عدد به حروف';
+const description = 'ابزار رایگان تبدیل عدد و مبلغ به حروف فارسی؛ مناسب برای نوشتن فاکتور، چک و قرارداد.';
 ---
 
 <MainLayout
-  title="تبدیل عدد به حروف"
-  description="ابزار رایگان تبدیل عدد و مبلغ به حروف فارسی؛ مناسب برای نوشتن فاکتور، چک و قرارداد."
+  title={title}
+  description={description}
   path="/tools/number-to-words"
   breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'عدد به حروف', path: '/tools/number-to-words' }]}
+  structuredData={[toolSchema(title, description, '/tools/number-to-words')]}
 >
   <article class="section tool-page tone-teal">
     <div class="container container--narrow">

@@ -2,13 +2,18 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import { toolSchema } from '../../lib/seo';
+
+const title = 'کارت دعوت جشن و عروسی';
+const description = 'ساخت رایگان کارت دعوت زیبا برای عروسی، تولد و مراسم؛ چند قالب رنگی، پیش‌نمایش زنده و آماده دانلود یا چاپ.';
 ---
 
 <MainLayout
-  title="کارت دعوت جشن و عروسی"
-  description="ساخت رایگان کارت دعوت زیبا برای عروسی، تولد و مراسم؛ چند قالب رنگی، پیش‌نمایش زنده و آماده دانلود یا چاپ."
+  title={title}
+  description={description}
   path="/tools/event-card"
   breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'کارت دعوت', path: '/tools/event-card' }]}
+  structuredData={[toolSchema(title, description, '/tools/event-card')]}
 >
   <article class="section tool-page">
     <div class="container">

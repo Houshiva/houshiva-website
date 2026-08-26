@@ -2,13 +2,18 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import { toolSchema } from '../../lib/seo';
+
+const title = 'تبدیل تاریخ شمسی و میلادی';
+const description = 'ابزار رایگان تبدیل آنی تاریخ بین گاه‌شمار شمسی (جلالی) و میلادی، همراه با نام روز هفته.';
 ---
 
 <MainLayout
-  title="تبدیل تاریخ شمسی و میلادی"
-  description="ابزار رایگان تبدیل آنی تاریخ بین گاه‌شمار شمسی (جلالی) و میلادی، همراه با نام روز هفته."
+  title={title}
+  description={description}
   path="/tools/date-converter"
   breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'تبدیل تاریخ', path: '/tools/date-converter' }]}
+  structuredData={[toolSchema(title, description, '/tools/date-converter')]}
 >
   <article class="section tool-page">
     <div class="container container--narrow">

@@ -2,13 +2,18 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import { toolSchema } from '../../lib/seo';
+
+const title = 'کارت ویزیت دیجیتال';
+const description = 'ساخت رایگان کارت ویزیت دیجیتال با عکس، QR کد تماس و پیش‌نمایش زنده؛ آماده دانلود، چاپ یا اشتراک‌گذاری.';
 ---
 
 <MainLayout
-  title="کارت ویزیت دیجیتال"
-  description="ساخت رایگان کارت ویزیت دیجیتال با عکس، QR کد تماس و پیش‌نمایش زنده؛ آماده دانلود، چاپ یا اشتراک‌گذاری."
+  title={title}
+  description={description}
   path="/tools/business-card"
   breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'کارت ویزیت', path: '/tools/business-card' }]}
+  structuredData={[toolSchema(title, description, '/tools/business-card')]}
 >
   <article class="section tool-page">
     <div class="container">

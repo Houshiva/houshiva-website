@@ -2,13 +2,19 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import { toolSchema } from '../../lib/seo';
+
+const title = 'رزومه‌ساز آنلاین';
+const description =
+  'رزومه حرفه‌ای خود را رایگان بسازید؛ اطلاعات را وارد کنید، پیش‌نمایش زنده ببینید و در نهایت چاپ یا PDF بگیرید. بدون نیاز به ثبت‌نام.';
 ---
 
 <MainLayout
-  title="رزومه‌ساز آنلاین"
-  description="رزومه حرفه‌ای خود را رایگان بسازید؛ اطلاعات را وارد کنید، پیش‌نمایش زنده ببینید و در نهایت چاپ یا PDF بگیرید. بدون نیاز به ثبت‌نام."
+  title={title}
+  description={description}
   path="/tools/resume-builder"
   breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'رزومه‌ساز', path: '/tools/resume-builder' }]}
+  structuredData={[toolSchema(title, description, '/tools/resume-builder')]}
 >
   <article class="section tool-page">
     <div class="container">
@@ -876,8 +882,6 @@ import CtaSection from '../../components/common/CtaSection.astro';
 </style>
 
 <script>
-  import html2pdf from 'html2pdf.js';
-
   interface ExperienceItem {
     title: string;
     company: string;
@@ -1255,6 +1259,7 @@ import CtaSection from '../../components/common/CtaSection.astro';
       const filenameBase = (fullName || 'resume').replace(/\s+/g, '-');
 
       try {
+        const html2pdf = (await import('html2pdf.js')).default;
         await html2pdf()
           .set({
             margin: 10,

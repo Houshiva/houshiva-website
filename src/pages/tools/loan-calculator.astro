@@ -2,13 +2,18 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import { toolSchema } from '../../lib/seo';
+
+const title = 'محاسبه‌گر اقساط وام';
+const description = 'محاسبه رایگان قسط ماهانه، مجموع بازپرداخت و سود کل وام بر اساس مبلغ، نرخ سود سالانه و مدت بازپرداخت.';
 ---
 
 <MainLayout
-  title="محاسبه‌گر اقساط وام"
-  description="محاسبه رایگان قسط ماهانه، مجموع بازپرداخت و سود کل وام بر اساس مبلغ، نرخ سود سالانه و مدت بازپرداخت."
+  title={title}
+  description={description}
   path="/tools/loan-calculator"
   breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'محاسبه‌گر اقساط', path: '/tools/loan-calculator' }]}
+  structuredData={[toolSchema(title, description, '/tools/loan-calculator')]}
 >
   <article class="section tool-page tone-gold">
     <div class="container container--narrow">

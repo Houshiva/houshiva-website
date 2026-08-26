@@ -2,13 +2,19 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import { toolSchema } from '../../lib/seo';
+
+const title = 'فشرده‌سازی و تبدیل عکس';
+const description =
+  'کاهش حجم عکس، تبدیل بین JPG، PNG و WebP و تغییر ابعاد؛ همه‌چیز داخل مرورگر شما پردازش می‌شود، بدون آپلود روی سرور.';
 ---
 
 <MainLayout
-  title="فشرده‌سازی و تبدیل عکس"
-  description="کاهش حجم عکس، تبدیل بین JPG، PNG و WebP و تغییر ابعاد؛ همه‌چیز داخل مرورگر شما پردازش می‌شود، بدون آپلود روی سرور."
+  title={title}
+  description={description}
   path="/tools/image-tool"
   breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'فشرده‌سازی عکس', path: '/tools/image-tool' }]}
+  structuredData={[toolSchema(title, description, '/tools/image-tool')]}
 >
   <article class="section tool-page">
     <div class="container">

@@ -2,13 +2,19 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
+import { toolSchema } from '../../lib/seo';
+
+const title = 'ابزار PDF (ادغام، جدا کردن و ویرایش صفحات)';
+const description =
+  'ادغام چند PDF، حذف یا جابه‌جایی صفحات، تبدیل عکس به PDF و دانلود هر صفحه به‌صورت جدا؛ همه‌چیز داخل مرورگر شما و بدون آپلود روی سرور.';
 ---
 
 <MainLayout
-  title="ابزار PDF (ادغام، جدا کردن و ویرایش صفحات)"
-  description="ادغام چند PDF، حذف یا جابه‌جایی صفحات، تبدیل عکس به PDF و دانلود هر صفحه به‌صورت جدا؛ همه‌چیز داخل مرورگر شما و بدون آپلود روی سرور."
+  title={title}
+  description={description}
   path="/tools/pdf-tool"
   breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'ابزار PDF', path: '/tools/pdf-tool' }]}
+  structuredData={[toolSchema(title, description, '/tools/pdf-tool')]}
 >
   <article class="section tool-page">
     <div class="container">
@@ -266,15 +272,31 @@ import CtaSection from '../../components/common/CtaSection.astro';
 </style>
 
 <script>
-  import { PDFDocument } from 'pdf-lib';
-  import * as pdfjsLib from 'pdfjs-dist';
-  import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.mjs?url';
+  import type { PDFDocument as PDFDocumentType } from 'pdf-lib';
 
-  pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
+  let pdfLibModule: typeof import('pdf-lib') | null = null;
+  let pdfjsModule: typeof import('pdfjs-dist') | null = null;
+
+  async function getPdfLib() {
+    if (!pdfLibModule) pdfLibModule = await import('pdf-lib');
+    return pdfLibModule;
+  }
+
+  async function getPdfjs() {
+    if (!pdfjsModule) {
+      const [mod, workerUrlMod] = await Promise.all([
+        import('pdfjs-dist'),
+        import('pdfjs-dist/build/pdf.worker.mjs?url'),
+      ]);
+      mod.GlobalWorkerOptions.workerSrc = workerUrlMod.default;
+      pdfjsModule = mod;
+    }
+    return pdfjsModule;
+  }
 
   interface SourceDoc {
     id: string;
-    doc: PDFDocument;
+    doc: PDFDocumentType;
   }
 
   interface PageItem {
@@ -347,6 +369,7 @@ import CtaSection from '../../components/common/CtaSection.astro';
     }
 
     async function buildPdfFromItems(items: PageItem[]): Promise<Uint8Array> {
+      const { PDFDocument } = await getPdfLib();
       const finalDoc = await PDFDocument.create();
       for (const item of items) {
         if (item.kind === 'pdf' && item.sourceDocId !== undefined && item.pageIndex !== undefined) {
@@ -403,6 +426,8 @@ import CtaSection from '../../components/common/CtaSection.astro';
     async function addPdfFile(file: File) {
       const buffer = await file.arrayBuffer();
       const sourceId = `${file.name}-${Date.now()}-${Math.random()}`;
+
+      const [{ PDFDocument }, pdfjsLib] = await Promise.all([getPdfLib(), getPdfjs()]);
 
       const libDoc = await PDFDocument.load(buffer.slice(0));
       sourceDocs.set(sourceId, { id: sourceId, doc: libDoc });
