@@ -138,8 +138,17 @@ const nodes = featured.map((service, i) => {
   .orbit-mock__ring {
     position: relative;
     width: min(480px, 100%);
-    aspect-ratio: 1;
     margin-inline: auto;
+  }
+
+  .orbit-mock__ring::before {
+    content: '';
+    display: block;
+    /* Guarantees height = width (a perfect circle) regardless of any
+       aspect-ratio quirk under the grid/stretch context above — padding
+       percentages are always resolved against the containing block's
+       width, in both axes. */
+    padding-top: 100%;
   }
 
   .orbit-mock__globe {
