@@ -15,10 +15,6 @@ export const articleCategories: ArticleCategory[] = [
   { name: 'نرم‌افزار کسب‌وکار', icon: 'dashboard' },
 ];
 
-export function iconForCategory(category: string): IconName {
-  return articleCategories.find((c) => c.name === category)?.icon ?? 'book';
-}
-
 export function slugForCategory(category: string): string {
   const index = articleCategories.findIndex((c) => c.name === category);
   return index >= 0 ? `cat-${index}` : 'cat-other';
