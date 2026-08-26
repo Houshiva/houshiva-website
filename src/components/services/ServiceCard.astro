@@ -43,46 +43,48 @@ const titleId = `${service.slug}-modal-title`;
       <Icon name="close" size={16} />
     </button>
 
-    <div class="service-modal__body">
-      <div class="service-modal__icon">
-        <Icon name={service.icon as any} size={28} />
+    <div class="service-modal__scroll">
+      <div class="service-modal__body">
+        <div class="service-modal__icon">
+          <Icon name={service.icon as any} size={28} />
+        </div>
+
+        <h3 id={titleId}>{service.title}</h3>
+        <p class="service-modal__desc">{service.description}</p>
+
+        <div class="service-modal__block">
+          <h4>مزایا</h4>
+          <ul>
+            {
+              service.benefits.map((benefit) => (
+                <li>
+                  <Icon name="check" size={14} />
+                  <span>{benefit}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="service-modal__block">
+          <h4>امکانات</h4>
+          <ul>
+            {
+              service.features.map((feature) => (
+                <li>
+                  <Icon name="check" size={14} />
+                  <span>{feature}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <a href="/contact" class="service-modal__cta">
+          مشاوره درباره {service.title}
+          <Icon name="chevron-start" size={14} />
+        </a>
       </div>
-
-      <h3 id={titleId}>{service.title}</h3>
-      <p class="service-modal__desc">{service.description}</p>
-
-      <div class="service-modal__block">
-        <h4>مزایا</h4>
-        <ul>
-          {
-            service.benefits.map((benefit) => (
-              <li>
-                <Icon name="check" size={14} />
-                <span>{benefit}</span>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-
-      <div class="service-modal__block">
-        <h4>امکانات</h4>
-        <ul>
-          {
-            service.features.map((feature) => (
-              <li>
-                <Icon name="check" size={14} />
-                <span>{feature}</span>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-
-      <a href="/contact" class="service-modal__cta">
-        مشاوره درباره {service.title}
-        <Icon name="chevron-start" size={14} />
-      </a>
     </div>
   </div>
 </div>
@@ -188,11 +190,9 @@ const titleId = `${service.slug}-modal-title`;
   .service-modal {
     position: relative;
     width: 100%;
-    max-width: 440px;
-    max-height: min(640px, calc(100vh - var(--space-6) * 2));
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    padding: var(--space-8);
+    max-width: 480px;
+    max-height: calc(100vh - var(--space-6) * 2);
+    overflow: hidden;
 
     border: 1px solid color-mix(in srgb, var(--tone-accent) 45%, var(--color-border-strong));
     border-radius: 28px;
@@ -272,6 +272,13 @@ const titleId = `${service.slug}-modal-title`;
     transform: rotate(90deg);
   }
 
+  .service-modal__scroll {
+    max-height: calc(100vh - var(--space-6) * 2);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--space-8);
+  }
+
   .service-modal__body {
     padding-top: var(--space-2);
   }
@@ -286,21 +293,21 @@ const titleId = `${service.slug}-modal-title`;
     background: var(--tone-accent-soft);
     color: var(--tone-accent-hover);
     box-shadow: 0 0 0 6px color-mix(in srgb, var(--tone-accent) 12%, transparent);
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-4);
   }
 
   .service-modal h3 {
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-2);
   }
 
   .service-modal__desc {
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-4);
   }
 
   .service-modal__block {
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-4);
   }
 
   .service-modal__block h4 {
@@ -352,8 +359,11 @@ const titleId = `${service.slug}-modal-title`;
 
   @media (max-width: 480px) {
     .service-modal {
-      padding: var(--space-6);
       border-radius: 22px;
+    }
+
+    .service-modal__scroll {
+      padding: var(--space-6);
     }
   }
 
