@@ -1,0 +1,399 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import Icon from '../../components/common/Icon.astro';
+import CtaSection from '../../components/common/CtaSection.astro';
+---
+
+<MainLayout
+  title="فشرده‌سازی و تبدیل عکس"
+  description="کاهش حجم عکس، تبدیل بین JPG، PNG و WebP و تغییر ابعاد؛ همه‌چیز داخل مرورگر شما پردازش می‌شود، بدون آپلود روی سرور."
+  path="/tools/image-tool"
+  breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'فشرده‌سازی عکس', path: '/tools/image-tool' }]}
+>
+  <article class="section tool-page">
+    <div class="container">
+      <a href="/tools" class="tool-page__back">
+        <Icon name="chevron-start" size={16} />
+        بازگشت به ابزارها
+      </a>
+
+      <h1 class="text-balance">فشرده‌سازی و تبدیل عکس</h1>
+      <p class="tool-page__lead">
+        عکس‌ها را انتخاب کنید، فرمت و کیفیت خروجی را تنظیم کنید و نتیجه را دانلود کنید. همه‌ی پردازش‌ها داخل
+        مرورگر شما انجام می‌شود؛ هیچ فایلی به سرور ارسال نمی‌شود.
+      </p>
+
+      <div class="image-tool" data-image-tool>
+        <label class="image-tool__drop" data-image-drop>
+          <Icon name="copy" size={28} />
+          <span>برای انتخاب عکس‌ها کلیک کنید یا فایل را اینجا رها کنید</span>
+          <span class="image-tool__drop-hint">JPG، PNG یا WebP — چند فایل هم‌زمان مجاز است</span>
+          <input type="file" accept="image/png,image/jpeg,image/webp" multiple hidden data-image-input />
+        </label>
+
+        <div class="image-tool__settings">
+          <label>
+            <span>فرمت خروجی</span>
+            <select data-format-select>
+              <option value="image/jpeg">JPG</option>
+              <option value="image/webp">WebP</option>
+              <option value="image/png">PNG</option>
+            </select>
+          </label>
+          <label>
+            <span>کیفیت: <strong data-quality-value>80٪</strong></span>
+            <input type="range" min="10" max="100" value="80" data-quality-input />
+          </label>
+          <label>
+            <span>حداکثر عرض (پیکسل — اختیاری)</span>
+            <input type="number" min="50" step="10" placeholder="مثلاً 1200" data-max-width-input />
+          </label>
+        </div>
+
+        <div class="image-tool__results" data-image-results></div>
+      </div>
+
+      <template data-result-template>
+        <div class="image-tool__card">
+          <img class="image-tool__thumb" data-result-thumb alt="" />
+          <div class="image-tool__card-body">
+            <span class="image-tool__filename" data-result-name></span>
+            <span class="image-tool__size" data-result-size></span>
+            <a class="image-tool__download" data-result-download download>
+              <Icon name="arrow-start" size={14} class="image-tool__download-icon" />
+              دانلود
+            </a>
+          </div>
+        </div>
+      </template>
+    </div>
+  </article>
+
+  <CtaSection />
+</MainLayout>
+
+<style>
+  .tool-page {
+    padding-bottom: var(--space-16);
+  }
+
+  .tool-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .tool-page__back:hover {
+    color: var(--tone-accent-hover);
+  }
+
+  .tool-page__back :global(svg) {
+    transform: scaleX(-1);
+  }
+
+  .tool-page h1 {
+    margin-bottom: var(--space-4);
+  }
+
+  .tool-page__lead {
+    font-size: var(--font-size-lg);
+    max-width: 70ch;
+    margin-bottom: var(--space-10);
+  }
+
+  .image-tool__drop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    text-align: center;
+    padding: var(--space-10);
+    background: var(--color-surface);
+    border: 2px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+    color: var(--tone-accent-hover);
+    cursor: pointer;
+    transition: border-color var(--transition-fast);
+    margin-bottom: var(--space-6);
+  }
+
+  .image-tool__drop:hover,
+  .image-tool__drop.is-dragover {
+    border-color: var(--tone-accent);
+  }
+
+  .image-tool__drop span {
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .image-tool__drop-hint {
+    color: var(--color-text-subtle) !important;
+    font-weight: var(--font-weight-normal) !important;
+    font-size: var(--font-size-xs) !important;
+  }
+
+  .image-tool__settings {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-bottom: var(--space-8);
+  }
+
+  .image-tool__settings label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+  }
+
+  .image-tool__settings select,
+  .image-tool__settings input[type='number'] {
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-sm);
+    font-family: inherit;
+    color: var(--color-text);
+    width: 100%;
+  }
+
+  .image-tool__settings select:focus,
+  .image-tool__settings input:focus {
+    outline: none;
+    border-color: var(--tone-accent);
+  }
+
+  .image-tool__settings input[type='range'] {
+    accent-color: var(--tone-accent);
+  }
+
+  .image-tool__results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--space-5);
+  }
+
+  .image-tool__results :global(.image-tool__card) {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .image-tool__results :global(.image-tool__thumb) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background: var(--color-background-alt);
+  }
+
+  .image-tool__results :global(.image-tool__card-body) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-4);
+  }
+
+  .image-tool__results :global(.image-tool__filename) {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .image-tool__results :global(.image-tool__size) {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+  }
+
+  .image-tool__results :global(.image-tool__size .is-smaller) {
+    color: var(--color-success);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .image-tool__results :global(.image-tool__download) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    justify-content: center;
+    margin-top: var(--space-2);
+    background: var(--tone-accent-soft);
+    color: var(--tone-accent-hover);
+    border-radius: var(--radius-full);
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    transition: background-color var(--transition-fast);
+  }
+
+  .image-tool__results :global(.image-tool__download:hover) {
+    background: color-mix(in srgb, var(--tone-accent-soft) 55%, var(--tone-accent) 45%);
+  }
+
+  .image-tool__results :global(.image-tool__download-icon) {
+    transform: rotate(-90deg);
+  }
+
+  @media (max-width: 720px) {
+    .image-tool__settings {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  interface ImageJob {
+    id: string;
+    file: File;
+    bitmap: ImageBitmap;
+    card: HTMLElement;
+    objectUrl?: string;
+  }
+
+  function formatBytes(bytes: number): string {
+    if (bytes < 1024) return `${bytes} بایت`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} کیلوبایت`;
+    return `${(bytes / (1024 * 1024)).toFixed(2)} مگابایت`;
+  }
+
+  function extensionFor(mime: string): string {
+    if (mime === 'image/png') return 'png';
+    if (mime === 'image/webp') return 'webp';
+    return 'jpg';
+  }
+
+  function initImageTool() {
+    const root = document.querySelector<HTMLElement>('[data-image-tool]');
+    if (!root || root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
+
+    const dropZone = root.querySelector<HTMLLabelElement>('[data-image-drop]');
+    const fileInput = root.querySelector<HTMLInputElement>('[data-image-input]');
+    const formatSelect = root.querySelector<HTMLSelectElement>('[data-format-select]');
+    const qualityInput = root.querySelector<HTMLInputElement>('[data-quality-input]');
+    const qualityValue = root.querySelector<HTMLElement>('[data-quality-value]');
+    const maxWidthInput = root.querySelector<HTMLInputElement>('[data-max-width-input]');
+    const results = root.querySelector<HTMLElement>('[data-image-results]');
+    const template = document.querySelector<HTMLTemplateElement>('[data-result-template]');
+
+    if (!dropZone || !fileInput || !formatSelect || !qualityInput || !qualityValue || !maxWidthInput || !results || !template) {
+      return;
+    }
+
+    const jobs: ImageJob[] = [];
+    let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+
+    async function processJob(job: ImageJob) {
+      const format = formatSelect!.value;
+      const quality = Number(qualityInput!.value) / 100;
+      const maxWidth = Number(maxWidthInput!.value) || 0;
+
+      let { width, height } = job.bitmap;
+      if (maxWidth > 0 && width > maxWidth) {
+        height = Math.round((height * maxWidth) / width);
+        width = maxWidth;
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      if (format === 'image/jpeg') {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, width, height);
+      }
+      ctx.drawImage(job.bitmap, 0, 0, width, height);
+
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, format, quality));
+      if (!blob) return;
+
+      if (job.objectUrl) URL.revokeObjectURL(job.objectUrl);
+      job.objectUrl = URL.createObjectURL(blob);
+
+      const thumb = job.card.querySelector<HTMLImageElement>('[data-result-thumb]');
+      const nameEl = job.card.querySelector<HTMLElement>('[data-result-name]');
+      const sizeEl = job.card.querySelector<HTMLElement>('[data-result-size]');
+      const downloadLink = job.card.querySelector<HTMLAnchorElement>('[data-result-download]');
+
+      if (thumb) thumb.src = job.objectUrl;
+      if (nameEl) nameEl.textContent = job.file.name;
+      if (sizeEl) {
+        const reduced = blob.size < job.file.size;
+        sizeEl.innerHTML = `${formatBytes(job.file.size)} ← <span class="${reduced ? 'is-smaller' : ''}">${formatBytes(blob.size)}</span>`;
+      }
+      if (downloadLink) {
+        const base = job.file.name.replace(/\.[^.]+$/, '');
+        downloadLink.href = job.objectUrl;
+        downloadLink.download = `${base}.${extensionFor(format)}`;
+      }
+    }
+
+    function processAll() {
+      jobs.forEach((job) => processJob(job));
+    }
+
+    function scheduleProcessAll() {
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(processAll, 150);
+    }
+
+    async function addFiles(fileList: FileList | null) {
+      if (!fileList) return;
+      for (const file of Array.from(fileList)) {
+        if (!file.type.startsWith('image/')) continue;
+        try {
+          const bitmap = await createImageBitmap(file);
+          const card = template!.content.firstElementChild!.cloneNode(true) as HTMLElement;
+          results!.appendChild(card);
+          const job: ImageJob = { id: `${file.name}-${Date.now()}-${Math.random()}`, file, bitmap, card };
+          jobs.push(job);
+          await processJob(job);
+        } catch {
+          // فایل قابل خواندن به‌عنوان تصویر نبود
+        }
+      }
+    }
+
+    fileInput.addEventListener('change', () => {
+      addFiles(fileInput.files);
+      fileInput.value = '';
+    });
+
+    dropZone.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      dropZone.classList.add('is-dragover');
+    });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('is-dragover'));
+    dropZone.addEventListener('drop', (event) => {
+      event.preventDefault();
+      dropZone.classList.remove('is-dragover');
+      addFiles(event.dataTransfer?.files ?? null);
+    });
+
+    formatSelect.addEventListener('change', scheduleProcessAll);
+    maxWidthInput.addEventListener('input', scheduleProcessAll);
+    qualityInput.addEventListener('input', () => {
+      qualityValue!.textContent = `${qualityInput!.value}٪`;
+      scheduleProcessAll();
+    });
+  }
+
+  document.addEventListener('astro:page-load', initImageTool);
+</script>

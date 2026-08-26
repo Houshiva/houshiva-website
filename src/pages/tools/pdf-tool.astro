@@ -1,0 +1,516 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import Icon from '../../components/common/Icon.astro';
+import CtaSection from '../../components/common/CtaSection.astro';
+---
+
+<MainLayout
+  title="ابزار PDF (ادغام، جدا کردن و ویرایش صفحات)"
+  description="ادغام چند PDF، حذف یا جابه‌جایی صفحات، تبدیل عکس به PDF و دانلود هر صفحه به‌صورت جدا؛ همه‌چیز داخل مرورگر شما و بدون آپلود روی سرور."
+  path="/tools/pdf-tool"
+  breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'ابزار PDF', path: '/tools/pdf-tool' }]}
+>
+  <article class="section tool-page">
+    <div class="container">
+      <a href="/tools" class="tool-page__back">
+        <Icon name="chevron-start" size={16} />
+        بازگشت به ابزارها
+      </a>
+
+      <h1 class="text-balance">ابزار PDF</h1>
+      <p class="tool-page__lead">
+        یک یا چند فایل PDF یا عکس اضافه کنید؛ صفحات آن‌ها این‌جا کنار هم می‌آیند و می‌توانید ترتیبشان را عوض
+        کنید، صفحه‌ای را حذف کنید یا در نهایت خروجی نهایی را دانلود کنید. همه‌چیز داخل مرورگر شما پردازش
+        می‌شود.
+      </p>
+
+      <div class="pdf-tool" data-pdf-tool>
+        <label class="pdf-tool__drop" data-pdf-drop>
+          <Icon name="layers" size={28} />
+          <span>برای انتخاب PDF یا عکس کلیک کنید یا فایل را اینجا رها کنید</span>
+          <span class="pdf-tool__drop-hint">می‌توانید چند فایل PDF را با هم اضافه کنید تا ادغام شوند</span>
+          <input type="file" accept="application/pdf,image/png,image/jpeg" multiple hidden data-pdf-input />
+        </label>
+
+        <p class="pdf-tool__status" data-pdf-status hidden></p>
+
+        <div class="pdf-tool__toolbar" data-pdf-toolbar hidden>
+          <span class="pdf-tool__count" data-page-count></span>
+          <button type="button" class="pdf-tool__download-all" data-download-all>
+            <Icon name="arrow-start" size={16} class="pdf-tool__download-icon" />
+            دانلود PDF نهایی
+          </button>
+        </div>
+
+        <div class="pdf-tool__pages" data-pdf-pages></div>
+      </div>
+
+      <template data-page-template>
+        <div class="pdf-tool__page">
+          <img class="pdf-tool__page-thumb" data-page-thumb alt="" />
+          <div class="pdf-tool__page-body">
+            <span class="pdf-tool__page-label" data-page-label></span>
+            <div class="pdf-tool__page-controls">
+              <button type="button" data-move-start title="جابه‌جایی به راست">
+                <Icon name="chevron-start" size={14} />
+              </button>
+              <button type="button" data-move-end title="جابه‌جایی به چپ">
+                <Icon name="chevron-start" size={14} class="pdf-tool__flip" />
+              </button>
+              <button type="button" data-download-page-pdf title="دانلود این صفحه به‌صورت PDF">PDF</button>
+              <button type="button" data-download-page-image title="دانلود این صفحه به‌صورت عکس">عکس</button>
+              <button type="button" data-remove-page title="حذف این صفحه" class="pdf-tool__remove">
+                <Icon name="close" size={14} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </article>
+
+  <CtaSection />
+</MainLayout>
+
+<style>
+  .tool-page {
+    padding-bottom: var(--space-16);
+  }
+
+  .tool-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .tool-page__back:hover {
+    color: var(--tone-accent-hover);
+  }
+
+  .tool-page__back :global(svg) {
+    transform: scaleX(-1);
+  }
+
+  .tool-page h1 {
+    margin-bottom: var(--space-4);
+  }
+
+  .tool-page__lead {
+    font-size: var(--font-size-lg);
+    max-width: 70ch;
+    margin-bottom: var(--space-10);
+  }
+
+  .pdf-tool__drop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    text-align: center;
+    padding: var(--space-10);
+    background: var(--color-surface);
+    border: 2px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+    color: var(--tone-accent-hover);
+    cursor: pointer;
+    transition: border-color var(--transition-fast);
+    margin-bottom: var(--space-6);
+  }
+
+  .pdf-tool__drop:hover,
+  .pdf-tool__drop.is-dragover {
+    border-color: var(--tone-accent);
+  }
+
+  .pdf-tool__drop span {
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .pdf-tool__drop-hint {
+    color: var(--color-text-subtle) !important;
+    font-weight: var(--font-weight-normal) !important;
+    font-size: var(--font-size-xs) !important;
+  }
+
+  .pdf-tool__status {
+    text-align: center;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-6);
+  }
+
+  .pdf-tool__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-6);
+  }
+
+  .pdf-tool__count {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+  }
+
+  .pdf-tool__download-all {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: var(--tone-accent);
+    color: var(--color-on-accent, white);
+    border: none;
+    border-radius: var(--radius-full);
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition:
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .pdf-tool__download-all:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .pdf-tool__download-icon {
+    transform: rotate(-90deg);
+  }
+
+  .pdf-tool__pages {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--space-5);
+  }
+
+  .pdf-tool__pages :global(.pdf-tool__page) {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .pdf-tool__pages :global(.pdf-tool__page-thumb) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: contain;
+    background: var(--color-background-alt);
+  }
+
+  .pdf-tool__pages :global(.pdf-tool__page-body) {
+    padding: var(--space-3);
+  }
+
+  .pdf-tool__pages :global(.pdf-tool__page-label) {
+    display: block;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-2);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pdf-tool__pages :global(.pdf-tool__page-controls) {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-1);
+  }
+
+  .pdf-tool__pages :global(.pdf-tool__page-controls button) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm, 6px);
+    color: var(--color-text-muted);
+    font-size: 0.65rem;
+    padding: var(--space-2);
+    cursor: pointer;
+    transition:
+      background-color var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  .pdf-tool__pages :global(.pdf-tool__page-controls button:hover) {
+    background: var(--tone-accent-soft);
+    color: var(--tone-accent-hover);
+  }
+
+  .pdf-tool__pages :global(.pdf-tool__remove:hover) {
+    background: color-mix(in srgb, var(--color-danger, #e5484d) 15%, transparent);
+    color: var(--color-danger, #e5484d);
+  }
+
+  .pdf-tool__pages :global(.pdf-tool__flip) {
+    transform: scaleX(-1);
+  }
+
+  @media (max-width: 480px) {
+    .pdf-tool__toolbar {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-4);
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  import { PDFDocument } from 'pdf-lib';
+  import * as pdfjsLib from 'pdfjs-dist';
+  import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.mjs?url';
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
+
+  interface SourceDoc {
+    id: string;
+    doc: PDFDocument;
+  }
+
+  interface PageItem {
+    id: string;
+    kind: 'pdf' | 'image';
+    thumbDataUrl: string;
+    label: string;
+    width: number;
+    height: number;
+    sourceDocId?: string;
+    pageIndex?: number;
+    imageBytes?: Uint8Array;
+    imageMime?: 'image/png' | 'image/jpeg';
+    card: HTMLElement;
+  }
+
+  function initPdfTool() {
+    const root = document.querySelector<HTMLElement>('[data-pdf-tool]');
+    if (!root || root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
+
+    const dropZone = root.querySelector<HTMLLabelElement>('[data-pdf-drop]');
+    const fileInput = root.querySelector<HTMLInputElement>('[data-pdf-input]');
+    const statusEl = root.querySelector<HTMLElement>('[data-pdf-status]');
+    const toolbar = root.querySelector<HTMLElement>('[data-pdf-toolbar]');
+    const countEl = root.querySelector<HTMLElement>('[data-page-count]');
+    const downloadAllBtn = root.querySelector<HTMLButtonElement>('[data-download-all]');
+    const pagesContainer = root.querySelector<HTMLElement>('[data-pdf-pages]');
+    const template = document.querySelector<HTMLTemplateElement>('[data-page-template]');
+
+    if (!dropZone || !fileInput || !statusEl || !toolbar || !countEl || !downloadAllBtn || !pagesContainer || !template) {
+      return;
+    }
+
+    const sourceDocs = new Map<string, SourceDoc>();
+    let pages: PageItem[] = [];
+
+    function updateToolbar() {
+      if (pages.length === 0) {
+        toolbar!.hidden = true;
+        return;
+      }
+      toolbar!.hidden = false;
+      countEl!.textContent = `${pages.length.toLocaleString('fa-IR')} صفحه`;
+    }
+
+    function renderOrder() {
+      pages.forEach((p) => pagesContainer!.appendChild(p.card));
+      pages.forEach((p, i) => {
+        const label = p.card.querySelector<HTMLElement>('[data-page-label]');
+        if (label) label.textContent = `${i + 1}. ${p.label}`;
+      });
+    }
+
+    function removePage(id: string) {
+      const index = pages.findIndex((p) => p.id === id);
+      if (index === -1) return;
+      pages[index].card.remove();
+      pages.splice(index, 1);
+      renderOrder();
+      updateToolbar();
+    }
+
+    function movePage(id: string, direction: -1 | 1) {
+      const index = pages.findIndex((p) => p.id === id);
+      const target = index + direction;
+      if (index === -1 || target < 0 || target >= pages.length) return;
+      [pages[index], pages[target]] = [pages[target], pages[index]];
+      renderOrder();
+    }
+
+    async function buildPdfFromItems(items: PageItem[]): Promise<Uint8Array> {
+      const finalDoc = await PDFDocument.create();
+      for (const item of items) {
+        if (item.kind === 'pdf' && item.sourceDocId !== undefined && item.pageIndex !== undefined) {
+          const source = sourceDocs.get(item.sourceDocId);
+          if (!source) continue;
+          const [copied] = await finalDoc.copyPages(source.doc, [item.pageIndex]);
+          finalDoc.addPage(copied);
+        } else if (item.kind === 'image' && item.imageBytes && item.imageMime) {
+          const image = item.imageMime === 'image/png' ? await finalDoc.embedPng(item.imageBytes) : await finalDoc.embedJpg(item.imageBytes);
+          const page = finalDoc.addPage([item.width, item.height]);
+          page.drawImage(image, { x: 0, y: 0, width: item.width, height: item.height });
+        }
+      }
+      return finalDoc.save();
+    }
+
+    function downloadBytes(bytes: Uint8Array, filename: string, mime: string) {
+      const blob = new Blob([bytes], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+    }
+
+    function addPageCard(item: Omit<PageItem, 'card'>): PageItem {
+      const card = template!.content.firstElementChild!.cloneNode(true) as HTMLElement;
+      const thumb = card.querySelector<HTMLImageElement>('[data-page-thumb]');
+      if (thumb) thumb.src = item.thumbDataUrl;
+
+      const full: PageItem = { ...item, card };
+
+      card.querySelector('[data-move-start]')?.addEventListener('click', () => movePage(full.id, -1));
+      card.querySelector('[data-move-end]')?.addEventListener('click', () => movePage(full.id, 1));
+      card.querySelector('[data-remove-page]')?.addEventListener('click', () => removePage(full.id));
+
+      card.querySelector('[data-download-page-image]')?.addEventListener('click', () => {
+        const a = document.createElement('a');
+        a.href = full.thumbDataUrl;
+        a.download = `${full.label.replace(/\s+/g, '-')}.png`;
+        a.click();
+      });
+
+      card.querySelector('[data-download-page-pdf]')?.addEventListener('click', async () => {
+        const bytes = await buildPdfFromItems([full]);
+        downloadBytes(new Uint8Array(bytes), `${full.label.replace(/\s+/g, '-')}.pdf`, 'application/pdf');
+      });
+
+      pagesContainer!.appendChild(card);
+      return full;
+    }
+
+    async function addPdfFile(file: File) {
+      const buffer = await file.arrayBuffer();
+      const sourceId = `${file.name}-${Date.now()}-${Math.random()}`;
+
+      const libDoc = await PDFDocument.load(buffer.slice(0));
+      sourceDocs.set(sourceId, { id: sourceId, doc: libDoc });
+
+      const loadingTask = pdfjsLib.getDocument({ data: buffer.slice(0) });
+      const pdf = await loadingTask.promise;
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale: 1.4 });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) continue;
+        await page.render({ canvasContext: ctx, viewport, canvas }).promise;
+
+        const item = addPageCard({
+          id: `${sourceId}-${i}`,
+          kind: 'pdf',
+          thumbDataUrl: canvas.toDataURL('image/png'),
+          label: `${file.name} — صفحه ${i}`,
+          width: viewport.width,
+          height: viewport.height,
+          sourceDocId: sourceId,
+          pageIndex: i - 1,
+        });
+        pages.push(item);
+      }
+    }
+
+    async function addImageFile(file: File) {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const mime = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+      const bitmap = await createImageBitmap(file);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = bitmap.width;
+      canvas.height = bitmap.height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.drawImage(bitmap, 0, 0);
+
+      const item = addPageCard({
+        id: `${file.name}-${Date.now()}-${Math.random()}`,
+        kind: 'image',
+        thumbDataUrl: canvas.toDataURL('image/png'),
+        label: file.name,
+        width: bitmap.width,
+        height: bitmap.height,
+        imageBytes: bytes,
+        imageMime: mime,
+      });
+      pages.push(item);
+    }
+
+    async function addFiles(fileList: FileList | null) {
+      if (!fileList || fileList.length === 0) return;
+      statusEl!.hidden = false;
+      statusEl!.textContent = 'در حال پردازش فایل‌ها...';
+
+      for (const file of Array.from(fileList)) {
+        try {
+          if (file.type === 'application/pdf') {
+            await addPdfFile(file);
+          } else if (file.type.startsWith('image/')) {
+            await addImageFile(file);
+          }
+        } catch {
+          // فایل قابل پردازش نبود
+        }
+      }
+
+      statusEl!.hidden = true;
+      renderOrder();
+      updateToolbar();
+    }
+
+    fileInput.addEventListener('change', () => {
+      addFiles(fileInput.files);
+      fileInput.value = '';
+    });
+
+    dropZone.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      dropZone.classList.add('is-dragover');
+    });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('is-dragover'));
+    dropZone.addEventListener('drop', (event) => {
+      event.preventDefault();
+      dropZone.classList.remove('is-dragover');
+      addFiles(event.dataTransfer?.files ?? null);
+    });
+
+    downloadAllBtn.addEventListener('click', async () => {
+      if (pages.length === 0 || downloadAllBtn.disabled) return;
+      const originalLabel = downloadAllBtn.innerHTML;
+      downloadAllBtn.disabled = true;
+      downloadAllBtn.textContent = 'در حال آماده‌سازی...';
+      try {
+        const bytes = await buildPdfFromItems(pages);
+        downloadBytes(new Uint8Array(bytes), 'output.pdf', 'application/pdf');
+      } finally {
+        downloadAllBtn.disabled = false;
+        downloadAllBtn.innerHTML = originalLabel;
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initPdfTool);
+</script>

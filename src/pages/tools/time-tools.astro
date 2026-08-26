@@ -1,0 +1,481 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import Icon from '../../components/common/Icon.astro';
+import CtaSection from '../../components/common/CtaSection.astro';
+
+const zones = [
+  { label: 'تهران', zone: 'Asia/Tehran' },
+  { label: 'دبی', zone: 'Asia/Dubai' },
+  { label: 'استانبول', zone: 'Europe/Istanbul' },
+  { label: 'لندن', zone: 'Europe/London' },
+  { label: 'برلین', zone: 'Europe/Berlin' },
+  { label: 'مسکو', zone: 'Europe/Moscow' },
+  { label: 'نیویورک', zone: 'America/New_York' },
+  { label: 'لس‌آنجلس', zone: 'America/Los_Angeles' },
+  { label: 'دهلی‌نو', zone: 'Asia/Kolkata' },
+  { label: 'پکن', zone: 'Asia/Shanghai' },
+  { label: 'توکیو', zone: 'Asia/Tokyo' },
+  { label: 'سیدنی', zone: 'Australia/Sydney' },
+];
+---
+
+<MainLayout
+  title="ابزار زمان و ساعت جهانی"
+  description="ساعت لحظه‌ای کشورهای مختلف، تبدیل منطقه زمانی، تبدیل Timestamp به تاریخ و محاسبه اختلاف زمانی بین دو کشور — رایگان و آنی."
+  path="/tools/time-tools"
+  breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'ابزار زمان', path: '/tools/time-tools' }]}
+>
+  <article class="section tool-page">
+    <div class="container container--narrow">
+      <a href="/tools" class="tool-page__back">
+        <Icon name="chevron-start" size={16} />
+        بازگشت به ابزارها
+      </a>
+
+      <h1 class="text-balance">ابزار زمان و ساعت جهانی</h1>
+      <p class="tool-page__lead">ساعت لحظه‌ای کشورهای مختلف، تبدیل منطقه زمانی، تبدیل Timestamp و محاسبه اختلاف زمانی.</p>
+
+      <section class="time-tool__section">
+        <h2>
+          <Icon name="clock" size={18} />
+          ساعت کشورهای مختلف
+        </h2>
+        <div class="time-tool__clocks" data-world-clocks>
+          {
+            zones.map((z) => (
+              <div class="time-tool__clock" data-zone={z.zone}>
+                <span class="time-tool__clock-city">{z.label}</span>
+                <strong class="time-tool__clock-time" data-clock-time>--:--:--</strong>
+                <span class="time-tool__clock-date" data-clock-date></span>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="time-tool__section">
+        <h2>
+          <Icon name="refresh" size={18} />
+          تبدیل منطقه زمانی
+        </h2>
+        <div class="time-tool__row">
+          <label>
+            <span>تاریخ و ساعت</span>
+            <input type="datetime-local" data-tz-datetime />
+          </label>
+          <label>
+            <span>از منطقه زمانی</span>
+            <select data-tz-from>
+              {zones.map((z) => <option value={z.zone}>{z.label}</option>)}
+            </select>
+          </label>
+          <label>
+            <span>به منطقه زمانی</span>
+            <select data-tz-to>
+              {zones.map((z, i) => (
+                <option value={z.zone} selected={i === 3}>
+                  {z.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <p class="time-tool__result" data-tz-result aria-live="polite"></p>
+      </section>
+
+      <section class="time-tool__section">
+        <h2>
+          <Icon name="hash" size={18} />
+          Timestamp ⇄ تاریخ
+        </h2>
+        <div class="time-tool__row time-tool__row--two">
+          <label>
+            <span>Unix Timestamp (ثانیه)</span>
+            <input type="number" class="ltr" data-ts-input placeholder="مثلاً 1735689600" />
+          </label>
+          <label>
+            <span>تاریخ و ساعت</span>
+            <input type="datetime-local" data-ts-date-input />
+          </label>
+        </div>
+        <p class="time-tool__result" data-ts-result aria-live="polite"></p>
+      </section>
+
+      <section class="time-tool__section">
+        <h2>
+          <Icon name="compass" size={18} />
+          اختلاف زمانی دو کشور
+        </h2>
+        <div class="time-tool__row time-tool__row--two">
+          <label>
+            <span>کشور اول</span>
+            <select data-diff-a>
+              {zones.map((z) => <option value={z.zone}>{z.label}</option>)}
+            </select>
+          </label>
+          <label>
+            <span>کشور دوم</span>
+            <select data-diff-b>
+              {zones.map((z, i) => (
+                <option value={z.zone} selected={i === 6}>
+                  {z.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <p class="time-tool__result" data-diff-result aria-live="polite"></p>
+      </section>
+    </div>
+  </article>
+
+  <CtaSection />
+</MainLayout>
+
+<style>
+  .tool-page {
+    padding-bottom: var(--space-16);
+  }
+
+  .tool-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .tool-page__back:hover {
+    color: var(--tone-accent-hover);
+  }
+
+  .tool-page__back :global(svg) {
+    transform: scaleX(-1);
+  }
+
+  .tool-page h1 {
+    margin-bottom: var(--space-4);
+  }
+
+  .tool-page__lead {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-10);
+  }
+
+  .time-tool__section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    margin-bottom: var(--space-6);
+  }
+
+  .time-tool__section h2 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-base);
+    color: var(--tone-accent-hover);
+    margin-bottom: var(--space-6);
+  }
+
+  .time-tool__clocks {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .time-tool__clock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border-hairline);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    text-align: center;
+  }
+
+  .time-tool__clock-city {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+  }
+
+  .time-tool__clock-time {
+    font-size: var(--font-size-xl);
+    font-variant-numeric: tabular-nums;
+    color: var(--tone-accent-hover);
+    direction: ltr;
+  }
+
+  .time-tool__clock-date {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+  }
+
+  .time-tool__row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  .time-tool__row--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .time-tool__row label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+  }
+
+  .time-tool__row input,
+  .time-tool__row select {
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-sm);
+    font-family: inherit;
+    color: var(--color-text);
+    width: 100%;
+  }
+
+  .time-tool__row input:focus,
+  .time-tool__row select:focus {
+    outline: none;
+    border-color: var(--tone-accent);
+  }
+
+  .time-tool__result {
+    margin-top: var(--space-6);
+    text-align: center;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+    background: var(--tone-accent-soft);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+  }
+
+  @media (max-width: 640px) {
+    .time-tool__row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  function offsetMinutes(zone: string, date: Date): number {
+    const dtf = new Intl.DateTimeFormat('en-US', {
+      timeZone: zone,
+      hourCycle: 'h23',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
+    const parts = dtf.formatToParts(date).reduce<Record<string, string>>((acc, p) => {
+      acc[p.type] = p.value;
+      return acc;
+    }, {});
+    const asUTC = Date.UTC(
+      Number(parts.year),
+      Number(parts.month) - 1,
+      Number(parts.day),
+      Number(parts.hour),
+      Number(parts.minute),
+      Number(parts.second)
+    );
+    return (asUTC - date.getTime()) / 60000;
+  }
+
+  function formatOffset(minutes: number): string {
+    const sign = minutes >= 0 ? '+' : '−';
+    const abs = Math.abs(minutes);
+    const h = Math.floor(abs / 60);
+    const m = abs % 60;
+    return `${sign}${h}${m ? `:${String(m).padStart(2, '0')}` : ''}`;
+  }
+
+  let clockInterval: ReturnType<typeof setInterval> | undefined;
+
+  function initWorldClocks() {
+    const clocks = Array.from(document.querySelectorAll<HTMLElement>('[data-world-clocks] [data-zone]'));
+    if (!clocks.length) return;
+
+    if (clockInterval) clearInterval(clockInterval);
+
+    function tick() {
+      const now = new Date();
+      clocks.forEach((el) => {
+        const zone = el.dataset.zone!;
+        const timeEl = el.querySelector<HTMLElement>('[data-clock-time]');
+        const dateEl = el.querySelector<HTMLElement>('[data-clock-date]');
+        if (timeEl) {
+          timeEl.textContent = now.toLocaleTimeString('en-GB', {
+            timeZone: zone,
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          });
+        }
+        if (dateEl) {
+          dateEl.textContent = now.toLocaleDateString('fa-IR', {
+            timeZone: zone,
+            weekday: 'short',
+            day: 'numeric',
+            month: 'short',
+          });
+        }
+      });
+    }
+
+    tick();
+    clockInterval = setInterval(tick, 1000);
+  }
+
+  function initTimezoneConverter() {
+    const datetimeInput = document.querySelector<HTMLInputElement>('[data-tz-datetime]');
+    const fromSelect = document.querySelector<HTMLSelectElement>('[data-tz-from]');
+    const toSelect = document.querySelector<HTMLSelectElement>('[data-tz-to]');
+    const result = document.querySelector<HTMLElement>('[data-tz-result]');
+    if (!datetimeInput || !fromSelect || !toSelect || !result) return;
+
+    function update() {
+      if (!datetimeInput!.value) return;
+      const [datePart, timePart] = datetimeInput!.value.split('T');
+      const [y, m, d] = datePart.split('-').map(Number);
+      const [h, mi] = timePart.split(':').map(Number);
+
+      const fromZone = fromSelect!.value;
+      const toZone = toSelect!.value;
+
+      const approx = new Date(Date.UTC(y, m - 1, d, h, mi));
+      const fromOffset = offsetMinutes(fromZone, approx);
+      const utcMillis = Date.UTC(y, m - 1, d, h, mi) - fromOffset * 60000;
+      const converted = new Date(utcMillis);
+
+      const formatted = converted.toLocaleString('fa-IR', {
+        timeZone: toZone,
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
+      result!.textContent = formatted;
+    }
+
+    datetimeInput.addEventListener('input', update);
+    fromSelect.addEventListener('change', update);
+    toSelect.addEventListener('change', update);
+
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    datetimeInput.value = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+    update();
+  }
+
+  function initTimestampTool() {
+    const tsInput = document.querySelector<HTMLInputElement>('[data-ts-input]');
+    const dateInput = document.querySelector<HTMLInputElement>('[data-ts-date-input]');
+    const result = document.querySelector<HTMLElement>('[data-ts-result]');
+    if (!tsInput || !dateInput || !result) return;
+
+    let syncing = false;
+
+    function fromTimestamp() {
+      if (syncing) return;
+      const value = Number(tsInput!.value);
+      if (!value) return;
+      syncing = true;
+      const ms = String(value).length > 11 ? value : value * 1000;
+      const date = new Date(ms);
+      const pad = (n: number) => String(n).padStart(2, '0');
+      dateInput!.value = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+      result!.textContent = date.toLocaleString('fa-IR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      syncing = false;
+    }
+
+    function fromDate() {
+      if (syncing || !dateInput!.value) return;
+      syncing = true;
+      const date = new Date(dateInput!.value);
+      tsInput!.value = String(Math.floor(date.getTime() / 1000));
+      result!.textContent = date.toLocaleString('fa-IR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      syncing = false;
+    }
+
+    tsInput.addEventListener('input', fromTimestamp);
+    dateInput.addEventListener('input', fromDate);
+
+    tsInput.value = String(Math.floor(Date.now() / 1000));
+    fromTimestamp();
+  }
+
+  function initTimeDifference() {
+    const selectA = document.querySelector<HTMLSelectElement>('[data-diff-a]');
+    const selectB = document.querySelector<HTMLSelectElement>('[data-diff-b]');
+    const result = document.querySelector<HTMLElement>('[data-diff-result]');
+    if (!selectA || !selectB || !result) return;
+
+    function update() {
+      const now = new Date();
+      const offsetA = offsetMinutes(selectA!.value, now);
+      const offsetB = offsetMinutes(selectB!.value, now);
+      const diff = offsetA - offsetB;
+
+      if (diff === 0) {
+        result!.textContent = 'این دو منطقه زمانی هم‌اکنون یک ساعت یکسان دارند.';
+        return;
+      }
+
+      const labelA = selectA!.selectedOptions[0]?.textContent ?? '';
+      const labelB = selectB!.selectedOptions[0]?.textContent ?? '';
+      const ahead = diff > 0 ? labelA : labelB;
+      const behind = diff > 0 ? labelB : labelA;
+      result!.textContent = `${ahead} حدود ${formatOffset(Math.abs(diff)).replace('+', '')} ساعت جلوتر از ${behind} است.`;
+    }
+
+    selectA.addEventListener('change', update);
+    selectB.addEventListener('change', update);
+    update();
+  }
+
+  function initTimeTools() {
+    initWorldClocks();
+    initTimezoneConverter();
+    initTimestampTool();
+    initTimeDifference();
+  }
+
+  document.addEventListener('astro:page-load', initTimeTools);
+  document.addEventListener('astro:before-swap', () => {
+    if (clockInterval) clearInterval(clockInterval);
+  });
+</script>

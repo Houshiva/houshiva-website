@@ -1,0 +1,747 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import Icon from '../../components/common/Icon.astro';
+import CtaSection from '../../components/common/CtaSection.astro';
+---
+
+<MainLayout
+  title="کارت ویزیت دیجیتال"
+  description="ساخت رایگان کارت ویزیت دیجیتال با عکس، QR کد تماس و پیش‌نمایش زنده؛ آماده دانلود، چاپ یا اشتراک‌گذاری."
+  path="/tools/business-card"
+  breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'کارت ویزیت', path: '/tools/business-card' }]}
+>
+  <article class="section tool-page">
+    <div class="container">
+      <a href="/tools" class="tool-page__back">
+        <Icon name="chevron-start" size={16} />
+        بازگشت به ابزارها
+      </a>
+
+      <h1 class="text-balance">کارت ویزیت دیجیتال</h1>
+      <p class="tool-page__lead">
+        اطلاعاتتان را وارد کنید؛ کارت ویزیت به‌همراه QR کد تماس (اسکن‌شدنی با دوربین موبایل) به‌صورت زنده ساخته
+        می‌شود. هیچ اطلاعاتی ذخیره یا به سروری ارسال نمی‌شود.
+      </p>
+
+      <div class="card-tool" data-card-tool>
+        <div class="card-tool__form">
+          <section class="card-tool__section">
+            <h2>اطلاعات</h2>
+
+            <div class="card-tool__photo">
+              <div class="card-tool__photo-preview" data-photo-preview>
+                <Icon name="users" size={22} />
+              </div>
+              <div class="card-tool__photo-actions">
+                <label class="card-tool__photo-upload">
+                  آپلود لوگو / عکس
+                  <input type="file" accept="image/*" data-photo-input hidden />
+                </label>
+                <button type="button" class="card-tool__photo-remove" data-remove-photo hidden>حذف</button>
+              </div>
+            </div>
+
+            <div class="card-tool__grid">
+              <label>
+                <span>نام و نام‌خانوادگی</span>
+                <input type="text" data-field="fullName" placeholder="مثلاً سارا احمدی" />
+              </label>
+              <label>
+                <span>سمت شغلی</span>
+                <input type="text" data-field="jobTitle" placeholder="مثلاً مدیر فروش" />
+              </label>
+              <label>
+                <span>نام شرکت / کسب‌وکار</span>
+                <input type="text" data-field="company" placeholder="مثلاً هوشیوا" />
+              </label>
+              <label>
+                <span>شماره تماس</span>
+                <input type="tel" class="ltr" data-field="phone" placeholder="0912xxxxxxx" />
+              </label>
+              <label>
+                <span>ایمیل</span>
+                <input type="email" class="ltr" data-field="email" placeholder="name@email.com" />
+              </label>
+              <label>
+                <span>وب‌سایت</span>
+                <input type="text" class="ltr" data-field="website" placeholder="example.com" />
+              </label>
+            </div>
+            <label class="card-tool__full">
+              <span>آدرس (اختیاری)</span>
+              <input type="text" data-field="address" placeholder="شهر، آدرس دفتر یا فروشگاه" />
+            </label>
+          </section>
+
+          <section class="card-tool__section">
+            <h2>رنگ کارت</h2>
+            <div class="card-tool__swatches" data-color-swatches>
+              <button type="button" class="is-active" data-color="#6d5bd0" style="--swatch: #6d5bd0" aria-label="بنفش"></button>
+              <button type="button" data-color="#2f8f88" style="--swatch: #2f8f88" aria-label="فیروزه‌ای"></button>
+              <button type="button" data-color="#b8863f" style="--swatch: #b8863f" aria-label="طلایی"></button>
+              <button type="button" data-color="#c14c6b" style="--swatch: #c14c6b" aria-label="رز"></button>
+              <button type="button" data-color="#2b2b33" style="--swatch: #2b2b33" aria-label="مشکی"></button>
+            </div>
+          </section>
+        </div>
+
+        <div class="card-tool__preview-col">
+          <div class="card-tool__actions">
+            <button type="button" class="card-tool__print" data-print-card>
+              <Icon name="copy" size={16} />
+              چاپ
+            </button>
+            <button type="button" class="card-tool__download" data-download-card>
+              <Icon name="arrow-start" size={16} class="card-tool__download-icon" />
+              دانلود PDF
+            </button>
+          </div>
+
+          <div class="card-tool__stage">
+            <div class="card-tool__card" data-business-card>
+              <div class="card-tool__card-content" data-card-content></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <CtaSection
+    title="می‌خواهید یک وب‌سایت شخصی یا معرفی کسب‌وکار هم داشته باشید؟"
+    description="کارت ویزیت دیجیتال شروع خوبیست؛ اگر به یک وب‌سایت حرفه‌ای هم نیاز دارید، برایتان طراحی می‌کنیم."
+  />
+</MainLayout>
+
+<style>
+  .tool-page {
+    padding-bottom: var(--space-16);
+  }
+
+  .tool-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .tool-page__back:hover {
+    color: var(--tone-accent-hover);
+  }
+
+  .tool-page__back :global(svg) {
+    transform: scaleX(-1);
+  }
+
+  .tool-page h1 {
+    margin-bottom: var(--space-4);
+  }
+
+  .tool-page__lead {
+    font-size: var(--font-size-lg);
+    max-width: 70ch;
+    margin-bottom: var(--space-10);
+  }
+
+  .card-tool {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-8);
+    align-items: start;
+  }
+
+  .card-tool__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .card-tool__section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+  }
+
+  .card-tool__section h2 {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-4);
+  }
+
+  .card-tool__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  .card-tool__form label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+  }
+
+  .card-tool__full {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+    margin-top: var(--space-4);
+  }
+
+  .card-tool__form input {
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-sm);
+    font-family: inherit;
+    color: var(--color-text);
+    width: 100%;
+  }
+
+  .card-tool__form input:focus {
+    outline: none;
+    border-color: var(--tone-accent);
+  }
+
+  /* ---- Photo upload ---- */
+
+  .card-tool__photo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+
+  .card-tool__photo-preview {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--tone-accent-soft);
+    color: var(--tone-accent-hover);
+    border: 1px solid var(--color-border);
+  }
+
+  .card-tool__photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card-tool__photo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .card-tool__photo-upload {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--tone-accent-hover);
+    background: var(--tone-accent-soft);
+    border-radius: var(--radius-full);
+    padding: var(--space-2) var(--space-4);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+  }
+
+  .card-tool__photo-upload:hover {
+    background: color-mix(in srgb, var(--tone-accent-soft) 55%, var(--tone-accent) 45%);
+  }
+
+  .card-tool__photo-remove {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .card-tool__photo-remove:hover {
+    color: var(--color-danger, #e5484d);
+  }
+
+  /* ---- Color swatches ---- */
+
+  .card-tool__swatches {
+    display: flex;
+    gap: var(--space-3);
+  }
+
+  .card-tool__swatches button {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--swatch);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform var(--transition-fast);
+  }
+
+  .card-tool__swatches button:hover {
+    transform: scale(1.1);
+  }
+
+  .card-tool__swatches button.is-active {
+    border-color: var(--color-text);
+    box-shadow: 0 0 0 2px var(--color-surface);
+  }
+
+  /* ---- Preview column ---- */
+
+  .card-tool__preview-col {
+    position: sticky;
+    top: calc(var(--space-8) + 64px);
+  }
+
+  .card-tool__actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+  }
+
+  .card-tool__print,
+  .card-tool__download {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    border: none;
+    border-radius: var(--radius-full);
+    padding: var(--space-3) var(--space-5);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition:
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .card-tool__print {
+    background: var(--tone-accent-soft);
+    color: var(--tone-accent-hover);
+  }
+
+  .card-tool__print:hover {
+    background: color-mix(in srgb, var(--tone-accent-soft) 55%, var(--tone-accent) 45%);
+  }
+
+  .card-tool__download {
+    background: var(--tone-accent);
+    color: var(--color-on-accent, white);
+  }
+
+  .card-tool__download:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .card-tool__download-icon {
+    transform: rotate(-90deg);
+  }
+
+  .card-tool__stage {
+    display: flex;
+    justify-content: center;
+    padding: var(--space-8);
+    background: var(--color-background-alt);
+    border-radius: var(--radius-lg);
+  }
+
+  .card-tool__card {
+    width: 340px;
+    aspect-ratio: 1.75 / 1;
+    border-radius: 16px;
+    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+  }
+
+  @media (max-width: 960px) {
+    .card-tool {
+      grid-template-columns: 1fr;
+    }
+
+    .card-tool__preview-col {
+      position: static;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .card-tool__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .card-tool__card {
+      width: 100%;
+      max-width: 340px;
+    }
+  }
+
+  @media print {
+    :global(header),
+    :global(footer),
+    :global(.whatsapp-fab),
+    :global(.skip-link),
+    .tool-page__back,
+    .tool-page__lead,
+    .card-tool__form,
+    .card-tool__actions,
+    :global(.cta) {
+      display: none !important;
+    }
+
+    :global(h1) {
+      display: none;
+    }
+
+    .card-tool {
+      display: block;
+    }
+
+    .card-tool__preview-col {
+      position: static;
+    }
+
+    .card-tool__stage {
+      background: none;
+      padding: 0;
+    }
+
+    .card-tool__card {
+      box-shadow: none;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+  }
+</style>
+
+<style is:global>
+  .card-preview {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 22px 24px;
+    background: linear-gradient(150deg, var(--card-accent, #6d5bd0), var(--card-accent-dark, #3a3168));
+    color: white;
+    font-family: inherit;
+  }
+
+  .card-preview__main {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .card-preview__top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .card-preview__photo {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+  }
+
+  .card-preview__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card-preview__name {
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  .card-preview__title {
+    font-size: 0.8rem;
+    opacity: 0.9;
+  }
+
+  .card-preview__company {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    opacity: 0.85;
+    margin-bottom: 6px;
+  }
+
+  .card-preview__contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 0.68rem;
+    opacity: 0.92;
+  }
+
+  .card-preview__contacts span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .card-preview__qr {
+    flex-shrink: 0;
+    width: 78px;
+    height: 78px;
+    border-radius: 10px;
+    background: white;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .card-preview__qr img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .card-preview__empty {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    color: white;
+    background: linear-gradient(150deg, var(--card-accent, #6d5bd0), var(--card-accent-dark, #3a3168));
+    font-size: 0.8rem;
+    opacity: 0.85;
+  }
+</style>
+
+<script>
+  import QRCode from 'qrcode';
+
+  function escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function field(root: ParentNode, name: string): HTMLInputElement | null {
+    return root.querySelector(`[data-field="${name}"]`);
+  }
+
+  function darkenHex(hex: string, amount: number): string {
+    const num = parseInt(hex.replace('#', ''), 16);
+    const r = Math.max(0, Math.round(((num >> 16) & 255) * (1 - amount)));
+    const g = Math.max(0, Math.round(((num >> 8) & 255) * (1 - amount)));
+    const b = Math.max(0, Math.round((num & 255) * (1 - amount)));
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  function applyAccent(cardEl: HTMLElement, hex: string) {
+    cardEl.style.setProperty('--card-accent', hex);
+    cardEl.style.setProperty('--card-accent-dark', darkenHex(hex, 0.45));
+  }
+
+  function buildVCard(data: {
+    fullName: string;
+    jobTitle: string;
+    company: string;
+    phone: string;
+    email: string;
+    website: string;
+    address: string;
+  }): string {
+    return [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      `FN:${data.fullName}`,
+      data.company && `ORG:${data.company}`,
+      data.jobTitle && `TITLE:${data.jobTitle}`,
+      data.phone && `TEL;TYPE=CELL:${data.phone}`,
+      data.email && `EMAIL:${data.email}`,
+      data.website && `URL:${data.website}`,
+      data.address && `ADR:;;${data.address};;;;`,
+      'END:VCARD',
+    ]
+      .filter(Boolean)
+      .join('\n');
+  }
+
+  function initBusinessCard() {
+    const root = document.querySelector<HTMLElement>('[data-card-tool]');
+    if (!root || root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
+
+    const cardContent = root.querySelector<HTMLElement>('[data-card-content]');
+    const cardEl = root.querySelector<HTMLElement>('[data-business-card]');
+    const photoInput = root.querySelector<HTMLInputElement>('[data-photo-input]');
+    const photoPreview = root.querySelector<HTMLElement>('[data-photo-preview]');
+    const photoRemoveBtn = root.querySelector<HTMLButtonElement>('[data-remove-photo]');
+    const swatches = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-color-swatches] button'));
+    const printBtn = root.querySelector<HTMLButtonElement>('[data-print-card]');
+    const downloadBtn = root.querySelector<HTMLButtonElement>('[data-download-card]');
+
+    if (!cardContent || !cardEl) return;
+
+    let photoDataUrl: string | null = null;
+    let accentColor = swatches[0]?.dataset.color ?? '#6d5bd0';
+    const defaultPhotoPreviewHtml = photoPreview?.innerHTML ?? '';
+    let renderToken = 0;
+
+    applyAccent(cardEl, accentColor);
+
+    async function render() {
+      const token = ++renderToken;
+
+      const fullName = field(root!, 'fullName')?.value.trim() ?? '';
+      const jobTitle = field(root!, 'jobTitle')?.value.trim() ?? '';
+      const company = field(root!, 'company')?.value.trim() ?? '';
+      const phone = field(root!, 'phone')?.value.trim() ?? '';
+      const email = field(root!, 'email')?.value.trim() ?? '';
+      const website = field(root!, 'website')?.value.trim() ?? '';
+      const address = field(root!, 'address')?.value.trim() ?? '';
+
+      const hasAnyContent = fullName || jobTitle || company || phone || email || website || photoDataUrl;
+
+      if (!hasAnyContent) {
+        cardContent!.innerHTML = '<div class="card-preview__empty">با پر کردن فرم، کارت ویزیت شما همین‌جا ساخته می‌شود.</div>';
+        return;
+      }
+
+      let qrHtml = '';
+      try {
+        const vcard = buildVCard({ fullName, jobTitle, company, phone, email, website, address });
+        const qrDataUrl = await QRCode.toDataURL(vcard, {
+          margin: 1,
+          width: 200,
+          color: { dark: '#1a1a1f', light: '#ffffff' },
+        });
+        if (token !== renderToken) return;
+        qrHtml = `<div class="card-preview__qr"><img src="${qrDataUrl}" alt="QR کد تماس" /></div>`;
+      } catch {
+        qrHtml = '';
+      }
+
+      const photoHtml = photoDataUrl ? `<div class="card-preview__photo"><img src="${photoDataUrl}" alt="" /></div>` : '';
+
+      const contacts = [
+        phone && `<span>${escapeHtml(phone)}</span>`,
+        email && `<span>${escapeHtml(email)}</span>`,
+        website && `<span>${escapeHtml(website)}</span>`,
+      ]
+        .filter(Boolean)
+        .join('');
+
+      cardContent!.innerHTML = `
+        <div class="card-preview">
+          <div class="card-preview__main">
+            <div class="card-preview__top">
+              ${photoHtml}
+              <div>
+                <div class="card-preview__name">${escapeHtml(fullName || 'نام و نام‌خانوادگی')}</div>
+                ${jobTitle ? `<div class="card-preview__title">${escapeHtml(jobTitle)}</div>` : ''}
+              </div>
+            </div>
+            ${company ? `<div class="card-preview__company">${escapeHtml(company)}</div>` : ''}
+            ${contacts ? `<div class="card-preview__contacts">${contacts}</div>` : ''}
+          </div>
+          ${qrHtml}
+        </div>
+      `;
+    }
+
+    photoInput?.addEventListener('change', () => {
+      const file = photoInput.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        photoDataUrl = reader.result as string;
+        if (photoPreview) photoPreview.innerHTML = `<img src="${photoDataUrl}" alt="" />`;
+        photoRemoveBtn?.removeAttribute('hidden');
+        render();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    photoRemoveBtn?.addEventListener('click', () => {
+      photoDataUrl = null;
+      if (photoInput) photoInput.value = '';
+      if (photoPreview) photoPreview.innerHTML = defaultPhotoPreviewHtml;
+      photoRemoveBtn.setAttribute('hidden', '');
+      render();
+    });
+
+    swatches.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        accentColor = btn.dataset.color ?? accentColor;
+        applyAccent(cardEl!, accentColor);
+        swatches.forEach((b) => b.classList.toggle('is-active', b === btn));
+      });
+    });
+
+    root.addEventListener('input', (event) => {
+      if ((event.target as HTMLElement).closest('[data-field]')) render();
+    });
+
+    printBtn?.addEventListener('click', () => window.print());
+
+    downloadBtn?.addEventListener('click', async () => {
+      if (downloadBtn.disabled) return;
+
+      const html2pdf = (await import('html2pdf.js')).default;
+      const originalLabel = downloadBtn.innerHTML;
+      downloadBtn.disabled = true;
+      downloadBtn.textContent = 'در حال آماده‌سازی...';
+
+      const fullName = field(root!, 'fullName')?.value.trim();
+      const filenameBase = (fullName || 'business-card').replace(/\s+/g, '-');
+
+      try {
+        await html2pdf()
+          .set({
+            margin: 0,
+            filename: `${filenameBase}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 3, useCORS: true },
+            jsPDF: { unit: 'mm', format: [90, 51.4], orientation: 'landscape' },
+          })
+          .from(cardEl)
+          .save();
+      } finally {
+        downloadBtn.disabled = false;
+        downloadBtn.innerHTML = originalLabel;
+      }
+    });
+
+    render();
+  }
+
+  document.addEventListener('astro:page-load', initBusinessCard);
+</script>
