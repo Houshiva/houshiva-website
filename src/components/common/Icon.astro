@@ -42,7 +42,8 @@ export type IconName =
   | 'database'
   | 'flowchart'
   | 'spreadsheet'
-  | 'checklist';
+  | 'checklist'
+  | 'rss';
 
 interface Props {
   name: IconName;
@@ -332,6 +333,14 @@ const { name, size = 24, class: className } = Astro.props;
       <path d="M13.5 8h6" />
       <path d="m7.5 14.3 1.2 1.2 2.3-2.4" />
       <path d="M13.5 14h6" />
+    </>
+  )}
+
+  {name === 'rss' && (
+    <>
+      <circle cx="6" cy="18" r="1.8" fill="currentColor" stroke="none" />
+      <path d="M4.5 11.5a8 8 0 0 1 8 8" />
+      <path d="M4.5 5.5a14 14 0 0 1 14 14" />
     </>
   )}
 </svg>
