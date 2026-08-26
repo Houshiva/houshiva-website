@@ -50,10 +50,21 @@ const structuredData =
           '@type': 'Article',
           headline: article.data.title,
           description: article.data.description,
+          image: new URL('/og-image.png', site.url).toString(),
           datePublished: article.data.publishDate.toISOString(),
+          dateModified: article.data.publishDate.toISOString(),
           inLanguage: 'fa-IR',
-          author: { '@type': 'Organization', name: 'هوشیوا' },
-          publisher: { '@type': 'Organization', name: 'هوشیوا', url: site.url },
+          author: { '@type': 'Organization', name: 'هوشیوا', url: site.url },
+          publisher: {
+            '@type': 'Organization',
+            name: 'هوشیوا',
+            url: site.url,
+            logo: { '@type': 'ImageObject', url: new URL('/brand/houshiva-logo.png', site.url).toString() },
+          },
+          mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': new URL(`/education/${Astro.params.slug}`, site.url).toString(),
+          },
         },
       ]
     : video
