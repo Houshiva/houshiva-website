@@ -3,6 +3,7 @@ import { ClientRouter } from 'astro:transitions';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import WhatsAppButton from '../components/common/WhatsAppButton.astro';
+import Breadcrumbs from '../components/common/Breadcrumbs.astro';
 import { site } from '../data/site';
 import '../styles/global.css';
 
@@ -118,6 +119,7 @@ const allSchemas = [organizationSchema, ...(breadcrumbSchema ? [breadcrumbSchema
   <body>
     <a href="#main-content" class="skip-link">رفتن به محتوای اصلی</a>
     <Header transition:persist />
+    <Breadcrumbs items={resolvedBreadcrumbs} />
     <main id="main-content" transition:name="main-content" transition:animate="none">
       <slot />
     </main>
