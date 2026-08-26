@@ -7,9 +7,10 @@
 - [x] ریپو public شد (پیش‌نیاز GitHub Pages روی پلن رایگان).
 - [x] GitHub Pages فعال شد، با `.github/workflows/deploy.yml` به‌عنوان منبع build (نه یک برنچ جدا).
 - [x] فایل `public/CNAME` با محتوای `houshiva.ir` اضافه شد و دامنه‌ی سفارشی توی تنظیمات Pages ست شد.
-- [ ] **DNS در Cloudflare**: باید این رکوردها روی دامنه `houshiva.ir` ست بشن (پایین همین فایل، بخش «رکوردهای DNS» رو ببین).
-- [ ] بعد از این‌که DNS درست propagate شد، گیت‌هاب خودش گواهی HTTPS رو صادر می‌کنه (چند دقیقه تا چند ساعت طول می‌کشه) — بعدش «Enforce HTTPS» توی Settings > Pages فعال بشه (الان چون دامنه هنوز verify نشده، خاموشه).
-- [ ] **Secrets گیت‌هاب اکشن**: `PUBLIC_WEB3FORMS_ACCESS_KEY` و `BRSAPI_KEY` باید توی Settings > Secrets and variables > Actions این ریپو ست بشن (مقادیرشون همون‌هاییه که توی `.env` لوکاله) — بدون این‌ها، build توی GitHub Actions قیمت‌ها/فرم تماس رو نمی‌سازه.
+- [x] **DNS در Cloudflare** زده شد و propagate شد.
+- [x] گواهی HTTPS گیت‌هاب صادر و تأیید شد؛ `Enforce HTTPS` روشنه. `https://houshiva.ir` کاملاً زنده‌ست.
+- [x] **Secrets گیت‌هاب اکشن** (`PUBLIC_WEB3FORMS_ACCESS_KEY`, `BRSAPI_KEY`) ست شدن؛ build خودکار کار می‌کنه.
+- [x] گوگل Search Console: دامنه verify شد، sitemap ثبت شد.
 
 ### رکوردهای DNS (Cloudflare)
 
