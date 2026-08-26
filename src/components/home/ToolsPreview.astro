@@ -8,14 +8,12 @@ import { toneForIndex, toneVars } from '../../lib/tones';
 
 <section class="section tools-preview">
   <div class="container">
-    <div class="tools-preview__header">
-      <SectionTitle
-        eyebrow="ابزارها"
-        title="چند ابزار رایگان، همین حالا آماده استفاده"
-        description="از رزومه‌ساز تا ابزار PDF؛ بدون ثبت‌نام و کاملاً رایگان."
-      />
-      <Button href="/tools" variant="secondary">مشاهده همه ابزارها</Button>
-    </div>
+    <SectionTitle
+      align="center"
+      eyebrow="ابزارها"
+      title="چند ابزار رایگان، همین حالا آماده استفاده"
+      description="از رزومه‌ساز تا ابزار PDF؛ بدون ثبت‌نام و کاملاً رایگان."
+    />
   </div>
 
   <div class="tools-preview__marquee">
@@ -38,6 +36,12 @@ import { toneForIndex, toneVars } from '../../lib/tones';
       }
     </div>
   </div>
+
+  <div class="container">
+    <div class="tools-preview__cta">
+      <Button href="/tools" variant="secondary">مشاهده همه ابزارها</Button>
+    </div>
+  </div>
 </section>
 
 <style>
@@ -45,16 +49,10 @@ import { toneForIndex, toneVars } from '../../lib/tones';
     overflow: hidden;
   }
 
-  .tools-preview__header {
+  .tools-preview__cta {
     display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: var(--space-8);
-    margin-bottom: var(--space-10);
-  }
-
-  .tools-preview__header :global(.section-title) {
-    margin-bottom: 0;
+    justify-content: center;
+    margin-top: var(--space-10);
   }
 
   .tools-preview__marquee {
@@ -126,13 +124,6 @@ import { toneForIndex, toneVars } from '../../lib/tones';
     }
     to {
       transform: translateX(-50%);
-    }
-  }
-
-  @media (max-width: 720px) {
-    .tools-preview__header {
-      flex-direction: column;
-      align-items: flex-start;
     }
   }
 
