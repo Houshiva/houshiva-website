@@ -395,7 +395,7 @@ const description = 'ساخت رایگان کارت دعوت زیبا برای �
   }
 
   .event-tool__card {
-    width: 320px;
+    width: min(320px, 100%);
     aspect-ratio: 0.68 / 1;
     border-radius: 6px;
     box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.45);
@@ -415,6 +415,10 @@ const description = 'ساخت رایگان کارت دعوت زیبا برای �
   @media (max-width: 480px) {
     .event-tool__grid {
       grid-template-columns: 1fr;
+    }
+
+    .event-tool__stage {
+      padding: var(--space-5);
     }
   }
 
