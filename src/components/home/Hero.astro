@@ -104,7 +104,7 @@ import HeroIllustration from '../illustrations/HeroIllustration.astro';
 
   .hero__visual {
     width: 100%;
-    max-width: 700px;
+    max-width: 460px;
     margin-inline: auto;
   }
 
@@ -114,9 +114,15 @@ import HeroIllustration from '../illustrations/HeroIllustration.astro';
       gap: var(--space-12);
     }
 
+    /* Text first on mobile — the visual is decoration, not the message. */
     .hero__visual {
-      order: -1;
-      max-width: 440px;
+      max-width: 340px;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .hero__visual {
+      max-width: 280px;
     }
   }
 </style>

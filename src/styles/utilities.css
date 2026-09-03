@@ -37,6 +37,33 @@
   top: var(--space-4);
 }
 
+.route-progress {
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  height: 3px;
+  background: var(--color-primary);
+  box-shadow: 0 0 10px 1px var(--color-primary-soft-strong);
+  transform: scaleX(0);
+  transform-origin: right;
+  opacity: 0;
+  z-index: var(--z-modal);
+  pointer-events: none;
+  transition:
+    transform 0.25s ease,
+    opacity 0.2s ease;
+}
+
+.route-progress.is-loading {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-progress {
+    transition: opacity 0.2s ease;
+  }
+}
+
 .text-balance {
   text-wrap: balance;
 }

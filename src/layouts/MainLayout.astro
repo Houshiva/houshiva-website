@@ -121,7 +121,8 @@ const allSchemas = [organizationSchema, ...(breadcrumbSchema ? [breadcrumbSchema
     <a href="#main-content" class="skip-link">رفتن به محتوای اصلی</a>
     <Header transition:persist />
     <Breadcrumbs items={resolvedBreadcrumbs} />
-    <main id="main-content" transition:name="main-content" transition:animate="none">
+    <div class="route-progress" id="route-progress" aria-hidden="true"></div>
+    <main id="main-content" transition:name="main-content">
       <slot />
     </main>
     <Footer transition:persist />
@@ -179,6 +180,39 @@ const allSchemas = [organizationSchema, ...(breadcrumbSchema ? [breadcrumbSchema
       }
 
       document.addEventListener('astro:page-load', initReveal);
+    </script>
+
+    <script>
+      // Visible feedback that a page navigation is actually happening — a
+      // thin top bar that grows on astro:before-preparation (nav started),
+      // jumps to full on astro:after-swap (new content is in), then fades.
+      const bar = document.getElementById('route-progress');
+      let fadeTimer: ReturnType<typeof setTimeout> | undefined;
+
+      document.addEventListener('astro:before-preparation', () => {
+        if (!bar) return;
+        clearTimeout(fadeTimer);
+        bar.classList.remove('is-done');
+        bar.classList.add('is-loading');
+        // force reflow so the 0 -> partial transition always plays, even
+        // if a previous navigation left it mid-animation
+        void bar.offsetWidth;
+        bar.style.transform = 'scaleX(0.35)';
+      });
+
+      document.addEventListener('astro:after-swap', () => {
+        if (!bar) return;
+        bar.style.transform = 'scaleX(1)';
+      });
+
+      document.addEventListener('astro:page-load', () => {
+        if (!bar) return;
+        fadeTimer = setTimeout(() => {
+          bar.classList.add('is-done');
+          bar.classList.remove('is-loading');
+          bar.style.transform = 'scaleX(0)';
+        }, 200);
+      });
     </script>
   </body>
 </html>

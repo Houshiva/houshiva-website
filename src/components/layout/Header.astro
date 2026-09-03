@@ -197,10 +197,16 @@ function isActive(href: string) {
 </style>
 
 <script>
-  const toggle = document.getElementById('nav-toggle');
-  const panel = document.getElementById('mobile-nav');
+  // Re-run after every Astro client-side transition, not just the initial
+  // load — Header/mobile-nav can end up as fresh DOM nodes post-navigation
+  // even though the component is marked transition:persist, and a plain
+  // top-level script here only ever binds once to the very first nodes.
+  function initMobileNav() {
+    const toggle = document.getElementById('nav-toggle');
+    const panel = document.getElementById('mobile-nav');
+    if (!toggle || !panel || toggle.dataset.navBound === 'true') return;
+    toggle.dataset.navBound = 'true';
 
-  if (toggle && panel) {
     toggle.addEventListener('click', () => {
       const isOpen = panel.dataset.state === 'open';
       panel.dataset.state = isOpen ? 'closed' : 'open';
@@ -217,4 +223,6 @@ function isActive(href: string) {
       });
     });
   }
+
+  document.addEventListener('astro:page-load', initMobileNav);
 </script>
