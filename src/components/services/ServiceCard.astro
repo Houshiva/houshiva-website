@@ -9,36 +9,107 @@ export interface Props {
 }
 
 const { service, tone = 'violet' } = Astro.props;
+const overlayId = `${service.slug}-modal`;
+const titleId = `${service.slug}-modal-title`;
 ---
 
-<article class="service-card" id={service.slug} data-reveal style={toneVars(tone)}>
+<button
+  type="button"
+  class="service-card"
+  id={service.slug}
+  data-reveal
+  style={toneVars(tone)}
+  aria-haspopup="dialog"
+  aria-controls={overlayId}
+  data-modal-target={overlayId}
+>
   <div class="service-card__icon">
     <Icon name={service.icon as any} size={26} />
   </div>
   <h3>{service.title}</h3>
   <p>{service.shortDescription}</p>
-  <a href={`/services#${service.slug}`} class="service-card__link">
+  <span class="service-card__hint">
     اطلاعات بیشتر
-    <Icon name="chevron-start" size={16} />
-  </a>
-</article>
+    <Icon name="chevron-start" size={16} class="service-card__chevron" />
+  </span>
+</button>
+
+<div class="service-modal-overlay" id={overlayId}>
+  <div class="service-modal" role="dialog" aria-modal="true" aria-labelledby={titleId} tabindex="-1" style={toneVars(tone)}>
+    <div class="service-modal__blob service-modal__blob--a" aria-hidden="true"></div>
+    <div class="service-modal__blob service-modal__blob--b" aria-hidden="true"></div>
+
+    <button type="button" class="service-modal__close" aria-label="بستن">
+      <Icon name="close" size={16} />
+    </button>
+
+    <div class="service-modal__scroll">
+      <div class="service-modal__body">
+        <div class="service-modal__icon">
+          <Icon name={service.icon as any} size={28} />
+        </div>
+
+        <h3 id={titleId}>{service.title}</h3>
+        <p class="service-modal__desc">{service.description}</p>
+
+        <div class="service-modal__block">
+          <h4>مزایا</h4>
+          <ul>
+            {
+              service.benefits.map((benefit) => (
+                <li>
+                  <Icon name="check" size={14} />
+                  <span>{benefit}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="service-modal__block">
+          <h4>امکانات</h4>
+          <ul>
+            {
+              service.features.map((feature) => (
+                <li>
+                  <Icon name="check" size={14} />
+                  <span>{feature}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <a href="/contact" class="service-modal__cta">
+          مشاوره درباره {service.title}
+          <Icon name="chevron-start" size={14} />
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <style>
   .service-card {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
+    font-family: inherit;
+    text-align: start;
     padding: var(--space-8);
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
+    cursor: pointer;
     transition:
       border-color var(--transition-base),
       transform var(--transition-base),
       box-shadow var(--transition-base);
   }
 
-  .service-card:hover {
+  .service-card:hover,
+  .service-card:focus-visible {
     border-color: var(--tone-accent);
     transform: translateY(-4px);
     box-shadow: var(--shadow-md);
@@ -54,6 +125,11 @@ const { service, tone = 'violet' } = Astro.props;
     background: var(--tone-accent-soft);
     color: var(--tone-accent-hover);
     margin-bottom: var(--space-5);
+    transition: transform var(--transition-base);
+  }
+
+  .service-card:hover .service-card__icon {
+    transform: scale(1.08) rotate(-4deg);
   }
 
   .service-card h3 {
@@ -66,7 +142,7 @@ const { service, tone = 'violet' } = Astro.props;
     flex-grow: 1;
   }
 
-  .service-card__link {
+  .service-card__hint {
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
@@ -75,11 +151,272 @@ const { service, tone = 'violet' } = Astro.props;
     color: var(--tone-accent-hover);
   }
 
-  .service-card__link :global(svg) {
-    transition: transform var(--transition-fast);
-  }
-
-  .service-card:hover .service-card__link :global(svg) {
+  .service-card:hover .service-card__hint :global(.service-card__chevron) {
     transform: translateX(-3px);
   }
+
+  /* ---- Modal overlay ---- */
+
+  .service-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6);
+
+    background: radial-gradient(circle at 50% 30%, rgba(30, 20, 50, 0.35), rgba(8, 6, 14, 0.65));
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 0.35s ease,
+      visibility 0s linear 0.35s;
+  }
+
+  .service-modal-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition:
+      opacity 0.35s ease,
+      visibility 0s linear 0s;
+  }
+
+  .service-modal {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    max-height: calc(100vh - var(--space-6) * 2);
+    overflow: hidden;
+
+    border: 1px solid color-mix(in srgb, var(--tone-accent) 45%, var(--color-border-strong));
+    border-radius: 28px;
+    background:
+      linear-gradient(155deg, color-mix(in srgb, var(--tone-accent) 14%, transparent) 0%, transparent 60%),
+      color-mix(in srgb, var(--color-surface) 97%, transparent);
+    backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    box-shadow:
+      0 40px 90px -24px color-mix(in srgb, var(--tone-accent) 50%, transparent),
+      inset 0 1px 0 color-mix(in srgb, white 22%, transparent);
+
+    transform: scale(0.82) translateY(28px);
+    filter: blur(10px);
+    transition:
+      transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .service-modal-overlay.is-open .service-modal {
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+
+  .service-modal__blob {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    background: var(--tone-accent);
+    filter: blur(46px);
+    z-index: -1;
+  }
+
+  .service-modal__blob--a {
+    width: 160px;
+    height: 160px;
+    top: -50px;
+    inset-inline-end: -50px;
+    opacity: 0.4;
+  }
+
+  .service-modal__blob--b {
+    width: 120px;
+    height: 120px;
+    bottom: -40px;
+    inset-inline-start: -40px;
+    opacity: 0.28;
+  }
+
+  .service-modal__close {
+    position: absolute;
+    top: var(--space-4);
+    inset-inline-end: var(--space-4);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-surface) 70%, transparent);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    z-index: 1;
+    transition:
+      background-color var(--transition-fast),
+      color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .service-modal__close:hover {
+    background: var(--tone-accent-soft);
+    color: var(--tone-accent-hover);
+    transform: rotate(90deg);
+  }
+
+  .service-modal__scroll {
+    max-height: calc(100vh - var(--space-6) * 2);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--space-8);
+  }
+
+  .service-modal__body {
+    padding-top: var(--space-2);
+  }
+
+  .service-modal__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-md);
+    background: var(--tone-accent-soft);
+    color: var(--tone-accent-hover);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--tone-accent) 12%, transparent);
+    margin-bottom: var(--space-4);
+  }
+
+  .service-modal h3 {
+    margin-bottom: var(--space-2);
+  }
+
+  .service-modal__desc {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .service-modal__block {
+    margin-bottom: var(--space-4);
+  }
+
+  .service-modal__block h4 {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-3);
+  }
+
+  .service-modal__block ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .service-modal__block li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+  }
+
+  .service-modal__block li :global(svg) {
+    flex-shrink: 0;
+    margin-top: 3px;
+    color: var(--color-success);
+  }
+
+  .service-modal__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--tone-accent-hover);
+    background: var(--tone-accent-soft);
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius-full);
+    transition:
+      background-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .service-modal__cta:hover {
+    background: color-mix(in srgb, var(--tone-accent-soft) 55%, var(--tone-accent) 45%);
+    transform: translateX(-3px);
+  }
+
+  @media (max-width: 480px) {
+    .service-modal {
+      border-radius: 22px;
+    }
+
+    .service-modal__scroll {
+      padding: var(--space-6);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-card,
+    .service-card__icon,
+    .service-modal-overlay,
+    .service-modal,
+    .service-modal__close {
+      transition: none;
+    }
+  }
 </style>
+
+<style is:global>
+  html.has-open-service-modal {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  function initServiceCards() {
+    document.querySelectorAll<HTMLButtonElement>('.service-card[data-modal-target]').forEach((trigger) => {
+      if (trigger.dataset.bound === 'true') return;
+      trigger.dataset.bound = 'true';
+
+      const overlay = document.getElementById(trigger.dataset.modalTarget ?? '');
+      if (!overlay) return;
+
+      const panel = overlay.querySelector<HTMLElement>('.service-modal');
+      const closeBtn = overlay.querySelector<HTMLButtonElement>('.service-modal__close');
+
+      function openModal() {
+        overlay!.classList.add('is-open');
+        document.documentElement.classList.add('has-open-service-modal');
+        panel?.focus({ preventScroll: true });
+      }
+
+      function closeModal() {
+        overlay!.classList.remove('is-open');
+        document.documentElement.classList.remove('has-open-service-modal');
+        trigger.focus({ preventScroll: true });
+      }
+
+      trigger.addEventListener('click', openModal);
+      closeBtn?.addEventListener('click', closeModal);
+
+      overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) closeModal();
+      });
+
+      overlay.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeModal();
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initServiceCards);
+</script>

@@ -6,12 +6,32 @@ import CtaSection from '../components/common/CtaSection.astro';
 import GradientMesh from '../components/common/GradientMesh.astro';
 import { toneForIndex } from '../lib/tones';
 import { services } from '../data/services';
+import { site } from '../data/site';
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: services.map((service, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Service',
+        name: service.title,
+        description: service.shortDescription,
+        url: new URL(`/services#${service.slug}`, site.url).toString(),
+        provider: { '@type': 'Organization', name: site.name, url: site.url },
+      },
+    })),
+  },
+];
 ---
 
 <MainLayout
   title="خدمات هوشیوا"
   description="طراحی سایت، فروشگاه اینترنتی، نرم‌افزار اختصاصی، حسابداری، صندوق فروش، CRM، مدیریت انبار، اتوماسیون، داشبورد مدیریتی و اتصال سامانه‌ها — خدمات کامل هوشیوا برای کسب‌وکار شما."
   path="/services"
+  structuredData={structuredData}
 >
   <section class="section services-hero">
     <GradientMesh variant="hero" />

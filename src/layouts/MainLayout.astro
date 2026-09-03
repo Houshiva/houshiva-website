@@ -3,6 +3,7 @@ import { ClientRouter } from 'astro:transitions';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import WhatsAppButton from '../components/common/WhatsAppButton.astro';
+import Breadcrumbs from '../components/common/Breadcrumbs.astro';
 import { site } from '../data/site';
 import '../styles/global.css';
 
@@ -84,6 +85,7 @@ const allSchemas = [organizationSchema, ...(breadcrumbSchema ? [breadcrumbSchema
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} — مقالات آموزشی`} href="/rss.xml" />
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
 
     <title>{pageTitle}</title>
@@ -118,6 +120,7 @@ const allSchemas = [organizationSchema, ...(breadcrumbSchema ? [breadcrumbSchema
   <body>
     <a href="#main-content" class="skip-link">رفتن به محتوای اصلی</a>
     <Header transition:persist />
+    <Breadcrumbs items={resolvedBreadcrumbs} />
     <main id="main-content" transition:name="main-content" transition:animate="none">
       <slot />
     </main>
@@ -142,10 +145,37 @@ const allSchemas = [organizationSchema, ...(breadcrumbSchema ? [breadcrumbSchema
           { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }
         );
 
-        document.querySelectorAll('[data-reveal]:not(.is-visible)').forEach((el, i) => {
-          (el as HTMLElement).style.setProperty('--reveal-delay', `${Math.min(i % 6, 5) * 70}ms`);
-          observer.observe(el);
+        const revealEls = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]:not(.is-visible)'));
+
+        // Stagger delay must reflect actual visual row, not DOM order: a flat
+        // page-wide (or even per-parent) counter can put a card early in a
+        // row's index sequence right after a leftover from a previous section
+        // or a previous row, so it lags behind — or jumps ahead of — its own
+        // row-mates. Group by parent, then by rendered offsetTop (= row), so
+        // each row gets its own clean 0, 70, 140... sequence.
+        const groups = new Map<Element, HTMLElement[]>();
+        revealEls.forEach((el) => {
+          const parent = el.parentElement;
+          if (!parent) return;
+          if (!groups.has(parent)) groups.set(parent, []);
+          groups.get(parent)!.push(el);
         });
+
+        groups.forEach((siblings) => {
+          const rows = new Map<number, HTMLElement[]>();
+          siblings.forEach((el) => {
+            const top = Math.round(el.offsetTop);
+            if (!rows.has(top)) rows.set(top, []);
+            rows.get(top)!.push(el);
+          });
+          rows.forEach((rowEls) => {
+            rowEls.forEach((el, i) => {
+              el.style.setProperty('--reveal-delay', `${Math.min(i, 5) * 70}ms`);
+            });
+          });
+        });
+
+        revealEls.forEach((el) => observer.observe(el));
       }
 
       document.addEventListener('astro:page-load', initReveal);

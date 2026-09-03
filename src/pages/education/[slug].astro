@@ -1,9 +1,11 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import MainLayout from '../../layouts/MainLayout.astro';
 import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
 import ProtectedVideoPlayer from '../../components/education/ProtectedVideoPlayer.astro';
+import RelatedArticles from '../../components/education/RelatedArticles.astro';
 import { videos } from '../../data/videos';
 import { site } from '../../data/site';
 import type { Video } from '../../data/videos';
@@ -50,10 +52,21 @@ const structuredData =
           '@type': 'Article',
           headline: article.data.title,
           description: article.data.description,
+          image: new URL('/og-image.png', site.url).toString(),
           datePublished: article.data.publishDate.toISOString(),
+          dateModified: article.data.publishDate.toISOString(),
           inLanguage: 'fa-IR',
-          author: { '@type': 'Organization', name: 'هوشیوا' },
-          publisher: { '@type': 'Organization', name: 'هوشیوا', url: site.url },
+          author: { '@type': 'Organization', name: 'هوشیوا', url: site.url },
+          publisher: {
+            '@type': 'Organization',
+            name: 'هوشیوا',
+            url: site.url,
+            logo: { '@type': 'ImageObject', url: new URL('/brand/houshiva-logo.png', site.url).toString() },
+          },
+          mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': new URL(`/education/${Astro.params.slug}`, site.url).toString(),
+          },
         },
       ]
     : video
@@ -100,7 +113,15 @@ const structuredData =
               <span aria-hidden="true">·</span>
               <span>{article.data.readingTime} مطالعه</span>
             </div>
+            <Image
+              src={article.data.coverImage}
+              alt={article.data.title}
+              width={960}
+              height={420}
+              class="content-detail__cover"
+            />
             <div class="content-detail__body">{Content && <Content />}</div>
+            <RelatedArticles currentSlug={article.id} currentCategory={article.data.category} />
           </>
         )
       }
@@ -178,6 +199,16 @@ const structuredData =
     margin-bottom: var(--space-8);
   }
 
+  .content-detail :global(.content-detail__cover) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-10);
+  }
+
   .content-detail__body {
     font-size: var(--font-size-lg);
     line-height: var(--line-height-normal);
@@ -248,6 +279,8 @@ const structuredData =
   }
 
   .content-detail__body :global(table) {
+    display: block;
+    overflow-x: auto;
     width: 100%;
     border-collapse: collapse;
     margin-bottom: var(--space-5);
@@ -268,9 +301,16 @@ const structuredData =
   }
 
   .content-detail__body :global(blockquote) {
+    background: var(--tone-accent-soft);
     border-inline-start: 3px solid var(--tone-accent);
-    padding-inline-start: var(--space-5);
-    color: var(--color-text-muted);
+    border-radius: var(--radius-md);
+    padding: var(--space-5) var(--space-6);
+    color: var(--color-text);
+    font-size: var(--font-size-base);
     margin-bottom: var(--space-5);
+  }
+
+  .content-detail__body :global(blockquote p:last-child) {
+    margin-bottom: 0;
   }
 </style>

@@ -1,0 +1,106 @@
+---
+import Icon from '../common/Icon.astro';
+import { tools } from '../../data/tools';
+
+export interface Props {
+  exclude: string;
+}
+
+const { exclude } = Astro.props;
+const related = tools.filter((tool) => tool.slug !== exclude).slice(0, 3);
+---
+
+<section class="related-tools">
+  <div class="container container--narrow">
+    <h2>ابزارهای دیگر</h2>
+    <div class="related-tools__grid">
+      {
+        related.map((tool) => (
+          <a href={`/tools/${tool.slug}`} class="related-tools__item">
+            <span class="related-tools__icon">
+              <Icon name={tool.icon} size={20} />
+            </span>
+            <span class="related-tools__text">
+              <strong>{tool.title}</strong>
+              <span>{tool.description}</span>
+            </span>
+            <Icon name="chevron-start" size={16} class="related-tools__chevron" />
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .related-tools {
+    padding-block: var(--space-12);
+  }
+
+  .related-tools h2 {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-6);
+  }
+
+  .related-tools__grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .related-tools__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4) var(--space-5);
+    transition:
+      border-color var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  .related-tools__item:hover {
+    border-color: var(--tone-accent);
+    transform: translateY(-2px);
+  }
+
+  .related-tools__icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: var(--tone-accent-soft);
+    color: var(--tone-accent-hover);
+  }
+
+  .related-tools__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .related-tools__text strong {
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+  }
+
+  .related-tools__text span {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-subtle);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .related-tools__chevron {
+    flex-shrink: 0;
+    color: var(--color-text-subtle);
+  }
+</style>

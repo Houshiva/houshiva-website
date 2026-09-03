@@ -1,0 +1,85 @@
+---
+import Icon from './Icon.astro';
+
+export interface BreadcrumbItem {
+  label: string;
+  path: string;
+}
+
+export interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <nav class="breadcrumbs" aria-label="مسیر صفحه">
+      <div class="container">
+        <ol>
+          <li>
+            <a href="/">صفحه اصلی</a>
+          </li>
+          {items.map((item, i) => (
+            <li>
+              <Icon name="chevron-start" size={12} />
+              {i === items.length - 1 ? (
+                <span aria-current="page">{item.label}</span>
+              ) : (
+                <a href={item.path}>{item.label}</a>
+              )}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </nav>
+  )
+}
+
+<style>
+  .breadcrumbs {
+    border-bottom: 1px solid var(--color-border-hairline);
+    background: var(--color-background-alt);
+  }
+
+  .breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    padding-block: var(--space-3);
+    font-size: var(--font-size-xs);
+  }
+
+  .breadcrumbs li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
+  .breadcrumbs a {
+    color: var(--color-text-subtle);
+    white-space: nowrap;
+    transition: color var(--transition-fast);
+  }
+
+  .breadcrumbs a:hover {
+    color: var(--tone-accent-hover);
+  }
+
+  .breadcrumbs span[aria-current='page'] {
+    color: var(--color-text-muted);
+    font-weight: var(--font-weight-medium);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 40ch;
+  }
+
+  .breadcrumbs :global(svg) {
+    flex-shrink: 0;
+    color: var(--color-border-strong);
+  }
+</style>

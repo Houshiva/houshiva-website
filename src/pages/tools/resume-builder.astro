@@ -1,0 +1,1291 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import Icon from '../../components/common/Icon.astro';
+import CtaSection from '../../components/common/CtaSection.astro';
+import RelatedTools from '../../components/tools/RelatedTools.astro';
+import { toolSchema } from '../../lib/seo';
+
+const title = 'رزومه‌ساز آنلاین';
+const description =
+  'رزومه حرفه‌ای خود را رایگان بسازید؛ اطلاعات را وارد کنید، پیش‌نمایش زنده ببینید و در نهایت چاپ یا PDF بگیرید. بدون نیاز به ثبت‌نام.';
+---
+
+<MainLayout
+  title={title}
+  description={description}
+  path="/tools/resume-builder"
+  breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'رزومه‌ساز', path: '/tools/resume-builder' }]}
+  structuredData={[toolSchema(title, description, '/tools/resume-builder')]}
+>
+  <article class="section tool-page">
+    <div class="container">
+      <a href="/tools" class="tool-page__back">
+        <Icon name="chevron-start" size={16} />
+        بازگشت به ابزارها
+      </a>
+
+      <h1 class="text-balance">رزومه‌ساز آنلاین</h1>
+      <p class="tool-page__lead">
+        اطلاعاتتان را در فرم زیر وارد کنید؛ رزومه در سمت راست، همزمان و به‌صورت زنده ساخته می‌شود. هیچ اطلاعاتی
+        ذخیره یا به سروری ارسال نمی‌شود.
+      </p>
+
+      <div class="resume-tool" data-resume-tool>
+        <div class="resume-tool__form">
+          <section class="resume-tool__section">
+            <h2>اطلاعات شخصی</h2>
+
+            <div class="resume-tool__photo">
+              <div class="resume-tool__photo-preview" data-photo-preview>
+                <Icon name="users" size={22} />
+              </div>
+              <div class="resume-tool__photo-actions">
+                <label class="resume-tool__photo-upload">
+                  آپلود عکس پروفایل
+                  <input type="file" accept="image/*" data-photo-input hidden />
+                </label>
+                <button type="button" class="resume-tool__photo-remove" data-remove-photo hidden>حذف عکس</button>
+              </div>
+            </div>
+
+            <div class="resume-tool__grid">
+              <label>
+                <span>نام و نام‌خانوادگی</span>
+                <input type="text" data-field="fullName" placeholder="مثلاً سارا احمدی" />
+              </label>
+              <label>
+                <span>عنوان شغلی / تخصص</span>
+                <input type="text" data-field="jobTitle" placeholder="مثلاً توسعه‌دهنده فرانت‌اند" />
+              </label>
+              <label>
+                <span>شماره تماس</span>
+                <input type="tel" class="ltr" data-field="phone" placeholder="0912xxxxxxx" />
+              </label>
+              <label>
+                <span>ایمیل</span>
+                <input type="email" class="ltr" data-field="email" placeholder="name@email.com" />
+              </label>
+              <label>
+                <span>شهر محل سکونت</span>
+                <input type="text" data-field="city" placeholder="مثلاً تهران" />
+              </label>
+            </div>
+            <label class="resume-tool__full">
+              <span>درباره من</span>
+              <textarea data-field="summary" rows="3" placeholder="در دو یا سه جمله، خلاصه‌ای از تخصص و تجربه خود بنویسید."></textarea>
+            </label>
+          </section>
+
+          <section class="resume-tool__section">
+            <div class="resume-tool__section-head">
+              <h2>سوابق کاری</h2>
+              <button type="button" class="resume-tool__add" data-add-experience>
+                <Icon name="spark" size={14} />
+                افزودن سابقه
+              </button>
+            </div>
+            <div data-experience-list></div>
+          </section>
+
+          <section class="resume-tool__section">
+            <div class="resume-tool__section-head">
+              <h2>تحصیلات</h2>
+              <button type="button" class="resume-tool__add" data-add-education>
+                <Icon name="spark" size={14} />
+                افزودن مقطع
+              </button>
+            </div>
+            <div data-education-list></div>
+          </section>
+
+          <section class="resume-tool__section">
+            <h2>مهارت‌ها</h2>
+            <div class="resume-tool__skill-input">
+              <input type="text" data-skill-input placeholder="مثلاً مدیریت پروژه — اینتر بزنید" />
+              <button type="button" data-add-skill>افزودن</button>
+            </div>
+            <div class="resume-tool__chips" data-skill-chips></div>
+          </section>
+
+          <section class="resume-tool__section">
+            <div class="resume-tool__section-head">
+              <h2>زبان‌ها</h2>
+              <button type="button" class="resume-tool__add" data-add-language>
+                <Icon name="spark" size={14} />
+                افزودن زبان
+              </button>
+            </div>
+            <div data-language-list></div>
+          </section>
+        </div>
+
+        <div class="resume-tool__preview-col">
+          <div class="resume-tool__actions">
+            <div class="resume-tool__lang-toggle" role="group" aria-label="زبان رزومه">
+              <button type="button" class="is-active" data-resume-lang="fa">فارسی</button>
+              <button type="button" data-resume-lang="en">English</button>
+            </div>
+            <div class="resume-tool__action-buttons">
+              <button type="button" class="resume-tool__print" data-print-resume>
+                <Icon name="copy" size={16} />
+                چاپ
+              </button>
+              <button type="button" class="resume-tool__download" data-download-resume>
+                <Icon name="arrow-start" size={16} class="resume-tool__download-icon" />
+                دانلود PDF
+              </button>
+            </div>
+          </div>
+          <div class="resume-tool__preview" data-resume-preview-wrap>
+            <div class="resume-tool__preview-content" data-resume-preview></div>
+          </div>
+        </div>
+      </div>
+
+      <template data-experience-template>
+        <div class="resume-row">
+          <button type="button" class="resume-row__remove" data-remove-row aria-label="حذف این سابقه">
+            <Icon name="close" size={14} />
+          </button>
+          <div class="resume-tool__grid">
+            <label>
+              <span>عنوان شغلی</span>
+              <input type="text" data-field="title" placeholder="مثلاً کارشناس فروش" />
+            </label>
+            <label>
+              <span>نام شرکت</span>
+              <input type="text" data-field="company" placeholder="مثلاً شرکت نمونه" />
+            </label>
+            <label>
+              <span>از (مثلاً بهمن ۱۴۰۰)</span>
+              <input type="text" data-field="start" />
+            </label>
+            <label>
+              <span>تا</span>
+              <input type="text" data-field="end" placeholder="مثلاً اکنون" />
+            </label>
+          </div>
+          <label class="resume-tool__full">
+            <span>توضیحات</span>
+            <textarea data-field="description" rows="2" placeholder="مهم‌ترین وظایف و دستاوردها را بنویسید."></textarea>
+          </label>
+        </div>
+      </template>
+
+      <template data-education-template>
+        <div class="resume-row">
+          <button type="button" class="resume-row__remove" data-remove-row aria-label="حذف این مقطع">
+            <Icon name="close" size={14} />
+          </button>
+          <div class="resume-tool__grid">
+            <label>
+              <span>مقطع و رشته</span>
+              <input type="text" data-field="degree" placeholder="مثلاً کارشناسی مهندسی کامپیوتر" />
+            </label>
+            <label>
+              <span>دانشگاه / مؤسسه</span>
+              <input type="text" data-field="institution" placeholder="مثلاً دانشگاه تهران" />
+            </label>
+            <label>
+              <span>از</span>
+              <input type="text" data-field="start" />
+            </label>
+            <label>
+              <span>تا</span>
+              <input type="text" data-field="end" />
+            </label>
+          </div>
+        </div>
+      </template>
+
+      <template data-language-template>
+        <div class="resume-row resume-row--inline">
+          <div class="resume-tool__grid resume-tool__grid--two">
+            <label>
+              <span>زبان</span>
+              <input type="text" data-field="name" placeholder="مثلاً انگلیسی" />
+            </label>
+            <label>
+              <span>سطح</span>
+              <select data-field="level">
+                <option value="مبتدی">مبتدی</option>
+                <option value="متوسط" selected>متوسط</option>
+                <option value="پیشرفته">پیشرفته</option>
+                <option value="زبان مادری">زبان مادری</option>
+              </select>
+            </label>
+          </div>
+          <button type="button" class="resume-row__remove resume-row__remove--inline" data-remove-row aria-label="حذف این زبان">
+            <Icon name="close" size={14} />
+          </button>
+        </div>
+      </template>
+    </div>
+  </article>
+
+  <RelatedTools exclude="resume-builder" />
+
+  <CtaSection
+    title="می‌خواهید یک وب‌سایت شخصی یا نمونه‌کار هم داشته باشید؟"
+    description="گاهی یک رزومه کافی نیست؛ اگر به یک وب‌سایت شخصی حرفه‌ای برای معرفی خودتان نیاز دارید، برایتان طراحی می‌کنیم."
+  />
+</MainLayout>
+
+<style>
+  .tool-page {
+    padding-bottom: var(--space-16);
+  }
+
+  .tool-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .tool-page__back:hover {
+    color: var(--tone-accent-hover);
+  }
+
+  .tool-page__back :global(svg) {
+    transform: scaleX(-1);
+  }
+
+  .tool-page h1 {
+    margin-bottom: var(--space-4);
+  }
+
+  .tool-page__lead {
+    font-size: var(--font-size-lg);
+    max-width: 70ch;
+    margin-bottom: var(--space-10);
+  }
+
+  .resume-tool {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-8);
+    align-items: start;
+  }
+
+  .resume-tool__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .resume-tool__section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+  }
+
+  .resume-tool__section h2 {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-4);
+  }
+
+  .resume-tool__section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+  }
+
+  .resume-tool__section-head h2 {
+    margin-bottom: 0;
+  }
+
+  .resume-tool__add {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--tone-accent-hover);
+    background: var(--tone-accent-soft);
+    border: none;
+    border-radius: var(--radius-full);
+    padding: var(--space-2) var(--space-4);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+  }
+
+  .resume-tool__add:hover {
+    background: color-mix(in srgb, var(--tone-accent-soft) 55%, var(--tone-accent) 45%);
+  }
+
+  .resume-tool__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  .resume-tool__grid--two {
+    flex: 1;
+  }
+
+  .resume-tool__form label,
+  .resume-row label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+  }
+
+  .resume-tool__full {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+    margin-top: var(--space-4);
+  }
+
+  .resume-tool__form input,
+  .resume-tool__form textarea,
+  .resume-tool__form select,
+  .resume-row input,
+  .resume-row textarea,
+  .resume-row select {
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-sm);
+    font-family: inherit;
+    color: var(--color-text);
+    width: 100%;
+  }
+
+  .resume-tool__form input:focus,
+  .resume-tool__form textarea:focus,
+  .resume-tool__form select:focus,
+  .resume-row input:focus,
+  .resume-row textarea:focus,
+  .resume-row select:focus {
+    outline: none;
+    border-color: var(--tone-accent);
+  }
+
+  .resume-tool__form textarea {
+    resize: vertical;
+  }
+
+  .resume-row {
+    position: relative;
+    padding: var(--space-4);
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border-hairline);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-4);
+  }
+
+  .resume-row--inline {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-3);
+  }
+
+  .resume-row__remove {
+    position: absolute;
+    top: var(--space-3);
+    inset-inline-end: var(--space-3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition:
+      background-color var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  .resume-row__remove:hover {
+    background: color-mix(in srgb, var(--color-danger, #e5484d) 15%, transparent);
+    color: var(--color-danger, #e5484d);
+  }
+
+  .resume-row__remove--inline {
+    position: static;
+    flex-shrink: 0;
+    margin-bottom: 2px;
+  }
+
+  .resume-tool__skill-input {
+    display: flex;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .resume-tool__skill-input input {
+    flex: 1;
+  }
+
+  .resume-tool__skill-input button {
+    flex-shrink: 0;
+    background: var(--tone-accent-soft);
+    color: var(--tone-accent-hover);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 0 var(--space-5);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+  }
+
+  .resume-tool__skill-input button:hover {
+    background: color-mix(in srgb, var(--tone-accent-soft) 55%, var(--tone-accent) 45%);
+  }
+
+  .resume-tool__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .resume-tool__chips :global(.resume-tool__chip) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-xs);
+    color: var(--color-text);
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: var(--space-1) var(--space-2) var(--space-1) var(--space-3);
+  }
+
+  .resume-tool__chips :global(.resume-tool__chip button) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: none;
+    background: var(--color-border);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    font-size: 0.75rem;
+    line-height: 1;
+  }
+
+  /* ---- Photo upload ---- */
+
+  .resume-tool__photo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+
+  .resume-tool__photo-preview {
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--tone-accent-soft);
+    color: var(--tone-accent-hover);
+    border: 1px solid var(--color-border);
+  }
+
+  .resume-tool__photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .resume-tool__photo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .resume-tool__photo-upload {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--tone-accent-hover);
+    background: var(--tone-accent-soft);
+    border-radius: var(--radius-full);
+    padding: var(--space-2) var(--space-4);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+  }
+
+  .resume-tool__photo-upload:hover {
+    background: color-mix(in srgb, var(--tone-accent-soft) 55%, var(--tone-accent) 45%);
+  }
+
+  .resume-tool__photo-remove {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .resume-tool__photo-remove:hover {
+    color: var(--color-danger, #e5484d);
+  }
+
+  /* ---- Preview column ---- */
+
+  .resume-tool__preview-col {
+    position: sticky;
+    top: calc(var(--space-8) + 64px);
+  }
+
+  .resume-tool__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .resume-tool__lang-toggle {
+    display: inline-flex;
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 3px;
+    gap: 2px;
+  }
+
+  .resume-tool__lang-toggle button {
+    border: none;
+    background: none;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition:
+      background-color var(--transition-fast),
+      color var(--transition-fast);
+  }
+
+  .resume-tool__lang-toggle button.is-active {
+    background: var(--tone-accent);
+    color: var(--color-on-accent, white);
+  }
+
+  .resume-tool__action-buttons {
+    display: flex;
+    gap: var(--space-3);
+  }
+
+  .resume-tool__print,
+  .resume-tool__download {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    border: none;
+    border-radius: var(--radius-full);
+    padding: var(--space-3) var(--space-5);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition:
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast),
+      background-color var(--transition-fast);
+  }
+
+  .resume-tool__print {
+    background: var(--tone-accent-soft);
+    color: var(--tone-accent-hover);
+  }
+
+  .resume-tool__print:hover {
+    background: color-mix(in srgb, var(--tone-accent-soft) 55%, var(--tone-accent) 45%);
+  }
+
+  .resume-tool__download {
+    background: var(--tone-accent);
+    color: var(--color-on-accent, white);
+  }
+
+  .resume-tool__download:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .resume-tool__download-icon {
+    transform: rotate(-90deg);
+  }
+
+  .resume-tool__preview {
+    position: relative;
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg, 0 20px 50px -20px rgba(0, 0, 0, 0.35));
+    overflow: hidden;
+  }
+
+  .resume-tool__preview::before {
+    content: 'هوشیوا';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    font-weight: 800;
+    color: #6d5bd0;
+    opacity: 0.045;
+    transform: rotate(-18deg);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .resume-tool__preview-content {
+    position: relative;
+    z-index: 1;
+    color: #1a1a1f;
+    padding: 36px 32px;
+    min-height: 400px;
+    max-height: 82vh;
+    overflow-y: auto;
+    font-size: 0.85rem;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 960px) {
+    .resume-tool {
+      grid-template-columns: 1fr;
+    }
+
+    .resume-tool__preview-col {
+      position: static;
+    }
+
+    .resume-tool__preview-content {
+      max-height: none;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .resume-tool__grid,
+    .resume-tool__grid--two {
+      grid-template-columns: 1fr;
+    }
+
+    .resume-row--inline {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .resume-tool__actions {
+      justify-content: center;
+    }
+  }
+
+  @media print {
+    :global(header),
+    :global(footer),
+    :global(.whatsapp-fab),
+    :global(.skip-link),
+    .tool-page__back,
+    .tool-page__lead,
+    .resume-tool__form,
+    .resume-tool__actions,
+    :global(.cta) {
+      display: none !important;
+    }
+
+    :global(h1) {
+      display: none;
+    }
+
+    .resume-tool {
+      display: block;
+    }
+
+    .resume-tool__preview-col {
+      position: static;
+    }
+
+    .resume-tool__preview {
+      box-shadow: none;
+      border-radius: 0;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+
+    .resume-tool__preview-content {
+      padding: 0;
+      max-height: none;
+      overflow: visible;
+      print-color-adjust: exact;
+      -webkit-print-color-adjust: exact;
+    }
+  }
+</style>
+
+<style is:global>
+  .resume-preview__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    border-bottom: 2px solid var(--resume-accent, #6d5bd0);
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+  }
+
+  .resume-preview__photo {
+    flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--resume-accent, #6d5bd0);
+  }
+
+  .resume-preview__photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .resume-preview__header-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .resume-preview__name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111;
+  }
+
+  .resume-preview__title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--resume-accent, #6d5bd0);
+  }
+
+  .resume-preview__contacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    font-size: 0.78rem;
+    color: #555;
+    width: 100%;
+  }
+
+  .resume-preview__contacts span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .resume-preview__section {
+    margin-bottom: 16px;
+  }
+
+  .resume-preview__section h3 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--resume-accent, #6d5bd0);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .resume-preview__summary {
+    color: #333;
+    font-size: 0.85rem;
+  }
+
+  .resume-preview__item {
+    margin-bottom: 10px;
+  }
+
+  .resume-preview__item-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .resume-preview__item-title {
+    font-weight: 700;
+    color: #111;
+  }
+
+  .resume-preview__item-sub {
+    color: #555;
+    font-size: 0.8rem;
+  }
+
+  .resume-preview__item-date {
+    font-size: 0.75rem;
+    color: #888;
+    white-space: nowrap;
+  }
+
+  .resume-preview__item-desc {
+    font-size: 0.8rem;
+    color: #444;
+    margin-top: 4px;
+  }
+
+  .resume-preview__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .resume-preview__tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: #333;
+    background: #f1f0fb;
+    border-radius: 999px;
+    padding: 3px 12px;
+  }
+
+  .resume-preview__empty {
+    color: #999;
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 40px 0;
+  }
+</style>
+
+<script>
+  interface ExperienceItem {
+    title: string;
+    company: string;
+    start: string;
+    end: string;
+    description: string;
+  }
+
+  interface EducationItem {
+    degree: string;
+    institution: string;
+    start: string;
+    end: string;
+  }
+
+  interface LanguageItem {
+    name: string;
+    level: string;
+  }
+
+  type ResumeLang = 'fa' | 'en';
+
+  const LABELS: Record<
+    ResumeLang,
+    {
+      fullName: string;
+      jobTitle: string;
+      about: string;
+      experience: string;
+      education: string;
+      skills: string;
+      languages: string;
+      to: string;
+      empty: string;
+    }
+  > = {
+    fa: {
+      fullName: 'نام و نام‌خانوادگی',
+      jobTitle: 'عنوان شغلی',
+      about: 'درباره من',
+      experience: 'سوابق کاری',
+      education: 'تحصیلات',
+      skills: 'مهارت‌ها',
+      languages: 'زبان‌ها',
+      to: ' تا ',
+      empty: 'با پر کردن فرم سمت چپ، رزومه شما همین‌جا ساخته می‌شود.',
+    },
+    en: {
+      fullName: 'Full Name',
+      jobTitle: 'Job Title',
+      about: 'About Me',
+      experience: 'Experience',
+      education: 'Education',
+      skills: 'Skills',
+      languages: 'Languages',
+      to: ' – ',
+      empty: 'Fill in the form to see your resume built live here.',
+    },
+  };
+
+  function escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function field(root: ParentNode, name: string): HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null {
+    return root.querySelector(`[data-field="${name}"]`);
+  }
+
+  function initResumeBuilder() {
+    const root = document.querySelector<HTMLElement>('[data-resume-tool]');
+    if (!root || root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
+
+    const expList = root.querySelector<HTMLElement>('[data-experience-list]');
+    const expTemplate = document.querySelector<HTMLTemplateElement>('[data-experience-template]');
+    const eduList = root.querySelector<HTMLElement>('[data-education-list]');
+    const eduTemplate = document.querySelector<HTMLTemplateElement>('[data-education-template]');
+    const langList = root.querySelector<HTMLElement>('[data-language-list]');
+    const langTemplate = document.querySelector<HTMLTemplateElement>('[data-language-template]');
+    const previewWrap = root.querySelector<HTMLElement>('[data-resume-preview-wrap]');
+    const preview = root.querySelector<HTMLElement>('[data-resume-preview]');
+    const skillInput = root.querySelector<HTMLInputElement>('[data-skill-input]');
+    const skillChips = root.querySelector<HTMLElement>('[data-skill-chips]');
+    const printBtn = root.querySelector<HTMLButtonElement>('[data-print-resume]');
+    const downloadBtn = root.querySelector<HTMLButtonElement>('[data-download-resume]');
+    const photoInput = root.querySelector<HTMLInputElement>('[data-photo-input]');
+    const photoPreview = root.querySelector<HTMLElement>('[data-photo-preview]');
+    const photoRemoveBtn = root.querySelector<HTMLButtonElement>('[data-remove-photo]');
+    const langButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-resume-lang]'));
+
+    if (
+      !expList ||
+      !expTemplate ||
+      !eduList ||
+      !eduTemplate ||
+      !langList ||
+      !langTemplate ||
+      !previewWrap ||
+      !preview ||
+      !skillInput ||
+      !skillChips
+    ) {
+      return;
+    }
+
+    let skills: string[] = [];
+    let photoDataUrl: string | null = null;
+    let resumeLang: ResumeLang = 'fa';
+    const defaultPhotoPreviewHtml = photoPreview?.innerHTML ?? '';
+
+    function addRow(listEl: HTMLElement, template: HTMLTemplateElement) {
+      const node = template.content.firstElementChild?.cloneNode(true) as HTMLElement | undefined;
+      if (!node) return;
+      listEl.appendChild(node);
+      render();
+    }
+
+    function collectExperiences(): ExperienceItem[] {
+      return Array.from(expList!.querySelectorAll<HTMLElement>('.resume-row'))
+        .map((row) => ({
+          title: (field(row, 'title') as HTMLInputElement)?.value.trim() ?? '',
+          company: (field(row, 'company') as HTMLInputElement)?.value.trim() ?? '',
+          start: (field(row, 'start') as HTMLInputElement)?.value.trim() ?? '',
+          end: (field(row, 'end') as HTMLInputElement)?.value.trim() ?? '',
+          description: (field(row, 'description') as HTMLTextAreaElement)?.value.trim() ?? '',
+        }))
+        .filter((item) => item.title || item.company);
+    }
+
+    function collectEducation(): EducationItem[] {
+      return Array.from(eduList!.querySelectorAll<HTMLElement>('.resume-row'))
+        .map((row) => ({
+          degree: (field(row, 'degree') as HTMLInputElement)?.value.trim() ?? '',
+          institution: (field(row, 'institution') as HTMLInputElement)?.value.trim() ?? '',
+          start: (field(row, 'start') as HTMLInputElement)?.value.trim() ?? '',
+          end: (field(row, 'end') as HTMLInputElement)?.value.trim() ?? '',
+        }))
+        .filter((item) => item.degree || item.institution);
+    }
+
+    function collectLanguages(): LanguageItem[] {
+      return Array.from(langList!.querySelectorAll<HTMLElement>('.resume-row'))
+        .map((row) => ({
+          name: (field(row, 'name') as HTMLInputElement)?.value.trim() ?? '',
+          level: (field(row, 'level') as HTMLSelectElement)?.value ?? '',
+        }))
+        .filter((item) => item.name);
+    }
+
+    function renderSkillChips() {
+      skillChips!.innerHTML = skills
+        .map(
+          (skill, index) => `
+            <span class="resume-tool__chip">
+              ${escapeHtml(skill)}
+              <button type="button" data-remove-skill="${index}" aria-label="حذف ${escapeHtml(skill)}">×</button>
+            </span>
+          `
+        )
+        .join('');
+    }
+
+    function buildSection(title: string, innerHtml: string): string {
+      return `<div class="resume-preview__section"><h3>${title}</h3>${innerHtml}</div>`;
+    }
+
+    function render() {
+      const t = LABELS[resumeLang];
+      preview!.dir = resumeLang === 'en' ? 'ltr' : 'rtl';
+
+      const fullName = (field(root!, 'fullName') as HTMLInputElement)?.value.trim();
+      const jobTitle = (field(root!, 'jobTitle') as HTMLInputElement)?.value.trim();
+      const phone = (field(root!, 'phone') as HTMLInputElement)?.value.trim();
+      const email = (field(root!, 'email') as HTMLInputElement)?.value.trim();
+      const city = (field(root!, 'city') as HTMLInputElement)?.value.trim();
+      const summary = (field(root!, 'summary') as HTMLTextAreaElement)?.value.trim();
+
+      const experiences = collectExperiences();
+      const education = collectEducation();
+      const languages = collectLanguages();
+
+      const hasAnyContent =
+        fullName ||
+        jobTitle ||
+        phone ||
+        email ||
+        summary ||
+        photoDataUrl ||
+        experiences.length ||
+        education.length ||
+        skills.length ||
+        languages.length;
+
+      if (!hasAnyContent) {
+        preview!.innerHTML = `<p class="resume-preview__empty">${t.empty}</p>`;
+        return;
+      }
+
+      const contacts = [
+        phone && `<span>${escapeHtml(phone)}</span>`,
+        email && `<span>${escapeHtml(email)}</span>`,
+        city && `<span>${escapeHtml(city)}</span>`,
+      ]
+        .filter(Boolean)
+        .join('');
+
+      const photoHtml = photoDataUrl
+        ? `<div class="resume-preview__photo"><img src="${photoDataUrl}" alt="" /></div>`
+        : '';
+
+      let html = `
+        <div class="resume-preview__header">
+          ${photoHtml}
+          <div class="resume-preview__header-main">
+            <div>
+              <div class="resume-preview__name">${escapeHtml(fullName || t.fullName)}</div>
+              ${jobTitle ? `<div class="resume-preview__title">${escapeHtml(jobTitle)}</div>` : ''}
+            </div>
+            ${contacts ? `<div class="resume-preview__contacts">${contacts}</div>` : ''}
+          </div>
+        </div>
+      `;
+
+      if (summary) {
+        html += buildSection(t.about, `<p class="resume-preview__summary">${escapeHtml(summary)}</p>`);
+      }
+
+      if (experiences.length) {
+        const items = experiences
+          .map(
+            (exp) => `
+              <div class="resume-preview__item">
+                <div class="resume-preview__item-head">
+                  <div>
+                    <span class="resume-preview__item-title">${escapeHtml(exp.title || t.jobTitle)}</span>
+                    ${exp.company ? `<span class="resume-preview__item-sub"> — ${escapeHtml(exp.company)}</span>` : ''}
+                  </div>
+                  ${exp.start || exp.end ? `<span class="resume-preview__item-date">${escapeHtml(exp.start)}${exp.start && exp.end ? t.to : ''}${escapeHtml(exp.end)}</span>` : ''}
+                </div>
+                ${exp.description ? `<p class="resume-preview__item-desc">${escapeHtml(exp.description)}</p>` : ''}
+              </div>
+            `
+          )
+          .join('');
+        html += buildSection(t.experience, items);
+      }
+
+      if (education.length) {
+        const items = education
+          .map(
+            (edu) => `
+              <div class="resume-preview__item">
+                <div class="resume-preview__item-head">
+                  <div>
+                    <span class="resume-preview__item-title">${escapeHtml(edu.degree || t.education)}</span>
+                    ${edu.institution ? `<span class="resume-preview__item-sub"> — ${escapeHtml(edu.institution)}</span>` : ''}
+                  </div>
+                  ${edu.start || edu.end ? `<span class="resume-preview__item-date">${escapeHtml(edu.start)}${edu.start && edu.end ? t.to : ''}${escapeHtml(edu.end)}</span>` : ''}
+                </div>
+              </div>
+            `
+          )
+          .join('');
+        html += buildSection(t.education, items);
+      }
+
+      if (skills.length) {
+        const tags = skills.map((skill) => `<span class="resume-preview__tag">${escapeHtml(skill)}</span>`).join('');
+        html += buildSection(t.skills, `<div class="resume-preview__tags">${tags}</div>`);
+      }
+
+      if (languages.length) {
+        const tags = languages
+          .map((lang) => `<span class="resume-preview__tag">${escapeHtml(lang.name)} — ${escapeHtml(lang.level)}</span>`)
+          .join('');
+        html += buildSection(t.languages, `<div class="resume-preview__tags">${tags}</div>`);
+      }
+
+      preview!.innerHTML = html;
+    }
+
+    root.querySelector('[data-add-experience]')?.addEventListener('click', () => addRow(expList, expTemplate));
+    root.querySelector('[data-add-education]')?.addEventListener('click', () => addRow(eduList, eduTemplate));
+    root.querySelector('[data-add-language]')?.addEventListener('click', () => addRow(langList, langTemplate));
+
+    root.addEventListener('input', (event) => {
+      if ((event.target as HTMLElement).closest('[data-field]')) render();
+    });
+
+    root.addEventListener('click', (event) => {
+      const removeRow = (event.target as HTMLElement).closest<HTMLElement>('[data-remove-row]');
+      if (removeRow) {
+        removeRow.closest('.resume-row')?.remove();
+        render();
+        return;
+      }
+
+      const removeSkill = (event.target as HTMLElement).closest<HTMLElement>('[data-remove-skill]');
+      if (removeSkill) {
+        const index = Number(removeSkill.dataset.removeSkill);
+        skills.splice(index, 1);
+        renderSkillChips();
+        render();
+      }
+    });
+
+    function commitSkill() {
+      const value = skillInput!.value.trim();
+      if (!value) return;
+      skills.push(value);
+      skillInput!.value = '';
+      renderSkillChips();
+      render();
+    }
+
+    root.querySelector('[data-add-skill]')?.addEventListener('click', commitSkill);
+    skillInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ',') {
+        event.preventDefault();
+        commitSkill();
+      }
+    });
+
+    printBtn?.addEventListener('click', () => window.print());
+
+    photoInput?.addEventListener('change', () => {
+      const file = photoInput.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        photoDataUrl = reader.result as string;
+        if (photoPreview) photoPreview.innerHTML = `<img src="${photoDataUrl}" alt="" />`;
+        photoRemoveBtn?.removeAttribute('hidden');
+        render();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    photoRemoveBtn?.addEventListener('click', () => {
+      photoDataUrl = null;
+      if (photoInput) photoInput.value = '';
+      if (photoPreview) photoPreview.innerHTML = defaultPhotoPreviewHtml;
+      photoRemoveBtn.setAttribute('hidden', '');
+      render();
+    });
+
+    langButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const lang = btn.dataset.resumeLang === 'en' ? 'en' : 'fa';
+        if (lang === resumeLang) return;
+        resumeLang = lang;
+        langButtons.forEach((b) => b.classList.toggle('is-active', b === btn));
+        render();
+      });
+    });
+
+    downloadBtn?.addEventListener('click', async () => {
+      if (!preview || !previewWrap || downloadBtn.disabled) return;
+
+      const originalLabel = downloadBtn.innerHTML;
+      downloadBtn.disabled = true;
+      downloadBtn.textContent = resumeLang === 'en' ? 'Preparing…' : 'در حال آماده‌سازی...';
+
+      const originalMaxHeight = preview.style.maxHeight;
+      const originalOverflow = preview.style.overflowY;
+      preview.style.maxHeight = 'none';
+      preview.style.overflowY = 'visible';
+
+      const fullName = (field(root!, 'fullName') as HTMLInputElement)?.value.trim();
+      const filenameBase = (fullName || 'resume').replace(/\s+/g, '-');
+
+      try {
+        const html2pdf = (await import('html2pdf.js')).default;
+        await html2pdf()
+          .set({
+            margin: 10,
+            filename: `${filenameBase}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          })
+          .from(previewWrap)
+          .save();
+      } finally {
+        preview.style.maxHeight = originalMaxHeight;
+        preview.style.overflowY = originalOverflow;
+        downloadBtn.disabled = false;
+        downloadBtn.innerHTML = originalLabel;
+      }
+    });
+
+    addRow(expList, expTemplate);
+    addRow(eduList, eduTemplate);
+    renderSkillChips();
+    render();
+  }
+
+  document.addEventListener('astro:page-load', initResumeBuilder);
+</script>

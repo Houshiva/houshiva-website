@@ -1,0 +1,120 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Button from '../components/common/Button.astro';
+import Icon from '../components/common/Icon.astro';
+import GradientMesh from '../components/common/GradientMesh.astro';
+---
+
+<MainLayout
+  title="صفحه پیدا نشد"
+  description="صفحه‌ای که دنبالش بودید پیدا نشد. از لینک‌های زیر به بخش‌های اصلی سایت هوشیوا بروید."
+  path="/404"
+  noindex={true}
+>
+  <section class="section not-found">
+    <GradientMesh variant="hero" />
+    <div class="container">
+      <span class="not-found__code" aria-hidden="true">۴۰۴</span>
+      <h1 class="text-balance">این صفحه پیدا نشد</h1>
+      <p class="not-found__lead text-balance">
+        ممکن است آدرس اشتباه تایپ شده باشد یا این صفحه جابه‌جا شده باشد. از لینک‌های زیر می‌توانید به بخش‌های
+        اصلی سایت بروید.
+      </p>
+
+      <div class="not-found__actions">
+        <Button href="/" size="lg">بازگشت به صفحه اصلی</Button>
+        <Button href="/contact" variant="ghost" size="lg">تماس با ما</Button>
+      </div>
+
+      <ul class="not-found__links">
+        <li>
+          <a href="/services">
+            <Icon name="layers" size={16} />
+            خدمات
+          </a>
+        </li>
+        <li>
+          <a href="/portfolio">
+            <Icon name="compass" size={16} />
+            نمونه‌کارها
+          </a>
+        </li>
+        <li>
+          <a href="/tools">
+            <Icon name="spark" size={16} />
+            ابزارهای رایگان
+          </a>
+        </li>
+        <li>
+          <a href="/education">
+            <Icon name="book" size={16} />
+            آموزش
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  .not-found {
+    position: relative;
+    z-index: 0;
+    text-align: center;
+    padding-block: var(--space-20);
+  }
+
+  .not-found .container {
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  .not-found__code {
+    display: block;
+    font-size: clamp(4rem, 12vw, 7rem);
+    font-weight: var(--font-weight-bold);
+    color: var(--tone-accent);
+    opacity: 0.35;
+    line-height: 1;
+    margin-bottom: var(--space-4);
+  }
+
+  .not-found h1 {
+    margin-bottom: var(--space-4);
+  }
+
+  .not-found__lead {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .not-found__actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-12);
+  }
+
+  .not-found__links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+  }
+
+  .not-found__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    transition: color var(--transition-fast);
+  }
+
+  .not-found__links a:hover {
+    color: var(--tone-accent-hover);
+  }
+</style>

@@ -32,4 +32,40 @@ export const tools: Tool[] = [
     description: 'نمایش قیمت روز طلا، سکه و ارز — به‌زودی از منبع رسمی متصل می‌شود.',
     icon: 'trending-up',
   },
+  {
+    slug: 'resume-builder',
+    title: 'رزومه‌ساز آنلاین',
+    description: 'ساخت رزومه حرفه‌ای با پیش‌نمایش زنده؛ کاملاً رایگان و آماده چاپ یا ذخیره PDF.',
+    icon: 'copy',
+  },
+  {
+    slug: 'business-card',
+    title: 'کارت ویزیت دیجیتال',
+    description: 'ساخت کارت ویزیت دیجیتال با عکس، QR کد تماس و پیش‌نمایش زنده؛ آماده چاپ یا اشتراک‌گذاری.',
+    icon: 'users',
+  },
+  {
+    slug: 'event-card',
+    title: 'کارت دعوت جشن و عروسی',
+    description: 'ساخت کارت دعوت زیبا برای عروسی، تولد و مراسم؛ چند قالب رنگی، آماده چاپ یا ارسال.',
+    icon: 'spark',
+  },
+  {
+    slug: 'time-tools',
+    title: 'ابزار زمان و ساعت جهانی',
+    description: 'ساعت لحظه‌ای کشورهای مختلف، تبدیل منطقه زمانی، تبدیل Timestamp و اختلاف زمانی دو کشور.',
+    icon: 'clock',
+  },
+  {
+    slug: 'image-tool',
+    title: 'فشرده‌سازی و تبدیل عکس',
+    description: 'کاهش حجم عکس، تبدیل بین JPG، PNG و WebP و تغییر ابعاد — کاملاً در مرورگر، بدون آپلود.',
+    icon: 'refresh',
+  },
+  {
+    slug: 'pdf-tool',
+    title: 'ابزار PDF',
+    description: 'ادغام چند PDF، حذف یا جابه‌جایی صفحات، تبدیل عکس به PDF و دانلود هر صفحه به‌تنهایی.',
+    icon: 'layers',
+  },
 ];
