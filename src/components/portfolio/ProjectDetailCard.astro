@@ -14,7 +14,13 @@ const { project, tone = 'violet' } = Astro.props;
 
 <article class="project-detail" data-reveal style={toneVars(tone)}>
   <div class="project-detail__cover">
-    <ProjectCover variant={project.cover as any} />
+    {
+      project.coverImage ? (
+        <img src={project.coverImage} alt={project.title} loading="lazy" />
+      ) : (
+        <ProjectCover variant={project.cover as any} />
+      )
+    }
   </div>
 
   <div class="project-detail__body">
@@ -65,11 +71,18 @@ const { project, tone = 'violet' } = Astro.props;
     border-radius: var(--radius-md);
     overflow: hidden;
     align-self: start;
+    aspect-ratio: 400 / 240;
   }
 
   .project-detail__cover :global(svg) {
     width: 100%;
     height: auto;
+  }
+
+  .project-detail__cover :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .project-detail__category {
