@@ -53,12 +53,6 @@ const featuredServices = services.slice(0, 6);
             {site.contact.email}
           </a>
         </li>
-        <li>
-          <a href={`mailto:${site.contact.secondaryEmail}`} class="ltr">
-            <Icon name="mail" size={18} />
-            {site.contact.secondaryEmail}
-          </a>
-        </li>
         {
           site.contact.phones.map((phone) => (
             <li>

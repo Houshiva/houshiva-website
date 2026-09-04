@@ -64,6 +64,30 @@ const values: { icon: IconName; title: string; description: string }[] = [
     </div>
   </section>
 
+  <section class="section team">
+    <div class="container">
+      <SectionTitle eyebrow="تیم ما" title="افرادی که پشت هوشیوا هستند" />
+      <div class="team__grid">
+        <a href="https://erfanmohammadi.ir" target="_blank" rel="noopener noreferrer" class="team__card" data-reveal style={toneVars(toneForIndex(0))}>
+          <h3>عرفان محمدی</h3>
+          <p>توسعه‌دهنده فول‌استک — Python، Django، React</p>
+          <span class="team__link">
+            مشاهده نمونه‌کارهای شخصی
+            <Icon name="chevron-start" size={16} />
+          </span>
+        </a>
+        <a href="https://alirezaalamshah.ir" target="_blank" rel="noopener noreferrer" class="team__card" data-reveal style={toneVars(toneForIndex(1))}>
+          <h3>علیرضا علمشاه</h3>
+          <p>توسعه‌دهنده فول‌استک — Django، React</p>
+          <span class="team__link">
+            مشاهده نمونه‌کارهای شخصی
+            <Icon name="chevron-start" size={16} />
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <section class="section section--alt values">
     <div class="container">
       <SectionTitle eyebrow="نگاه ما" title="اصولی که در هر پروژه رعایت می‌کنیم" />
@@ -105,6 +129,45 @@ const values: { icon: IconName; title: string; description: string }[] = [
     line-height: var(--line-height-normal);
     color: var(--color-text-muted);
     text-align: center;
+  }
+
+  .team__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .team__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-8);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition:
+      border-color var(--transition-base),
+      transform var(--transition-base);
+  }
+
+  .team__card:hover {
+    border-color: var(--tone-accent);
+    transform: translateY(-4px);
+  }
+
+  .team__card p {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+
+  .team__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--tone-accent-hover);
+    margin-top: var(--space-2);
   }
 
   .values__grid {

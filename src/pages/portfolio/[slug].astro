@@ -42,19 +42,16 @@ const images = project.gallery ?? (project.coverImage ? [project.coverImage] : [
       <h1 class="text-balance">{project.title}</h1>
       <p class="project-page__lead">{project.shortDescription}</p>
 
-      <div class="project-page__meta">
-        <ul class="project-page__tech">
-          {project.technologies.map((tech) => <li>{tech}</li>)}
-        </ul>
-        {
-          project.link && (
+      {
+        project.link && (
+          <div class="project-page__meta">
             <a href={project.link} target="_blank" rel="noopener noreferrer" class="project-page__link">
               مشاهده پروژه
               <Icon name="chevron-start" size={16} />
             </a>
-          )
-        }
-      </div>
+          </div>
+        )
+      }
 
       <div class="project-page__cover">
         {project.coverImage ? <img src={project.coverImage} alt={project.title} /> : <ProjectCover variant={project.cover as any} />}
@@ -159,27 +156,7 @@ const images = project.gallery ?? (project.coverImage ? [project.coverImage] : [
   }
 
   .project-page__meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: var(--space-4);
     margin-bottom: var(--space-8);
-  }
-
-  .project-page__tech {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  .project-page__tech li {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-    background: var(--color-background-alt);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-full);
-    padding: var(--space-1) var(--space-3);
   }
 
   .project-page__link {

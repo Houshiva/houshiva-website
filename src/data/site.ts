@@ -9,8 +9,7 @@ export const site = {
   locale: 'fa_IR',
 
   contact: {
-    email: 'info@houshiva.ir',
-    secondaryEmail: 'houshiva@gmail.com',
+    email: 'houshiva@gmail.com',
     phones: [
       { label: 'تماس و مشاوره', number: '0937 774 7217', href: '+989377747217' },
       { label: 'پشتیبانی', number: '0935 595 8047', href: '+989355958047' },

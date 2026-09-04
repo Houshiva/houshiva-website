@@ -38,8 +38,7 @@ if (brsApiKey) {
   }
 }
 
-function formatPrice(symbol?: string): string | null {
-  if (!symbol) return null;
+function formatPrice(symbol: string): string | null {
   const price = priceBySymbol.get(symbol);
   if (price === undefined) return null;
   return `${price.toLocaleString('fa-IR')} تومان`;
@@ -47,8 +46,8 @@ function formatPrice(symbol?: string): string | null {
 ---
 
 <MainLayout
-  title="قیمت لحظه‌ای طلا، ارز و خودرو"
-  description="صفحه قیمت روز طلا، سکه، ارز و خودرو — به‌زودی از یک منبع رسمی به‌روزرسانی زنده متصل می‌شود."
+  title="قیمت لحظه‌ای طلا و ارز"
+  description="قیمت لحظه‌ای طلا، سکه و ارز، به‌صورت دوره‌ای به‌روزرسانی می‌شود."
   path="/tools/prices"
   breadcrumbs={[{ label: 'ابزارها', path: '/tools' }, { label: 'قیمت‌ها', path: '/tools/prices' }]}
 >
@@ -59,11 +58,8 @@ function formatPrice(symbol?: string): string | null {
         بازگشت به ابزارها
       </a>
 
-      <h1 class="text-balance">قیمت طلا، ارز و خودرو</h1>
-      <p class="tool-page__lead">
-        قیمت طلا، سکه و ارز به‌صورت دوره‌ای (هر ۱ تا ۲ ساعت) به‌روزرسانی می‌شود. برای قیمت خودرو هنوز منبع رسمی و
-        رایگانی پیدا نکرده‌ایم، برای همین فعلاً «به‌زودی» نشان داده می‌شود تا عددی نادرست نمایش ندهیم.
-      </p>
+      <h1 class="text-balance">قیمت طلا و ارز</h1>
+      <p class="tool-page__lead">قیمت طلا، سکه و ارز، به‌صورت دوره‌ای به‌روزرسانی می‌شود.</p>
       {lastUpdated && <p class="tool-page__updated">آخرین به‌روزرسانی: {lastUpdated}</p>}
 
       {
