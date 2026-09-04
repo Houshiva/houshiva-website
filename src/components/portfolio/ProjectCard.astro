@@ -13,7 +13,7 @@ const { project, tone = 'violet' } = Astro.props;
 ---
 
 <article class="project-card" data-reveal style={toneVars(tone)}>
-  <div class="project-card__cover">
+  <a href={`/portfolio/${project.slug}`} class="project-card__cover" aria-hidden="true" tabindex="-1">
     {
       project.coverImage ? (
         <img src={project.coverImage} alt={project.title} loading="lazy" />
@@ -21,15 +21,15 @@ const { project, tone = 'violet' } = Astro.props;
         <ProjectCover variant={project.cover as any} />
       )
     }
-  </div>
+  </a>
   <div class="project-card__body">
     <span class="project-card__category">{projectCategories[project.category]}</span>
-    <h3>{project.title}</h3>
+    <h3><a href={`/portfolio/${project.slug}`}>{project.title}</a></h3>
     <p>{project.shortDescription}</p>
     <ul class="project-card__tech">
       {project.technologies.map((tech) => <li>{tech}</li>)}
     </ul>
-    <a href={`/portfolio#${project.slug}`} class="project-card__link">
+    <a href={`/portfolio/${project.slug}`} class="project-card__link">
       مشاهده جزئیات پروژه
       <Icon name="chevron-start" size={16} />
     </a>
@@ -75,6 +75,15 @@ const { project, tone = 'violet' } = Astro.props;
   .project-card__category {
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-semibold);
+    color: var(--tone-accent-hover);
+  }
+
+  .project-card__body h3 a {
+    color: var(--color-text);
+    transition: color var(--transition-fast);
+  }
+
+  .project-card__body h3 a:hover {
     color: var(--tone-accent-hover);
   }
 

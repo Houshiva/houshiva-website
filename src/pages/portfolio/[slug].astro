@@ -1,0 +1,331 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import Icon from '../../components/common/Icon.astro';
+import CtaSection from '../../components/common/CtaSection.astro';
+import ProjectCover from '../../components/illustrations/ProjectCover.astro';
+import { toneForIndex, toneVars } from '../../lib/tones';
+import { projects, projectCategories, type Project } from '../../data/projects';
+
+export function getStaticPaths() {
+  return projects.map((project, index) => ({
+    params: { slug: project.slug },
+    props: { project, tone: toneForIndex(index) },
+  }));
+}
+
+interface Props {
+  project: Project;
+  tone: ReturnType<typeof toneForIndex>;
+}
+
+const { project, tone } = Astro.props;
+const images = project.gallery ?? (project.coverImage ? [project.coverImage] : []);
+---
+
+<MainLayout
+  title={project.title}
+  description={project.shortDescription}
+  path={`/portfolio/${project.slug}`}
+  breadcrumbs={[
+    { label: 'نمونه‌کارها', path: '/portfolio' },
+    { label: project.title, path: `/portfolio/${project.slug}` },
+  ]}
+>
+  <article class="section project-page" style={toneVars(tone)}>
+    <div class="container container--narrow">
+      <a href="/portfolio" class="project-page__back">
+        <Icon name="chevron-start" size={16} />
+        بازگشت به نمونه‌کارها
+      </a>
+
+      <span class="project-page__category">{projectCategories[project.category]}</span>
+      <h1 class="text-balance">{project.title}</h1>
+      <p class="project-page__lead">{project.shortDescription}</p>
+
+      <div class="project-page__meta">
+        <ul class="project-page__tech">
+          {project.technologies.map((tech) => <li>{tech}</li>)}
+        </ul>
+        {
+          project.link && (
+            <a href={project.link} target="_blank" rel="noopener noreferrer" class="project-page__link">
+              مشاهده پروژه
+              <Icon name="chevron-start" size={16} />
+            </a>
+          )
+        }
+      </div>
+
+      <div class="project-page__cover">
+        {project.coverImage ? <img src={project.coverImage} alt={project.title} /> : <ProjectCover variant={project.cover as any} />}
+      </div>
+
+      {
+        images.length > 1 && (
+          <div class="project-page__gallery">
+            {images.slice(1).map((src) => (
+              <img src={src} alt={project.title} loading="lazy" />
+            ))}
+          </div>
+        )
+      }
+
+      <h2 class="project-page__heading">معرفی پروژه</h2>
+      <p class="project-page__overview">{project.overview}</p>
+
+      <div class="project-page__grid">
+        <div>
+          <h3>نیاز و مسئله</h3>
+          <p>{project.problem}</p>
+        </div>
+        <div>
+          <h3>راهکار</h3>
+          <p>{project.solution}</p>
+        </div>
+      </div>
+
+      <h2 class="project-page__heading">چطور ساختیم</h2>
+      <ol class="project-page__build">
+        {project.build.map((step) => <li>{step}</li>)}
+      </ol>
+
+      <h2 class="project-page__heading">امکانات</h2>
+      <ul class="project-page__features">
+        {
+          project.features.map((feature) => (
+            <li>
+              <Icon name="check" size={16} />
+              <span>{feature}</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="project-page__result">
+        <h3>نتیجه</h3>
+        <p>{project.result}</p>
+      </div>
+    </div>
+  </article>
+
+  <CtaSection
+    title="پروژه‌ی بعدی می‌تواند مال کسب‌وکار شما باشد"
+    description="اگر نیاز مشابهی دارید یا ایده‌ای برای یک راهکار اختصاصی در ذهن دارید، بیایید درباره‌اش صحبت کنیم."
+    class={tone === 'violet' ? undefined : `tone-${tone}`}
+  />
+</MainLayout>
+
+<style>
+  .project-page {
+    padding-bottom: var(--space-16);
+  }
+
+  .project-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  .project-page__back:hover {
+    color: var(--tone-accent-hover);
+  }
+
+  .project-page__back :global(svg) {
+    transform: scaleX(-1);
+  }
+
+  .project-page__category {
+    display: inline-block;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--tone-accent-hover);
+    background: var(--tone-accent-soft);
+    padding: var(--space-1) var(--space-4);
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-4);
+  }
+
+  .project-page h1 {
+    margin-bottom: var(--space-4);
+  }
+
+  .project-page__lead {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-6);
+  }
+
+  .project-page__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+  }
+
+  .project-page__tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .project-page__tech li {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    background: var(--color-background-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: var(--space-1) var(--space-3);
+  }
+
+  .project-page__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--tone-accent-hover);
+    flex-shrink: 0;
+  }
+
+  .project-page__cover {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    margin-bottom: var(--space-6);
+    aspect-ratio: 400 / 240;
+  }
+
+  .project-page__cover :global(img),
+  .project-page__cover :global(svg) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .project-page__gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-10);
+  }
+
+  .project-page__gallery img {
+    width: 100%;
+    aspect-ratio: 400 / 240;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+  }
+
+  .project-page__heading {
+    font-size: var(--font-size-xl);
+    margin-top: var(--space-10);
+    margin-bottom: var(--space-4);
+  }
+
+  .project-page__overview {
+    font-size: var(--font-size-base);
+    color: var(--color-text-muted);
+  }
+
+  .project-page__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+  }
+
+  .project-page__grid h3 {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-2);
+  }
+
+  .project-page__grid p {
+    font-size: var(--font-size-sm);
+  }
+
+  .project-page__build {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    counter-reset: build-step;
+  }
+
+  .project-page__build li {
+    position: relative;
+    padding-inline-start: var(--space-10);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    line-height: var(--line-height-normal);
+  }
+
+  .project-page__build li::before {
+    counter-increment: build-step;
+    content: counter(build-step);
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: var(--radius-full);
+    background: var(--tone-accent-soft);
+    color: var(--tone-accent-hover);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .project-page__features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .project-page__features li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .project-page__features :global(svg) {
+    flex-shrink: 0;
+    color: var(--color-success);
+    margin-top: 2px;
+  }
+
+  .project-page__result {
+    margin-top: var(--space-10);
+    padding: var(--space-6) var(--space-8);
+    background: var(--tone-accent-soft);
+    border: 1px solid var(--color-border-hairline);
+    border-radius: var(--radius-lg);
+  }
+
+  .project-page__result h3 {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--tone-accent-hover);
+    margin-bottom: var(--space-2);
+  }
+
+  @media (max-width: 720px) {
+    .project-page__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

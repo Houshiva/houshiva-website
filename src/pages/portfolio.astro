@@ -1,7 +1,7 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
 import SectionTitle from '../components/common/SectionTitle.astro';
-import ProjectDetailCard from '../components/portfolio/ProjectDetailCard.astro';
+import ProjectCard from '../components/portfolio/ProjectCard.astro';
 import CtaSection from '../components/common/CtaSection.astro';
 import GradientMesh from '../components/common/GradientMesh.astro';
 import { toneForIndex } from '../lib/tones';
@@ -39,8 +39,8 @@ const categories = Object.entries(projectCategories);
         <div class="portfolio-filter__grid">
           {
             projects.map((project, index) => (
-              <div class:list={['portfolio-filter__item', `cat-${project.category}`]} id={project.slug}>
-                <ProjectDetailCard project={project} tone={toneForIndex(index)} />
+              <div class:list={['portfolio-filter__item', `cat-${project.category}`]}>
+                <ProjectCard project={project} tone={toneForIndex(index)} />
               </div>
             ))
           }
@@ -85,8 +85,8 @@ const categories = Object.entries(projectCategories);
   }
 
   .portfolio-filter__grid {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: var(--space-6);
   }
 
