@@ -1,5 +1,6 @@
 ---
 title: "پایگاه‌داده رابطه‌ای در برابر NoSQL: تفاوت‌ها و کاربرد هرکدام"
+slug: "relational-vs-nosql"
 description: "چه زمانی باید از پایگاه‌داده‌ی رابطه‌ای مثل PostgreSQL استفاده کرد و چه زمانی NoSQL مثل MongoDB انتخاب بهتری است؟"
 category: "پایگاه‌داده و SQL"
 publishDate: 2026-07-28

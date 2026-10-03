@@ -1,5 +1,6 @@
 ---
 title: "مدیریت محیط مجازی (Virtual Environment) در پایتون با venv"
+slug: "python-virtual-environments"
 description: "چرا هرگز نباید پکیج‌های پایتون را به‌صورت سراسری نصب کنید و چطور با venv برای هر پروژه یک محیط جدا و تمیز بسازید."
 category: "پایتون"
 publishDate: 2026-08-05

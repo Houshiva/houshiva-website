@@ -1,0 +1,52 @@
+{
+  "categories": [
+    {
+      "key": "gold",
+      "label": "طلا و سکه",
+      "items": [
+        {
+          "label": "طلای ۱۸ عیار (هر گرم)",
+          "symbol": "IR_GOLD_18K"
+        },
+        {
+          "label": "سکه امامی",
+          "symbol": "IR_COIN_EMAMI"
+        },
+        {
+          "label": "سکه بهار آزادی",
+          "symbol": "IR_COIN_BAHAR"
+        },
+        {
+          "label": "نیم‌سکه",
+          "symbol": "IR_COIN_HALF"
+        },
+        {
+          "label": "ربع‌سکه",
+          "symbol": "IR_COIN_QUARTER"
+        }
+      ]
+    },
+    {
+      "key": "currency",
+      "label": "ارز",
+      "items": [
+        {
+          "label": "دلار آمریکا",
+          "symbol": "USD"
+        },
+        {
+          "label": "یورو",
+          "symbol": "EUR"
+        },
+        {
+          "label": "درهم امارات",
+          "symbol": "AED"
+        },
+        {
+          "label": "لیر ترکیه",
+          "symbol": "TRY"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,600 @@
+---
+/**
+ * Admin home (/admin): visit statistics, deploy status, content editor entry
+ * point and quick links. A static page — it holds no secrets: editing goes
+ * through the CMS (GitHub token), and the Umami share link is kept only in
+ * this browser's localStorage.
+ */
+import { getCollection } from 'astro:content';
+import Icon from '../../components/common/Icon.astro';
+import type { IconName } from '../../components/common/Icon.astro';
+import { projects } from '../../data/projects';
+import { services } from '../../data/services';
+import { videos } from '../../data/videos';
+import { site } from '../../data/site';
+import '../../styles/global.css';
+
+const articles = await getCollection('articles');
+const builtAt = new Date();
+const repo = 'Houshiva/houshiva-website';
+const hasUmami = Boolean(site.analytics.umamiWebsiteId);
+
+const stats: { label: string; value: number; icon: IconName; href: string }[] = [
+  { label: 'نمونه‌کار', value: projects.length, icon: 'layers', href: '/portfolio' },
+  { label: 'خدمت', value: services.length, icon: 'spark', href: '/services' },
+  { label: 'مقاله', value: articles.length, icon: 'book', href: '/education' },
+  { label: 'ویدیو', value: videos.length, icon: 'video', href: '/education' },
+];
+
+const links: { label: string; description: string; href: string; icon: IconName }[] = [
+  { label: 'درخواست‌های مشاوره', description: 'پیام‌های فرم تماس در Web3Forms', href: 'https://app.web3forms.com/', icon: 'mail' },
+  { label: 'Google Search Console', description: 'وضعیت سایت در گوگل و درخواست ایندکس', href: 'https://search.google.com/search-console', icon: 'target' },
+  { label: 'آمار در Umami', description: 'داشبورد کامل آمار بازدید', href: 'https://cloud.umami.is/', icon: 'trending-up' },
+  { label: 'انتشار و قیمت‌ها', description: 'اجرای دستی انتشار سایت و به‌روزرسانی قیمت‌ها', href: `https://github.com/${repo}/actions/workflows/deploy.yml`, icon: 'refresh' },
+  { label: 'Cloudflare', description: 'دامنه و DNS', href: 'https://dash.cloudflare.com/', icon: 'cloud' },
+  { label: 'کد سایت در گیت‌هاب', description: 'تاریخچه‌ی همه‌ی تغییرات', href: `https://github.com/${repo}`, icon: 'code' },
+];
+---
+
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#0a0a10" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>پنل مدیریت | هوشیوا</title>
+  </head>
+  <body>
+    <div class="admin">
+      <header class="admin__top">
+        <div>
+          <p class="admin__eyebrow">پنل مدیریت</p>
+          <h1>سلام، به پنل هوشیوا خوش آمدید</h1>
+          <p class="admin__sub">
+            آخرین انتشار سایت: <span data-date={builtAt.toISOString()}></span>
+          </p>
+        </div>
+        <a class="admin__btn admin__btn--ghost" href="/">
+          مشاهده‌ی سایت
+          <Icon name="chevron-start" size={16} />
+        </a>
+      </header>
+
+      <section class="admin__stats">
+        {
+          stats.map((s) => (
+            <a class="admin__stat" href={s.href} target="_blank">
+              <span class="admin__stat-icon"><Icon name={s.icon} size={20} /></span>
+              <b>{s.value.toLocaleString('fa-IR')}</b>
+              <span>{s.label}</span>
+            </a>
+          ))
+        }
+      </section>
+
+      <div class="admin__grid">
+        <section class="admin__card admin__card--edit">
+          <div class="admin__card-head">
+            <span class="admin__card-icon"><Icon name="brackets" size={22} /></span>
+            <div>
+              <h2>ویرایش محتوای سایت</h2>
+              <p>نمونه‌کارها، خدمات، مقاله‌ها، ویدیوها، تیم، اطلاعات تماس، شبکه‌های اجتماعی و فهرست قیمت‌ها</p>
+            </div>
+          </div>
+          <p class="admin__note">
+            بعد از هر «ذخیره» (Save)، تغییر در گیت‌هاب ثبت می‌شود و سایت حدود یک دقیقه بعد خودکار به‌روز می‌شود. وضعیتش را در
+            کادر «انتشارها» همین صفحه می‌بینید.
+          </p>
+          <a class="admin__btn" href="/admin/cms/">
+            ورود به ویرایشگر
+            <Icon name="chevron-start" size={16} />
+          </a>
+          <details class="admin__help">
+            <summary>اولین ورود: ساخت کلید دسترسی (فقط یک بار)</summary>
+            <ol>
+              <li>با حساب گیت‌هابی که به ریپوی سایت دسترسی دارد (Houshiva) وارد github.com شوید.</li>
+              <li>
+                به <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">ساخت توکن جدید</a> بروید
+                (Fine-grained token).
+              </li>
+              <li>یک نام بدهید، مدت اعتبار را مثلاً یک سال بگذارید و در «Repository access» فقط <b>houshiva-website</b> را انتخاب کنید.</li>
+              <li>در «Permissions» گزینه‌ی <b>Contents</b> را روی <b>Read and write</b> بگذارید و توکن را بسازید.</li>
+              <li>در ویرایشگر، «Sign In Using Access Token» را بزنید و توکن را وارد کنید. مرورگر شما آن را به خاطر می‌سپارد.</li>
+            </ol>
+            <p>این توکن مثل رمز است؛ آن را جایی ذخیره یا برای کسی ارسال نکنید.</p>
+          </details>
+        </section>
+
+        <section class="admin__card">
+          <div class="admin__card-head">
+            <span class="admin__card-icon"><Icon name="refresh" size={22} /></span>
+            <div>
+              <h2>انتشارها</h2>
+              <p>آخرین به‌روزرسانی‌های سایت (هر ذخیره، هر تغییر و به‌روزرسانی خودکار قیمت‌ها)</p>
+            </div>
+          </div>
+          <ul class="admin__runs" id="runs" data-repo={repo}>
+            <li class="admin__muted">در حال دریافت…</li>
+          </ul>
+          <a class="admin__link" href={`https://github.com/${repo}/actions`} target="_blank" rel="noopener">
+            همه‌ی انتشارها در گیت‌هاب
+            <Icon name="chevron-start" size={14} />
+          </a>
+        </section>
+      </div>
+
+      <section class="admin__card admin__card--stats">
+        <div class="admin__card-head">
+          <span class="admin__card-icon"><Icon name="trending-up" size={22} /></span>
+          <div>
+            <h2>آمار بازدید</h2>
+            <p>تعداد بازدید، بازدیدکننده‌ها، صفحه‌های پربازدید و اینکه از کجا آمده‌اند</p>
+          </div>
+          <button type="button" class="admin__btn admin__btn--ghost admin__btn--small" id="umami-reset" hidden>تغییر لینک</button>
+        </div>
+
+        <div id="umami-frame-wrap" hidden>
+          <iframe id="umami-frame" title="آمار بازدید" loading="lazy"></iframe>
+          <a class="admin__link" id="umami-open" target="_blank" rel="noopener">
+            باز کردن در صفحه‌ی جدا
+            <Icon name="chevron-start" size={14} />
+          </a>
+        </div>
+
+        <div id="umami-setup" class="admin__setup">
+          {
+            !hasUmami && (
+              <p class="admin__warn">
+                آمارگیری هنوز روی سایت فعال نیست. مراحل زیر را یک بار انجام دهید.
+              </p>
+            )
+          }
+          <ol>
+            <li>در <a href="https://cloud.umami.is/signup" target="_blank" rel="noopener">umami.is</a> یک حساب رایگان بسازید.</li>
+            <li>«Add website» را بزنید؛ نام: هوشیوا، دامنه: <b>houshiva.ir</b>.</li>
+            <li>
+              «Website ID» را کپی کنید و در ویرایشگر، بخش «تنظیمات سایت ← اطلاعات تماس، شبکه‌های اجتماعی و آمار»، در فیلد
+              «شناسه‌ی سایت در Umami» بگذارید و ذخیره کنید. {hasUmami && <b>(این مرحله انجام شده ✓)</b>}
+            </li>
+            <li>در تنظیمات همان سایت در Umami، «Share URL» را روشن کنید و لینکش را این‌جا بگذارید تا آمار داخل همین پنل نمایش داده شود:</li>
+          </ol>
+          <form id="umami-form" class="admin__form">
+            <input type="url" id="umami-url" placeholder="https://cloud.umami.is/share/..." dir="ltr" required />
+            <button type="submit" class="admin__btn">نمایش آمار</button>
+          </form>
+          <p class="admin__muted">این لینک فقط در همین مرورگر ذخیره می‌شود و در سایت منتشر نمی‌شود.</p>
+        </div>
+      </section>
+
+      <section class="admin__links">
+        {
+          links.map((l) => (
+            <a class="admin__quick" href={l.href} target="_blank" rel="noopener">
+              <span class="admin__card-icon"><Icon name={l.icon} size={20} /></span>
+              <span>
+                <b>{l.label}</b>
+                <small>{l.description}</small>
+              </span>
+            </a>
+          ))
+        }
+      </section>
+    </div>
+
+    <script>
+      const fa = (d: Date) =>
+        d.toLocaleString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+      document.querySelectorAll<HTMLElement>('[data-date]').forEach((el) => {
+        el.textContent = fa(new Date(el.dataset.date!));
+      });
+
+      // ---- deploy runs (public GitHub API, no token needed) ----
+      const runsEl = document.getElementById('runs')!;
+      const ago = (d: Date) => {
+        const m = Math.round((Date.now() - d.getTime()) / 60000);
+        if (m < 1) return 'همین الان';
+        if (m < 60) return `${m.toLocaleString('fa-IR')} دقیقه پیش`;
+        const h = Math.round(m / 60);
+        if (h < 24) return `${h.toLocaleString('fa-IR')} ساعت پیش`;
+        return `${Math.round(h / 24).toLocaleString('fa-IR')} روز پیش`;
+      };
+      const label = (r: { status: string; conclusion: string | null }) =>
+        r.status !== 'completed'
+          ? ['در حال انتشار…', 'running']
+          : r.conclusion === 'success'
+            ? ['منتشر شد', 'ok']
+            : ['ناموفق', 'fail'];
+      const why = (r: { event: string; display_title: string }) =>
+        r.event === 'schedule' ? 'به‌روزرسانی خودکار قیمت‌ها' : r.event === 'workflow_dispatch' ? 'انتشار دستی' : r.display_title;
+
+      async function loadRuns() {
+        try {
+          const res = await fetch(`https://api.github.com/repos/${runsEl.dataset.repo}/actions/runs?per_page=6`);
+          if (!res.ok) throw new Error(String(res.status));
+          const { workflow_runs: runs } = await res.json();
+          runsEl.replaceChildren(
+            ...runs.map((r: any) => {
+              const [text, cls] = label(r);
+              const li = document.createElement('li');
+              li.innerHTML = `<span class="admin__dot admin__dot--${cls}"></span><span class="admin__run-title" dir="auto"></span><span class="admin__run-meta">${text} · ${ago(new Date(r.created_at))}</span>`;
+              li.querySelector('.admin__run-title')!.textContent = why(r);
+              return li;
+            }),
+          );
+          if (runs.some((r: any) => r.status !== 'completed')) setTimeout(loadRuns, 15000);
+        } catch {
+          runsEl.innerHTML = '<li class="admin__muted">دریافت وضعیت ممکن نشد؛ لینک پایین را باز کنید.</li>';
+        }
+      }
+      loadRuns();
+
+      // ---- Umami share dashboard, remembered only in this browser ----
+      const KEY = 'houshiva-admin-umami-share';
+      const wrap = document.getElementById('umami-frame-wrap')!;
+      const setup = document.getElementById('umami-setup')!;
+      const frame = document.getElementById('umami-frame') as HTMLIFrameElement;
+      const open = document.getElementById('umami-open') as HTMLAnchorElement;
+      const reset = document.getElementById('umami-reset')!;
+      const read = () => {
+        try {
+          return localStorage.getItem(KEY);
+        } catch {
+          return null;
+        }
+      };
+      function show(url: string | null) {
+        const on = Boolean(url);
+        wrap.hidden = !on;
+        reset.hidden = !on;
+        setup.hidden = on;
+        if (url) {
+          frame.src = url;
+          open.href = url;
+        }
+      }
+      document.getElementById('umami-form')!.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const url = (document.getElementById('umami-url') as HTMLInputElement).value.trim();
+        try {
+          localStorage.setItem(KEY, url);
+        } catch {}
+        show(url);
+      });
+      reset.addEventListener('click', () => {
+        try {
+          localStorage.removeItem(KEY);
+        } catch {}
+        show(null);
+      });
+      show(read());
+    </script>
+
+    <style is:global>
+      /* Global: the deploy rows are created by the script below, which scoped styles would miss. */
+      body {
+        background: var(--color-background);
+      }
+
+      .admin [hidden] {
+        display: none !important;
+      }
+
+      .admin {
+        max-width: 1180px;
+        margin-inline: auto;
+        padding: var(--space-10) var(--space-4) var(--space-16);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-6);
+      }
+
+      .admin__top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: var(--space-4);
+        flex-wrap: wrap;
+      }
+
+      .admin__eyebrow {
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-primary-hover);
+      }
+
+      .admin__top h1 {
+        font-size: var(--font-size-2xl);
+        margin-block: var(--space-1);
+      }
+
+      .admin__sub,
+      .admin__muted {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-subtle);
+      }
+
+      .admin__stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--space-4);
+      }
+
+      .admin__stat {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-5);
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        color: var(--color-text-muted);
+        transition: border-color var(--transition-base);
+      }
+
+      .admin__stat:hover {
+        border-color: var(--color-primary);
+      }
+
+      .admin__stat b {
+        font-size: var(--font-size-2xl);
+        color: var(--color-text);
+      }
+
+      .admin__stat-icon,
+      .admin__card-icon {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border-radius: var(--radius-md);
+        background: var(--color-primary-soft);
+        color: var(--color-primary-hover);
+      }
+
+      .admin__grid {
+        display: grid;
+        grid-template-columns: 1.15fr 1fr;
+        gap: var(--space-6);
+      }
+
+      .admin__card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+        padding: var(--space-6);
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+      }
+
+      .admin__card--edit {
+        background:
+          linear-gradient(150deg, var(--color-primary-soft), transparent 60%),
+          var(--color-surface);
+        border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-border));
+      }
+
+      .admin__card-head {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--space-3);
+      }
+
+      .admin__card-head > div {
+        flex: 1;
+      }
+
+      .admin__card h2 {
+        font-size: var(--font-size-lg);
+      }
+
+      .admin__card-head p,
+      .admin__note {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+        margin-top: var(--space-1);
+      }
+
+      .admin__btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        width: fit-content;
+        padding: var(--space-3) var(--space-6);
+        border-radius: var(--radius-full);
+        border: 1px solid transparent;
+        background: var(--color-primary);
+        color: var(--color-text-on-primary);
+        font: inherit;
+        font-weight: var(--font-weight-semibold);
+        cursor: pointer;
+        transition: background-color var(--transition-base);
+      }
+
+      .admin__btn:hover {
+        background: var(--color-primary-hover);
+      }
+
+      .admin__btn--ghost {
+        background: transparent;
+        border-color: var(--color-border-strong);
+        color: var(--color-text);
+      }
+
+      .admin__btn--ghost:hover {
+        background: var(--color-surface-hover);
+      }
+
+      .admin__btn--small {
+        padding: var(--space-2) var(--space-4);
+        font-size: var(--font-size-sm);
+      }
+
+      .admin__help {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+        border-top: 1px solid var(--color-border);
+        padding-top: var(--space-4);
+      }
+
+      .admin__help summary {
+        cursor: pointer;
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text);
+      }
+
+      .admin__help ol,
+      .admin__setup ol {
+        list-style: decimal;
+        padding-inline-start: var(--space-6);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        margin-block: var(--space-3);
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+      }
+
+      .admin a:not(.admin__btn):not(.admin__stat):not(.admin__quick) {
+        color: var(--color-primary-hover);
+      }
+
+      .admin__runs {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .admin__runs li {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: var(--space-3);
+        padding-block: var(--space-3);
+        border-bottom: 1px solid var(--color-border);
+        font-size: var(--font-size-sm);
+      }
+
+      .admin__run-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .admin__run-meta {
+        color: var(--color-text-subtle);
+        font-size: var(--font-size-xs);
+        white-space: nowrap;
+      }
+
+      .admin__dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+      }
+
+      .admin__dot--ok {
+        background: var(--color-success);
+      }
+
+      .admin__dot--fail {
+        background: var(--color-danger);
+      }
+
+      .admin__dot--running {
+        background: var(--color-accent-gold);
+        animation: admin-pulse 1.2s ease-in-out infinite;
+      }
+
+      @keyframes admin-pulse {
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      .admin__link {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-1);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-semibold);
+      }
+
+      #umami-frame {
+        width: 100%;
+        height: 720px;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        background: #fff;
+        margin-bottom: var(--space-3);
+      }
+
+      .admin__warn {
+        font-size: var(--font-size-sm);
+        color: var(--color-accent-gold);
+      }
+
+      .admin__form {
+        display: flex;
+        gap: var(--space-3);
+        flex-wrap: wrap;
+      }
+
+      .admin__form input {
+        flex: 1;
+        min-width: 240px;
+        padding: var(--space-3) var(--space-4);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--color-border-strong);
+        background: var(--color-background-alt);
+        color: var(--color-text);
+        font: inherit;
+      }
+
+      .admin__links {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: var(--space-4);
+      }
+
+      .admin__quick {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-4) var(--space-5);
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        color: var(--color-text);
+        transition: border-color var(--transition-base), transform var(--transition-base);
+      }
+
+      .admin__quick:hover {
+        border-color: var(--color-primary);
+        transform: translateY(-2px);
+      }
+
+      .admin__quick small {
+        display: block;
+        font-size: var(--font-size-xs);
+        color: var(--color-text-subtle);
+      }
+
+      @media (max-width: 900px) {
+        .admin__grid,
+        .admin__links {
+          grid-template-columns: 1fr;
+        }
+
+        .admin__stats {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+    </style>
+  </body>
+</html>

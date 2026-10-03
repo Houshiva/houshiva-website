@@ -115,6 +115,14 @@ const allSchemas = [organizationSchema, ...(breadcrumbSchema ? [breadcrumbSchema
       ))
     }
 
+    {
+      // Visit statistics (Umami). The website ID is set from the admin panel; until then nothing loads.
+      // Umami follows ClientRouter navigations through the History API, so it only needs to load once.
+      site.analytics.umamiWebsiteId && (
+        <script is:inline defer src="https://cloud.umami.is/script.js" data-website-id={site.analytics.umamiWebsiteId} />
+      )
+    }
+
     <ClientRouter />
   </head>
   <body>

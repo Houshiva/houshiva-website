@@ -5,34 +5,10 @@ import Icon from '../components/common/Icon.astro';
 import CtaSection from '../components/common/CtaSection.astro';
 import GradientMesh from '../components/common/GradientMesh.astro';
 import { toneForIndex, toneVars } from '../lib/tones';
+import teamData from '../data/settings/team.json';
 import type { IconName } from '../components/common/Icon.astro';
 
-const team = [
-  {
-    name: 'عرفان محمدی',
-    role: 'معمار نرم‌افزار و سرپرست بک‌اند',
-    description:
-      'طراحی معماری سرور و APIها، پیاده‌سازی منطق کسب‌وکار، اتصال به درگاه پرداخت، پیامک و سرویس‌های بیرونی، و امنیت و کارایی سمت سرور.',
-  },
-  {
-    name: 'علیرضا علمشاه',
-    role: 'توسعه‌دهنده فرانت‌اند و مهندس پایگاه داده',
-    description:
-      'ساخت رابط‌های کاربری سریع و ریسپانسیو و اتصال آن‌ها به API، به‌همراه طراحی، مدل‌سازی و بهینه‌سازی پایگاه‌های داده.',
-  },
-  {
-    name: 'شیوا صالح‌بیگی',
-    role: 'طراح تجربه و رابط کاربری (UI/UX)',
-    description:
-      'شناخت کاربر، طراحی جریان‌ها و وایرفریم‌ها، رابط کاربری و سیستم طراحی؛ تا نرم‌افزار هم درست کار کند و هم استفاده از آن ساده و خوشایند باشد.',
-  },
-  {
-    name: 'الهام حقانی',
-    role: 'مهندس DevOps و زیرساخت',
-    description:
-      'استقرار و نگهداری سرورها، کانتینرسازی و خودکارسازی انتشار (CI/CD)، پایش، پشتیبان‌گیری و امنیت زیرساخت.',
-  },
-];
+const { members: team } = teamData;
 
 const values: { icon: IconName; title: string; description: string }[] = [
   {

@@ -1,0 +1,259 @@
+# Sveltia CMS — content editor for houshiva.ir (opened from /admin).
+# Every save is a commit to GitHub; the deploy workflow then rebuilds the site (~1 minute).
+backend:
+  name: github
+  repo: Houshiva/houshiva-website
+  branch: main
+  commit_messages:
+    create: 'پنل مدیریت: افزودن {{collection}} «{{slug}}»'
+    update: 'پنل مدیریت: ویرایش {{collection}} «{{slug}}»'
+    delete: 'پنل مدیریت: حذف {{collection}} «{{slug}}»'
+    uploadMedia: 'پنل مدیریت: آپلود «{{path}}»'
+    deleteMedia: 'پنل مدیریت: حذف فایل «{{path}}»'
+
+site_url: https://houshiva.ir
+display_url: https://houshiva.ir
+logo_url: /favicon.png
+
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  # ------------------------------------------------------------------ projects
+  - name: projects
+    label: نمونه‌کارها
+    label_singular: نمونه‌کار
+    description: هر نمونه‌کار یک صفحه در houshiva.ir/portfolio دارد. «ترتیب» کمتر = بالاتر در لیست.
+    folder: src/data/projects
+    extension: json
+    format: json
+    create: true
+    identifier_field: slug
+    slug: '{{slug}}'
+    summary: '{{order}} — {{title}}'
+    sortable_fields: [order, title]
+    media_folder: /public/portfolio
+    public_folder: /portfolio
+    preview_path: portfolio/{{slug}}
+    fields:
+      - { name: title, label: عنوان, widget: string }
+      - { name: englishName, label: نام انگلیسی (برای جست‌وجو), widget: string, required: false }
+      - { name: slug, label: آدرس صفحه (فقط حروف انگلیسی و خط تیره), widget: string, pattern: ['^[a-z0-9-]+$', 'فقط حروف کوچک انگلیسی، عدد و خط تیره'] }
+      - { name: order, label: ترتیب نمایش, widget: number, value_type: int, default: 100 }
+      - name: category
+        label: دسته‌بندی
+        widget: select
+        options:
+          - { label: وب‌سایت, value: website }
+          - { label: نرم‌افزار, value: software }
+          - { label: سیستم مدیریتی, value: management-system }
+          - { label: فروشگاه, value: store }
+          - { label: داشبورد, value: dashboard }
+      - name: cover
+        label: طرح جایگزین (وقتی عکس ندارد)
+        widget: select
+        default: software
+        options: [website, store, software, crm, pos, dashboard]
+      - { name: coverImage, label: عکس اصلی, widget: image, required: false }
+      - name: gallery
+        label: گالری عکس‌ها (اولی همان عکس اصلی است)
+        widget: list
+        required: false
+        field: { name: image, label: عکس, widget: image }
+      - { name: shortDescription, label: توضیح کوتاه (روی کارت و در نتایج گوگل), widget: text }
+      - { name: overview, label: معرفی پروژه, widget: text }
+      - { name: problem, label: نیاز و مسئله, widget: text }
+      - { name: solution, label: راهکار, widget: text }
+      - name: build
+        label: چطور ساختیم (مراحل)
+        widget: list
+        field: { name: step, label: مرحله, widget: text }
+      - name: features
+        label: امکانات
+        widget: list
+        field: { name: feature, label: امکان, widget: string }
+      - { name: result, label: نتیجه, widget: text }
+      - name: technologies
+        label: تکنولوژی‌ها
+        widget: list
+        field: { name: tech, label: تکنولوژی, widget: string }
+      - name: keywords
+        label: کلمات کلیدی (عبارت‌هایی که مردم جست‌وجو می‌کنند)
+        widget: list
+        required: false
+        field: { name: keyword, label: کلمه کلیدی, widget: string }
+      - { name: link, label: لینک پروژه (اختیاری), widget: string, required: false }
+
+  # ------------------------------------------------------------------ services
+  - name: services
+    label: خدمات
+    label_singular: خدمت
+    description: خدمات صفحه‌ی اصلی و houshiva.ir/services. «ترتیب» کمتر = بالاتر.
+    folder: src/data/services
+    extension: json
+    format: json
+    create: true
+    identifier_field: slug
+    slug: '{{slug}}'
+    summary: '{{order}} — {{title}}'
+    sortable_fields: [order, title]
+    fields:
+      - { name: title, label: عنوان, widget: string }
+      - { name: slug, label: شناسه (فقط حروف انگلیسی و خط تیره), widget: string, pattern: ['^[a-z0-9-]+$', 'فقط حروف کوچک انگلیسی، عدد و خط تیره'] }
+      - { name: order, label: ترتیب نمایش, widget: number, value_type: int, default: 100 }
+      - name: group
+        label: دسته
+        widget: select
+        options:
+          - { label: هوش مصنوعی, value: ai }
+          - { label: وب، اپ و محصول, value: product }
+          - { label: سیستم‌های کسب‌وکار, value: business }
+          - { label: یکپارچه‌سازی و زیرساخت, value: infra }
+      - { name: badge, label: برچسب کوچک (مثلاً «جدید»), widget: string, required: false }
+      - name: visual
+        label: تصویر متحرک
+        widget: select
+        options: [chat, agent, scan, forecast, saas, mobile, website, store, design, code, ledger, pos, crm, warehouse, flow, dashboard, api, cloud]
+      - name: icon
+        label: آیکون
+        widget: select
+        options: [globe, cart, code, calculator, pos, users, warehouse, workflow, dashboard, api, spark, target, layers, refresh, compass, book, video, clock, calendar, cash, hash, trending-up, terminal, brackets, brain, exchange, database, flowchart, spreadsheet, checklist, chat, scan, mobile, cloud, palette]
+      - { name: shortDescription, label: توضیح کوتاه (روی کارت), widget: text }
+      - { name: description, label: توضیح کامل, widget: text }
+      - name: benefits
+        label: مزایا
+        widget: list
+        field: { name: benefit, label: مزیت, widget: string }
+      - name: features
+        label: امکانات
+        widget: list
+        field: { name: feature, label: امکان, widget: string }
+      - name: suitableFor
+        label: مناسب چه کسب‌وکارهایی
+        widget: list
+        field: { name: item, label: مورد, widget: string }
+
+  # ------------------------------------------------------------------ articles
+  - name: articles
+    label: مقاله‌های آموزشی
+    label_singular: مقاله
+    description: مقاله‌های houshiva.ir/education
+    folder: src/content/articles
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{fields.slug}}'
+    summary: '{{publishDate}} — {{title}}'
+    sortable_fields: [publishDate, title]
+    media_folder: ../../assets/education
+    public_folder: ../../assets/education
+    preview_path: education/{{slug}}
+    fields:
+      - { name: title, label: عنوان, widget: string }
+      - { name: slug, label: آدرس صفحه (فقط حروف انگلیسی و خط تیره), widget: string, pattern: ['^[a-z0-9-]+$', 'فقط حروف کوچک انگلیسی، عدد و خط تیره'] }
+      - { name: description, label: توضیح کوتاه, widget: text }
+      - name: category
+        label: دسته‌بندی
+        widget: select
+        options: [پایتون, هوش مصنوعی و یادگیری ماشین, برنامه‌نویسی وب, پایگاه‌داده و SQL, ابزار و مفاهیم برنامه‌نویسی, نرم‌افزار کسب‌وکار]
+      - { name: publishDate, label: تاریخ انتشار, widget: datetime, format: 'YYYY-MM-DD', date_format: 'YYYY-MM-DD', time_format: false }
+      - { name: readingTime, label: زمان مطالعه (مثلاً «۴ دقیقه»), widget: string }
+      - name: icon
+        label: آیکون
+        widget: select
+        options: [globe, cart, code, calculator, pos, users, warehouse, workflow, dashboard, api, spark, target, layers, refresh, compass, book, video, clock, calendar, cash, hash, trending-up, terminal, brackets, brain, exchange, database, flowchart, spreadsheet, checklist, chat, scan, mobile, cloud, palette]
+      - { name: coverImage, label: عکس کاور, widget: image }
+      - { name: body, label: متن مقاله, widget: markdown }
+
+  # ------------------------------------------------------------------ videos
+  - name: videos
+    label: ویدیوهای آموزشی
+    label_singular: ویدیو
+    folder: src/data/videos
+    extension: json
+    format: json
+    create: true
+    identifier_field: slug
+    slug: '{{slug}}'
+    summary: '{{order}} — {{title}}'
+    fields:
+      - { name: title, label: عنوان, widget: string }
+      - { name: slug, label: شناسه (فقط حروف انگلیسی و خط تیره), widget: string, pattern: ['^[a-z0-9-]+$', 'فقط حروف کوچک انگلیسی، عدد و خط تیره'] }
+      - { name: order, label: ترتیب نمایش, widget: number, value_type: int, default: 100 }
+      - { name: description, label: توضیح, widget: text }
+      - { name: category, label: دسته‌بندی, widget: string }
+      - { name: duration, label: مدت (مثلاً «۰۵:۱۵»), widget: string }
+      - { name: publishDate, label: تاریخ انتشار (شمسی، مثلاً «۱۴۰۵/۰۴/۰۲»), widget: string }
+      - { name: videoUrl, label: لینک فایل ویدیو (mp4), widget: string, required: false }
+      - name: poster
+        label: طرح پوستر
+        widget: select
+        options: [website, store, crm, pos, dashboard]
+
+  # ------------------------------------------------------------------ settings
+  - name: settings
+    label: تنظیمات سایت
+    files:
+      - name: site
+        label: اطلاعات تماس، شبکه‌های اجتماعی و آمار
+        file: src/data/settings/site.json
+        format: json
+        fields:
+          - { name: tagline, label: شعار سایت, widget: string }
+          - { name: description, label: توضیح سایت (فوتر و گوگل), widget: text }
+          - name: contact
+            label: اطلاعات تماس
+            widget: object
+            fields:
+              - { name: email, label: ایمیل, widget: string }
+              - name: phones
+                label: شماره‌ها
+                widget: list
+                fields:
+                  - { name: label, label: عنوان (مثلاً «پشتیبانی»), widget: string }
+                  - { name: number, label: شماره برای نمایش, widget: string }
+                  - { name: href, label: شماره بین‌المللی (مثلاً +98912...), widget: string }
+          - name: social
+            label: شبکه‌های اجتماعی
+            widget: list
+            fields:
+              - { name: name, label: نام, widget: string }
+              - { name: platform, label: پلتفرم, widget: select, options: [instagram, youtube, aparat, github] }
+              - { name: url, label: لینک, widget: string }
+          - name: analytics
+            label: آمار بازدید
+            widget: object
+            fields:
+              - { name: umamiWebsiteId, label: شناسه‌ی سایت در Umami (Website ID), widget: string, required: false }
+      - name: team
+        label: تیم (صفحه‌ی درباره ما)
+        file: src/data/settings/team.json
+        format: json
+        fields:
+          - name: members
+            label: اعضای تیم
+            widget: list
+            summary: '{{fields.name}} — {{fields.role}}'
+            fields:
+              - { name: name, label: نام, widget: string }
+              - { name: role, label: سمت, widget: string }
+              - { name: description, label: توضیح, widget: text }
+      - name: prices
+        label: فهرست صفحه‌ی قیمت‌ها
+        file: src/data/settings/prices.json
+        format: json
+        fields:
+          - name: categories
+            label: دسته‌ها
+            widget: list
+            summary: '{{fields.label}}'
+            fields:
+              - { name: key, label: شناسه, widget: string }
+              - { name: label, label: عنوان, widget: string }
+              - name: items
+                label: موارد
+                widget: list
+                summary: '{{fields.label}} ({{fields.symbol}})'
+                fields:
+                  - { name: label, label: عنوان, widget: string }
+                  - { name: symbol, label: نماد در BrsApi (مثلاً USD), widget: string }
