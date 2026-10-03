@@ -140,25 +140,71 @@ const links: { label: string; description: string; href: string; icon: IconName 
         </section>
       </div>
 
-      <section class="admin__card admin__card--stats">
+      <section class="admin__card" data-embed="houshiva-admin-gsc-embed">
         <div class="admin__card-head">
-          <span class="admin__card-icon"><Icon name="trending-up" size={22} /></span>
+          <span class="admin__card-icon"><Icon name="target" size={22} /></span>
           <div>
-            <h2>آمار بازدید</h2>
-            <p>تعداد بازدید، بازدیدکننده‌ها، صفحه‌های پربازدید و اینکه از کجا آمده‌اند</p>
+            <h2>جست‌وجوی گوگل</h2>
+            <p>از گذشته تا امروز: چند بار در نتایج گوگل دیده شدید، چند کلیک گرفتید و با چه کلمه‌هایی پیدایتان کردند</p>
           </div>
-          <button type="button" class="admin__btn admin__btn--ghost admin__btn--small" id="umami-reset" hidden>تغییر لینک</button>
+          <button type="button" class="admin__btn admin__btn--ghost admin__btn--small js-embed-reset" hidden>تغییر لینک</button>
         </div>
 
-        <div id="umami-frame-wrap" hidden>
-          <iframe id="umami-frame" title="آمار بازدید" loading="lazy"></iframe>
-          <a class="admin__link" id="umami-open" target="_blank" rel="noopener">
+        <div class="js-embed-view" hidden>
+          <iframe class="admin__embed js-embed-frame" title="جست‌وجوی گوگل" loading="lazy" allowfullscreen></iframe>
+          <a class="admin__link js-embed-open" target="_blank" rel="noopener">
             باز کردن در صفحه‌ی جدا
             <Icon name="chevron-start" size={14} />
           </a>
         </div>
 
-        <div id="umami-setup" class="admin__setup">
+        <div class="admin__setup js-embed-setup">
+          <p class="admin__muted">
+            داده‌های Search Console را با ابزار رایگان گوگل به نام Looker Studio به یک گزارش تبدیل می‌کنیم و همان گزارش این‌جا نمایش
+            داده می‌شود (یک بار، حدود ۵ دقیقه):
+          </p>
+          <ol>
+            <li>
+              با همان حساب گوگلی که Search Console را دارد، وارد{' '}
+              <a href="https://lookerstudio.google.com/" target="_blank" rel="noopener">lookerstudio.google.com</a> شوید.
+            </li>
+            <li>
+              «Create ← Report» را بزنید، از فهرست منبع‌ها <b>Search Console</b> را انتخاب کنید، سایت <b>houshiva.ir</b> و بعد
+              «Site Impression» را انتخاب و «Add» کنید.
+            </li>
+            <li>
+              نمودار و جدول دلخواه را اضافه کنید (مثلاً «Time series» برای کلیک‌ها و «Table» با ستون «Query» برای کلمه‌ها).
+            </li>
+            <li>از منوی «File ← Embed report»، گزینه‌ی «Enable embedding» را روشن کنید و «Embed URL» را کپی کنید.</li>
+            <li>از دکمه‌ی «Share»، دسترسی را روی «Anyone with the link can view» بگذارید و لینک را این‌جا وارد کنید:</li>
+          </ol>
+          <form class="admin__form js-embed-form">
+            <input type="url" placeholder="https://lookerstudio.google.com/embed/reporting/..." dir="ltr" required />
+            <button type="submit" class="admin__btn">نمایش گزارش</button>
+          </form>
+          <p class="admin__muted">این لینک فقط در همین مرورگر ذخیره می‌شود و در سایت منتشر نمی‌شود.</p>
+        </div>
+      </section>
+
+      <section class="admin__card" data-embed="houshiva-admin-umami-share">
+        <div class="admin__card-head">
+          <span class="admin__card-icon"><Icon name="trending-up" size={22} /></span>
+          <div>
+            <h2>آمار بازدید</h2>
+            <p>از زمان فعال‌سازی به بعد: همه‌ی بازدیدها، صفحه‌های پربازدید و اینکه از کجا آمده‌اند</p>
+          </div>
+          <button type="button" class="admin__btn admin__btn--ghost admin__btn--small js-embed-reset" hidden>تغییر لینک</button>
+        </div>
+
+        <div class="js-embed-view" hidden>
+          <iframe class="admin__embed js-embed-frame" title="آمار بازدید" loading="lazy"></iframe>
+          <a class="admin__link js-embed-open" target="_blank" rel="noopener">
+            باز کردن در صفحه‌ی جدا
+            <Icon name="chevron-start" size={14} />
+          </a>
+        </div>
+
+        <div class="admin__setup js-embed-setup">
           {
             !hasUmami && (
               <p class="admin__warn">
@@ -175,8 +221,8 @@ const links: { label: string; description: string; href: string; icon: IconName 
             </li>
             <li>در تنظیمات همان سایت در Umami، «Share URL» را روشن کنید و لینکش را این‌جا بگذارید تا آمار داخل همین پنل نمایش داده شود:</li>
           </ol>
-          <form id="umami-form" class="admin__form">
-            <input type="url" id="umami-url" placeholder="https://cloud.umami.is/share/..." dir="ltr" required />
+          <form class="admin__form js-embed-form">
+            <input type="url" placeholder="https://cloud.umami.is/share/..." dir="ltr" required />
             <button type="submit" class="admin__btn">نمایش آمار</button>
           </form>
           <p class="admin__muted">این لینک فقط در همین مرورگر ذخیره می‌شود و در سایت منتشر نمی‌شود.</p>
@@ -252,45 +298,45 @@ const links: { label: string; description: string; href: string; icon: IconName 
         }
         loadRuns();
 
-        // ---- Umami share dashboard, remembered only in this browser ----
-        const KEY = 'houshiva-admin-umami-share';
-        const wrap = document.getElementById('umami-frame-wrap')!;
-        const setup = document.getElementById('umami-setup')!;
-        const frame = document.getElementById('umami-frame') as HTMLIFrameElement;
-        const open = document.getElementById('umami-open') as HTMLAnchorElement;
-        const reset = document.getElementById('umami-reset')!;
-        const read = () => {
+        // ---- embedded reports (Search Console via Looker Studio, Umami); links remembered only in this browser ----
+        document.querySelectorAll<HTMLElement>('[data-embed]').forEach((card) => {
+          const key = card.dataset.embed!;
+          const view = card.querySelector<HTMLElement>('.js-embed-view')!;
+          const setup = card.querySelector<HTMLElement>('.js-embed-setup')!;
+          const frame = card.querySelector<HTMLIFrameElement>('.js-embed-frame')!;
+          const open = card.querySelector<HTMLAnchorElement>('.js-embed-open')!;
+          const reset = card.querySelector<HTMLElement>('.js-embed-reset')!;
+          const form = card.querySelector<HTMLFormElement>('.js-embed-form')!;
+
+          const show = (url: string | null) => {
+            view.hidden = !url;
+            reset.hidden = !url;
+            setup.hidden = Boolean(url);
+            if (url) {
+              frame.src = url;
+              open.href = url;
+            }
+          };
+          const store = (url: string | null) => {
+            try {
+              if (url) localStorage.setItem(key, url);
+              else localStorage.removeItem(key);
+            } catch {}
+            show(url);
+          };
+
+          form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            store(form.querySelector('input')!.value.trim());
+          });
+          reset.addEventListener('click', () => store(null));
+
+          let saved: string | null = null;
           try {
-            return localStorage.getItem(KEY);
-          } catch {
-            return null;
-          }
-        };
-        function show(url: string | null) {
-          const on = Boolean(url);
-          wrap.hidden = !on;
-          reset.hidden = !on;
-          setup.hidden = on;
-          if (url) {
-            frame.src = url;
-            open.href = url;
-          }
-        }
-        document.getElementById('umami-form')!.addEventListener('submit', (e) => {
-          e.preventDefault();
-          const url = (document.getElementById('umami-url') as HTMLInputElement).value.trim();
-          try {
-            localStorage.setItem(KEY, url);
+            saved = localStorage.getItem(key);
           } catch {}
-          show(url);
+          show(saved);
         });
-        reset.addEventListener('click', () => {
-          try {
-            localStorage.removeItem(KEY);
-          } catch {}
-          show(null);
-        });
-        show(read());
       }
 
       unlockAdmin(initPanel);
@@ -610,7 +656,7 @@ const links: { label: string; description: string; href: string; icon: IconName 
         font-weight: var(--font-weight-semibold);
       }
 
-      #umami-frame {
+      .admin__embed {
         width: 100%;
         height: 720px;
         border: 1px solid var(--color-border);
