@@ -7,6 +7,33 @@ import GradientMesh from '../components/common/GradientMesh.astro';
 import { toneForIndex, toneVars } from '../lib/tones';
 import type { IconName } from '../components/common/Icon.astro';
 
+const team = [
+  {
+    name: 'عرفان محمدی',
+    role: 'معمار نرم‌افزار و سرپرست بک‌اند',
+    description:
+      'طراحی معماری سرور و APIها، پیاده‌سازی منطق کسب‌وکار، اتصال به درگاه پرداخت، پیامک و سرویس‌های بیرونی، و امنیت و کارایی سمت سرور.',
+  },
+  {
+    name: 'علیرضا علمشاه',
+    role: 'توسعه‌دهنده فرانت‌اند و مهندس پایگاه داده',
+    description:
+      'ساخت رابط‌های کاربری سریع و ریسپانسیو و اتصال آن‌ها به API، به‌همراه طراحی، مدل‌سازی و بهینه‌سازی پایگاه‌های داده.',
+  },
+  {
+    name: 'شیوا صالح‌بیگی',
+    role: 'طراح تجربه و رابط کاربری (UI/UX)',
+    description:
+      'شناخت کاربر، طراحی جریان‌ها و وایرفریم‌ها، رابط کاربری و سیستم طراحی؛ تا نرم‌افزار هم درست کار کند و هم استفاده از آن ساده و خوشایند باشد.',
+  },
+  {
+    name: 'الهام حقانی',
+    role: 'مهندس DevOps و زیرساخت',
+    description:
+      'استقرار و نگهداری سرورها، کانتینرسازی و خودکارسازی انتشار (CI/CD)، پایش، پشتیبان‌گیری و امنیت زیرساخت.',
+  },
+];
+
 const values: { icon: IconName; title: string; description: string }[] = [
   {
     icon: 'target',
@@ -66,25 +93,18 @@ const values: { icon: IconName; title: string; description: string }[] = [
 
   <section class="section team">
     <div class="container">
-      <SectionTitle eyebrow="تیم ما" title="افرادی که پشت هوشیوا هستند" />
-      <div class="team__grid">
-        <a href="https://erfanmohammadi.ir" target="_blank" rel="noopener noreferrer" class="team__card" data-reveal style={toneVars(toneForIndex(0))}>
-          <h3>عرفان محمدی</h3>
-          <p>توسعه‌دهنده فول‌استک — Python، Django، React</p>
-          <span class="team__link">
-            مشاهده نمونه‌کارهای شخصی
-            <Icon name="chevron-start" size={16} />
-          </span>
-        </a>
-        <a href="https://alirezaalamshah.ir" target="_blank" rel="noopener noreferrer" class="team__card" data-reveal style={toneVars(toneForIndex(1))}>
-          <h3>علیرضا علمشاه</h3>
-          <p>توسعه‌دهنده فول‌استک — Django، React</p>
-          <span class="team__link">
-            مشاهده نمونه‌کارهای شخصی
-            <Icon name="chevron-start" size={16} />
-          </span>
-        </a>
-      </div>
+      <SectionTitle eyebrow="تیم ما" title="تعدادی از افرادی که پشت هوشیوا هستند" />
+      <ul class="team__list">
+        {
+          team.map((member, index) => (
+            <li class="team__member" data-reveal style={toneVars(toneForIndex(index))}>
+              <h3>{member.name}</h3>
+              <p class="team__role">{member.role}</p>
+              <p>{member.description}</p>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </section>
 
@@ -131,43 +151,34 @@ const values: { icon: IconName; title: string; description: string }[] = [
     text-align: center;
   }
 
-  .team__grid {
+  .team__list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    column-gap: var(--space-12);
+    max-width: 960px;
   }
 
-  .team__card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    padding: var(--space-8);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    transition:
-      border-color var(--transition-base),
-      transform var(--transition-base);
+  .team__member {
+    padding-block: var(--space-6);
+    border-top: 1px solid var(--color-border);
   }
 
-  .team__card:hover {
-    border-color: var(--tone-accent);
-    transform: translateY(-4px);
+  .team__member h3 {
+    font-size: var(--font-size-lg);
   }
 
-  .team__card p {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
-  }
-
-  .team__link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
+  .team__role {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
     color: var(--tone-accent-hover);
-    margin-top: var(--space-2);
+    margin-top: var(--space-1);
+    margin-bottom: var(--space-3);
+  }
+
+  .team__member p:last-child {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    line-height: var(--line-height-normal);
   }
 
   .values__grid {
