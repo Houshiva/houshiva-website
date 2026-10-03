@@ -169,9 +169,6 @@ export const projects: Project[] = [
     gallery: [
       '/portfolio/rangnama-1.webp',
       '/portfolio/rangnama-2.webp',
-      '/portfolio/rangnama-3.webp',
-      '/portfolio/rangnama-4.webp',
-      '/portfolio/rangnama-5.webp',
     ],
     shortDescription:
       'مشتری عکس اتاق یا نمای ساختمانش را می‌گذارد و هوش مصنوعی در چند ثانیه دیوارها را تشخیص می‌دهد و با رنگ انتخابی رنگ می‌کند — با حفظ نور، سایه و بافت واقعی عکس.',
