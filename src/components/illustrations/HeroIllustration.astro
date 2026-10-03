@@ -10,7 +10,7 @@ import Logo from './Logo.astro';
 import { services } from '../../data/services';
 import { toneForIndex, toneVars } from '../../lib/tones';
 
-const featuredSlugs = ['website-design', 'ecommerce', 'accounting', 'pos', 'crm', 'dashboard'];
+const featuredSlugs = ['website-design', 'ecommerce', 'accounting', 'ai-assistant', 'crm', 'dashboard'];
 const featured = featuredSlugs
   .map((slug) => services.find((s) => s.slug === slug))
   .filter((s): s is (typeof services)[number] => Boolean(s));
@@ -19,7 +19,7 @@ const extras: Record<string, { label: string; value: number; suffix: string; bar
   'website-design': { label: 'امتیاز عملکرد سایت', value: 96, suffix: '٪', bars: [55, 70, 60, 85, 96] },
   ecommerce: { label: 'فروش این هفته', value: 8400000, suffix: ' تومان', bars: [40, 55, 50, 75, 90] },
   accounting: { label: 'اسناد ثبت‌شده', value: 240, suffix: ' سند', bars: [30, 50, 45, 65, 80] },
-  pos: { label: 'تراکنش امروز', value: 58, suffix: ' تراکنش', bars: [45, 60, 55, 80, 70] },
+  'ai-assistant': { label: 'پاسخ‌های امروز دستیار', value: 312, suffix: ' پاسخ', bars: [45, 60, 55, 80, 92] },
   crm: { label: 'فرصت‌های فعال', value: 12, suffix: ' فرصت', bars: [35, 45, 60, 50, 75] },
   dashboard: { label: 'شاخص‌های زنده', value: 9, suffix: ' شاخص', bars: [50, 65, 55, 90, 85] },
 };

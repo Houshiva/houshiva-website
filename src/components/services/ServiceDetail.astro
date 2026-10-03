@@ -1,5 +1,6 @@
 ---
 import Icon from '../common/Icon.astro';
+import ServiceVisual from '../illustrations/ServiceVisual.astro';
 import { toneVars, type Tone } from '../../lib/tones';
 import type { Service } from '../../data/services';
 
@@ -20,8 +21,11 @@ const { service, reversed = false, tone = 'violet' } = Astro.props;
   style={toneVars(tone)}
 >
   <div class="service-detail__intro">
-    <div class="service-detail__icon">
-      <Icon name={service.icon as any} size={30} />
+    <div class="service-detail__heading">
+      <div class="service-detail__icon">
+        <Icon name={service.icon as any} size={28} />
+      </div>
+      {service.badge && <span class="service-detail__badge">{service.badge}</span>}
     </div>
     <h2>{service.title}</h2>
     <p class="service-detail__description">{service.description}</p>
@@ -31,13 +35,17 @@ const { service, reversed = false, tone = 'violet' } = Astro.props;
       {service.suitableFor.map((item) => <li>{item}</li>)}
     </ul>
 
-    <a href="/contact" class="service-detail__cta">
+    <a href={`/contact?service=${service.slug}`} class="service-detail__cta">
       مشاوره درباره {service.title}
       <Icon name="chevron-start" size={16} />
     </a>
   </div>
 
   <div class="service-detail__lists">
+    <div class="service-detail__visual">
+      <ServiceVisual variant={service.visual} />
+    </div>
+
     <div class="service-detail__card">
       <h3>مزایا</h3>
       <ul>
@@ -86,16 +94,39 @@ const { service, reversed = false, tone = 'violet' } = Astro.props;
     direction: rtl;
   }
 
+  .service-detail__heading {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
   .service-detail__icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 58px;
-    height: 58px;
+    width: 56px;
+    height: 56px;
     border-radius: var(--radius-md);
     background: var(--tone-accent-soft);
     color: var(--tone-accent-hover);
-    margin-bottom: var(--space-5);
+  }
+
+  .service-detail__badge {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-background);
+    background: var(--tone-accent);
+    padding: 2px var(--space-3);
+    border-radius: var(--radius-full);
+  }
+
+  .service-detail__visual {
+    aspect-ratio: 400 / 240;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 30px 70px -40px var(--tone-accent);
   }
 
   .service-detail__intro h2 {

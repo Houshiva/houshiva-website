@@ -5,8 +5,11 @@ import ServiceDetail from '../components/services/ServiceDetail.astro';
 import CtaSection from '../components/common/CtaSection.astro';
 import GradientMesh from '../components/common/GradientMesh.astro';
 import { toneForIndex } from '../lib/tones';
-import { services } from '../data/services';
+import Icon from '../components/common/Icon.astro';
+import { services, serviceGroups, type ServiceGroup } from '../data/services';
 import { site } from '../data/site';
+
+const groups = Object.entries(serviceGroups) as [ServiceGroup, (typeof serviceGroups)[ServiceGroup]][];
 
 const structuredData = [
   {
@@ -29,7 +32,7 @@ const structuredData = [
 
 <MainLayout
   title="خدمات هوشیوا"
-  description="طراحی سایت، فروشگاه اینترنتی، نرم‌افزار اختصاصی، حسابداری، صندوق فروش، CRM، مدیریت انبار، اتوماسیون، داشبورد مدیریتی و اتصال سامانه‌ها — خدمات کامل هوشیوا برای کسب‌وکار شما."
+  description="چت‌بات و دستیار هوش مصنوعی، ایجنت‌های هوشمند، پردازش تصویر و اسناد، طراحی سایت، اپلیکیشن موبایل، پلتفرم SaaS، نرم‌افزار اختصاصی، حسابداری، CRM، انبار، داشبورد و زیرساخت ابری — خدمات کامل هوشیوا برای کسب‌وکار شما."
   path="/services"
   structuredData={structuredData}
 >
@@ -40,17 +43,39 @@ const structuredData = [
         as="h1"
         eyebrow="خدمات"
         title="هر راهکار، طراحی‌شده برای همان مسئله‌ای که دارید"
-        description="از یک وب‌سایت معرفی خدمات تا سامانه‌های مدیریتی چندبخشی؛ در ادامه می‌توانید جزئیات هر خدمت، مزایا و مناسب بودن آن برای کسب‌وکارتان را ببینید."
+        description="از دستیارهای هوش مصنوعی و ایجنت‌های هوشمند تا وب‌سایت، اپلیکیشن و سامانه‌های مدیریتی چندبخشی؛ در ادامه جزئیات هر خدمت، مزایا و مناسب بودن آن برای کسب‌وکارتان را ببینید."
         align="center"
       />
+
+      <nav class="services-nav" aria-label="دسته‌بندی خدمات">
+        {
+          groups.map(([key, group]) => (
+            <a href={`#group-${key}`} class:list={['services-nav__item', { 'services-nav__item--ai': key === 'ai' }]}>
+              {key === 'ai' && <Icon name="spark" size={16} />}
+              {group.label}
+              <span>{services.filter((s) => s.group === key).length}</span>
+            </a>
+          ))
+        }
+      </nav>
     </div>
   </section>
 
   <section class="services-list">
     <div class="container">
       {
-        services.map((service, index) => (
-          <ServiceDetail service={service} reversed={index % 2 === 1} tone={toneForIndex(index)} />
+        groups.map(([key, group]) => (
+          <section id={`group-${key}`} class="services-group">
+            <header class="services-group__header" data-reveal>
+              <span class="services-group__eyebrow">{key === 'ai' && <Icon name="spark" size={14} />}{group.label}</span>
+              <p>{group.description}</p>
+            </header>
+            {services
+              .filter((s) => s.group === key)
+              .map((service, index) => (
+                <ServiceDetail service={service} reversed={index % 2 === 1} tone={toneForIndex(index)} />
+              ))}
+          </section>
         ))
       }
     </div>
@@ -71,5 +96,89 @@ const structuredData = [
 
   .services-list {
     padding-bottom: var(--space-16);
+  }
+
+  .services-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+  }
+
+  .services-nav__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-5);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-surface);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    transition:
+      border-color var(--transition-base),
+      transform var(--transition-base);
+  }
+
+  .services-nav__item:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+  }
+
+  .services-nav__item span {
+    font-size: var(--font-size-xs);
+    min-width: 22px;
+    padding: 0 6px;
+    text-align: center;
+    border-radius: var(--radius-full);
+    background: var(--color-border);
+    color: var(--color-text-muted);
+  }
+
+  .services-nav__item--ai {
+    border-color: transparent;
+    background:
+      linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+      linear-gradient(120deg, var(--color-primary), var(--color-accent-secondary), var(--color-accent-gold), var(--color-primary)) border-box;
+    background-size: 100% 100%, 300% 100%;
+    animation: services-ai-border 6s linear infinite;
+  }
+
+  @keyframes services-ai-border {
+    to {
+      background-position: 0 0, 300% 0;
+    }
+  }
+
+  .services-group {
+    scroll-margin-top: 90px;
+    padding-top: var(--space-12);
+  }
+
+  .services-group__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .services-group__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-2xl, 1.6rem);
+    font-weight: var(--font-weight-bold, 800);
+    color: var(--color-text);
+  }
+
+  .services-group__header p {
+    color: var(--color-text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .services-nav__item--ai {
+      animation: none;
+    }
   }
 </style>

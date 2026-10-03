@@ -1,8 +1,17 @@
 ---
 import SectionTitle from '../common/SectionTitle.astro';
 import ServiceCard from '../services/ServiceCard.astro';
+import Icon from '../common/Icon.astro';
 import { toneForIndex } from '../../lib/tones';
-import { services } from '../../data/services';
+import { services, serviceGroups, type ServiceGroup } from '../../data/services';
+
+const groups = Object.entries(serviceGroups) as [ServiceGroup, (typeof serviceGroups)[ServiceGroup]][];
+
+// 4 cards → one row of 4; otherwise rows of 3 (or fewer), so no tab ends with a lone card.
+function columnsFor(group: ServiceGroup) {
+  const count = services.filter((s) => s.group === group).length;
+  return count === 4 ? 4 : Math.min(count, 3);
+}
 ---
 
 <section class="section services-preview">
@@ -10,19 +19,216 @@ import { services } from '../../data/services';
     <SectionTitle
       eyebrow="خدمات"
       title="راهکارهایی متناسب با کسب‌وکار شما"
-      description="از طراحی سایت تا سامانه‌های مدیریتی اختصاصی؛ هر راهکار بر اساس نیاز واقعی کسب‌وکار شما طراحی می‌شود، نه یک قالب آماده."
+      description="از دستیارهای هوش مصنوعی و ایجنت‌های هوشمند تا سایت، اپلیکیشن و سامانه‌های مدیریتی اختصاصی؛ هر راهکار بر اساس نیاز واقعی کسب‌وکار شما طراحی می‌شود، نه یک قالب آماده."
     />
 
-    <div class="services-preview__grid">
-      {services.map((service, index) => <ServiceCard service={service} tone={toneForIndex(index)} />)}
+    <div class="services-tabs">
+      {groups.map(([key], index) => <input type="radio" name="services-tab" id={`services-tab-${key}`} class="visually-hidden" checked={index === 0} />)}
+
+      <div class="services-tabs__bar" role="tablist" aria-label="دسته‌بندی خدمات">
+        {
+          groups.map(([key, group]) => (
+            <label for={`services-tab-${key}`} class:list={[`tab-${key}`]}>
+              {key === 'ai' && <Icon name="spark" size={16} />}
+              {group.label}
+              <span class="services-tabs__count">{services.filter((s) => s.group === key).length}</span>
+            </label>
+          ))
+        }
+      </div>
+
+      {
+        groups.map(([key, group]) => (
+          <div class:list={['services-tabs__panel', `panel-${key}`]}>
+            <p class="services-tabs__desc">{group.description}</p>
+            <div class="services-preview__grid" style={`--cols:${columnsFor(key)}`}>
+              {services
+                .filter((s) => s.group === key)
+                .map((service, index) => (
+                  <div class="services-tabs__item" style={`--i:${index}`}>
+                    <ServiceCard service={service} tone={toneForIndex(index)} />
+                  </div>
+                ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="services-preview__more">
+      <a href="/services" class="services-preview__all">
+        مشاهده‌ی همه‌ی {services.length} خدمت هوشیوا
+        <Icon name="chevron-start" size={16} />
+      </a>
     </div>
   </div>
 </section>
 
 <style>
+  .services-tabs__bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    margin-bottom: var(--space-6);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .services-tabs__bar label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-5);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition:
+      background-color var(--transition-base),
+      color var(--transition-base),
+      box-shadow var(--transition-base);
+  }
+
+  .services-tabs__bar label:hover {
+    color: var(--color-text);
+  }
+
+  .services-tabs__count {
+    font-size: var(--font-size-xs);
+    min-width: 22px;
+    padding: 0 6px;
+    text-align: center;
+    border-radius: var(--radius-full);
+    background: var(--color-border);
+    color: var(--color-text-muted);
+  }
+
+  .services-tabs__desc {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-6);
+  }
+
+  .services-tabs__panel {
+    display: none;
+  }
+
   .services-preview__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    /* Column count follows the number of cards so no tab ends with a lone card. */
+    grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
     gap: var(--space-6);
+  }
+
+  @media (max-width: 1100px) {
+    .services-preview__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .services-preview__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .services-tabs__item {
+    animation: services-tab-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--i) * 70ms);
+  }
+
+  /* The cards' own scroll-reveal would fight the tab-switch animation. */
+  .services-tabs__item :global(.service-card[data-reveal]) {
+    opacity: 1 !important;
+    transform: none;
+  }
+
+  #services-tab-ai:checked ~ .panel-ai,
+  #services-tab-product:checked ~ .panel-product,
+  #services-tab-business:checked ~ .panel-business,
+  #services-tab-infra:checked ~ .panel-infra {
+    display: block;
+  }
+
+  #services-tab-ai:checked ~ .services-tabs__bar .tab-ai,
+  #services-tab-product:checked ~ .services-tabs__bar .tab-product,
+  #services-tab-business:checked ~ .services-tabs__bar .tab-business,
+  #services-tab-infra:checked ~ .services-tabs__bar .tab-infra {
+    background: var(--color-primary);
+    color: var(--color-text-on-primary);
+    box-shadow: 0 8px 24px -10px var(--color-primary);
+  }
+
+  #services-tab-ai:checked ~ .services-tabs__bar .tab-ai .services-tabs__count,
+  #services-tab-product:checked ~ .services-tabs__bar .tab-product .services-tabs__count,
+  #services-tab-business:checked ~ .services-tabs__bar .tab-business .services-tabs__count,
+  #services-tab-infra:checked ~ .services-tabs__bar .tab-infra .services-tabs__count {
+    background: rgba(255, 255, 255, 0.22);
+    color: #fff;
+  }
+
+  #services-tab-ai:focus-visible ~ .services-tabs__bar .tab-ai,
+  #services-tab-product:focus-visible ~ .services-tabs__bar .tab-product,
+  #services-tab-business:focus-visible ~ .services-tabs__bar .tab-business,
+  #services-tab-infra:focus-visible ~ .services-tabs__bar .tab-infra {
+    outline: 2px solid var(--color-primary-hover);
+    outline-offset: 2px;
+  }
+
+  .services-preview__more {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-10);
+  }
+
+  .services-preview__all {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-hover);
+    padding: var(--space-3) var(--space-6);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-full);
+    transition:
+      border-color var(--transition-base),
+      background-color var(--transition-base);
+  }
+
+  .services-preview__all:hover {
+    border-color: var(--color-primary);
+    background: var(--color-primary-soft);
+  }
+
+  @keyframes services-tab-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .services-tabs__bar {
+      border-radius: var(--radius-lg);
+    }
+
+    .services-tabs__bar label {
+      padding-inline: var(--space-4);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .services-tabs__item {
+      animation: none;
+    }
   }
 </style>

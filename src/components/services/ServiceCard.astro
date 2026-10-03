@@ -1,5 +1,6 @@
 ---
 import Icon from '../common/Icon.astro';
+import ServiceVisual from '../illustrations/ServiceVisual.astro';
 import { toneVars, type Tone } from '../../lib/tones';
 import type { Service } from '../../data/services';
 
@@ -23,10 +24,16 @@ const titleId = `${service.slug}-modal-title`;
   aria-controls={overlayId}
   data-modal-target={overlayId}
 >
-  <div class="service-card__icon">
-    <Icon name={service.icon as any} size={26} />
+  <div class="service-card__visual">
+    <ServiceVisual variant={service.visual} />
+    {service.badge && <span class="service-card__badge">{service.badge}</span>}
   </div>
-  <h3>{service.title}</h3>
+  <div class="service-card__title">
+    <div class="service-card__icon">
+      <Icon name={service.icon as any} size={22} />
+    </div>
+    <h3>{service.title}</h3>
+  </div>
   <p>{service.shortDescription}</p>
   <span class="service-card__hint">
     اطلاعات بیشتر
@@ -44,6 +51,9 @@ const titleId = `${service.slug}-modal-title`;
     </button>
 
     <div class="service-modal__scroll">
+      <div class="service-modal__visual">
+        <ServiceVisual variant={service.visual} />
+      </div>
       <div class="service-modal__body">
         <div class="service-modal__icon">
           <Icon name={service.icon as any} size={28} />
@@ -97,8 +107,9 @@ const titleId = `${service.slug}-modal-title`;
     width: 100%;
     font-family: inherit;
     text-align: start;
-    padding: var(--space-8);
+    padding: var(--space-3) var(--space-3) var(--space-6);
     background: var(--color-surface);
+    overflow: hidden;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     cursor: pointer;
@@ -115,16 +126,55 @@ const titleId = `${service.slug}-modal-title`;
     box-shadow: var(--shadow-md);
   }
 
+  .service-card__visual {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 400 / 240;
+    border-radius: calc(var(--radius-lg) - 6px);
+    overflow: hidden;
+    border: 1px solid var(--color-border-hairline);
+    margin-bottom: var(--space-5);
+  }
+
+  .service-card__visual :global(.svis) {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .service-card:hover .service-card__visual :global(.svis) {
+    transform: scale(1.05);
+  }
+
+  .service-card__badge {
+    position: absolute;
+    top: var(--space-3);
+    inset-inline-start: var(--space-3);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-background);
+    background: var(--tone-accent);
+    padding: 2px var(--space-3);
+    border-radius: var(--radius-full);
+    box-shadow: 0 6px 18px -6px var(--tone-accent);
+  }
+
+  .service-card__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding-inline: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
   .service-card__icon {
     display: inline-flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    width: 52px;
-    height: 52px;
+    width: 40px;
+    height: 40px;
     border-radius: var(--radius-md);
     background: var(--tone-accent-soft);
     color: var(--tone-accent-hover);
-    margin-bottom: var(--space-5);
     transition: transform var(--transition-base);
   }
 
@@ -133,16 +183,18 @@ const titleId = `${service.slug}-modal-title`;
   }
 
   .service-card h3 {
-    margin-bottom: var(--space-3);
+    font-size: var(--font-size-lg);
   }
 
   .service-card p {
     font-size: var(--font-size-sm);
     margin-bottom: var(--space-5);
+    padding-inline: var(--space-3);
     flex-grow: 1;
   }
 
   .service-card__hint {
+    padding-inline: var(--space-3);
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
@@ -274,6 +326,14 @@ const titleId = `${service.slug}-modal-title`;
     overflow-y: auto;
     overscroll-behavior: contain;
     padding: var(--space-8);
+  }
+
+  .service-modal__visual {
+    aspect-ratio: 400 / 240;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--color-border-hairline);
+    margin-bottom: var(--space-5);
   }
 
   .service-modal__body {

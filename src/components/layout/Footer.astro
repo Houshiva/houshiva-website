@@ -7,7 +7,8 @@ import { footerNav } from '../../data/navigation';
 import { services } from '../../data/services';
 
 const year = new Date().getFullYear();
-const featuredServices = services.slice(0, 6);
+const featuredSlugs = ['ai-assistant', 'ai-agents', 'website-design', 'ecommerce', 'custom-software', 'saas-platform'];
+const featuredServices = featuredSlugs.map((slug) => services.find((s) => s.slug === slug)!).filter(Boolean);
 ---
 
 <footer class="footer">

@@ -1,0 +1,512 @@
+---
+/**
+ * Animated mini-scene for each service (400x240). Colors come from the
+ * --tone-* custom properties so a card's tone recolors its scene. Animations
+ * only run while the scene is on screen (see the script at the bottom) and
+ * are disabled entirely under prefers-reduced-motion.
+ */
+export type ServiceVisualVariant =
+  | 'chat'
+  | 'agent'
+  | 'scan'
+  | 'forecast'
+  | 'saas'
+  | 'mobile'
+  | 'website'
+  | 'store'
+  | 'design'
+  | 'code'
+  | 'ledger'
+  | 'pos'
+  | 'crm'
+  | 'warehouse'
+  | 'flow'
+  | 'dashboard'
+  | 'api'
+  | 'cloud';
+
+export interface Props {
+  variant: ServiceVisualVariant;
+  class?: string;
+}
+
+const { variant, class: className } = Astro.props;
+const A = 'var(--tone-accent)';
+const SOFT = 'var(--tone-accent-soft)';
+const LINE = 'var(--color-border-strong)';
+const DIM = 'var(--color-text-subtle)';
+const PANEL = 'var(--color-background-alt)';
+const BORDER = 'var(--color-border)';
+const OK = 'var(--color-success)';
+---
+
+<svg class:list={['svis', className]} viewBox="0 0 400 240" fill="none" role="img" aria-hidden="true">
+  <defs>
+    <radialGradient id={`sv-glow-${variant}`} cx="50%" cy="40%" r="65%">
+      <stop offset="0" stop-color="var(--tone-accent)" stop-opacity="0.22" />
+      <stop offset="1" stop-color="var(--tone-accent)" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="400" height="240" fill="var(--color-surface)" />
+  <rect width="400" height="240" fill={`url(#sv-glow-${variant})`} />
+
+  {/* ---------- AI assistant / chatbot ---------- */}
+  {variant === 'chat' && (
+    <>
+      <rect x="70" y="18" width="260" height="204" rx="18" fill={PANEL} stroke={BORDER} />
+      <circle cx="96" cy="42" r="10" fill={A} class="sv-pulse" />
+      <path d="M96 36.5c.4 2.3 1.6 3.5 3.9 3.9-2.3.4-3.5 1.6-3.9 3.9-.4-2.3-1.6-3.5-3.9-3.9 2.3-.4 3.5-1.6 3.9-3.9Z" fill="#fff" />
+      <rect x="114" y="38" width="70" height="8" rx="4" fill={LINE} />
+      <g class="sv-seq" style="--d:0s"><rect x="186" y="66" width="128" height="26" rx="13" fill={A} opacity="0.9" /><rect x="198" y="76" width="96" height="6" rx="3" fill="#fff" opacity="0.85" /></g>
+      <g class="sv-seq" style="--d:1s"><rect x="86" y="102" width="160" height="40" rx="14" fill={SOFT} stroke={BORDER} /><rect x="98" y="113" width="132" height="6" rx="3" fill={LINE} /><rect x="98" y="125" width="96" height="6" rx="3" fill={LINE} /></g>
+      <g class="sv-seq" style="--d:2s"><rect x="214" y="152" width="100" height="26" rx="13" fill={A} opacity="0.9" /><rect x="226" y="162" width="70" height="6" rx="3" fill="#fff" opacity="0.85" /></g>
+      <g class="sv-seq" style="--d:3s">
+        <rect x="86" y="188" width="56" height="22" rx="11" fill={SOFT} stroke={BORDER} />
+        <circle cx="102" cy="199" r="3" fill={A} class="sv-dot" style="--d:0s" />
+        <circle cx="114" cy="199" r="3" fill={A} class="sv-dot" style="--d:.15s" />
+        <circle cx="126" cy="199" r="3" fill={A} class="sv-dot" style="--d:.3s" />
+      </g>
+    </>
+  )}
+
+  {/* ---------- AI agents ---------- */}
+  {variant === 'agent' && (
+    <>
+      {[[80, 60], [80, 180], [320, 60], [320, 180], [200, 28]].map(([x, y], i) => (
+        <path d={`M200 120 L${x} ${y}`} stroke={A} stroke-width="2" stroke-dasharray="6 8" class="sv-flow" style={`--d:${i * 0.3}s`} opacity="0.7" />
+      ))}
+      {[[80, 60, 'M72 56h16M72 62h10'], [80, 180, 'M73 176l7 5 7-5M73 176h14v10H73Z'], [320, 60, 'M313 54h14v14h-14ZM313 60h14'], [320, 180, 'M314 186v-8M320 186v-12M326 186v-5'], [200, 28, 'M193 28h14M200 21v14']].map(([x, y, d], i) => (
+        <g class="sv-node" style={`--d:${i * 0.5}s`}>
+          <rect x={(x as number) - 24} y={(y as number) - 18} width="48" height="36" rx="10" fill={PANEL} stroke={BORDER} />
+          <path d={d as string} stroke={DIM} stroke-width="2" stroke-linecap="round" />
+        </g>
+      ))}
+      <circle cx="200" cy="120" r="44" fill={SOFT} class="sv-pulse" />
+      <circle cx="200" cy="120" r="30" fill={A} />
+      <path d="M200 106c1 5.6 4 8.6 9.6 9.6-5.6 1-8.6 4-9.6 9.6-1-5.6-4-8.6-9.6-9.6 5.6-1 8.6-4 9.6-9.6Z" fill="#fff" class="sv-spin" />
+      <rect x="150" y="196" width="100" height="22" rx="11" fill={PANEL} stroke={BORDER} />
+      <rect x="160" y="204" width="0" height="6" rx="3" fill={OK} class="sv-grow" style="--w:80px" />
+    </>
+  )}
+
+  {/* ---------- Image & document AI (OCR / vision) ---------- */}
+  {variant === 'scan' && (
+    <>
+      <rect x="44" y="22" width="150" height="196" rx="8" fill="#f4f4f7" />
+      <rect x="62" y="42" width="80" height="10" rx="3" fill="#b9b9c6" />
+      {[66, 82, 98, 114, 146, 162, 178].map((y, i) => <rect x="62" y={y} width={i % 3 === 2 ? 70 : 112} height="6" rx="3" fill="#d4d4de" />)}
+      <rect x="62" y="128" width="54" height="10" rx="3" fill={A} opacity="0.35" class="sv-blink" />
+      <rect x="40" y="22" width="158" height="3" rx="1.5" fill={A} class="sv-scan" />
+      <path d="M202 120h26" stroke={A} stroke-width="2" stroke-dasharray="4 5" class="sv-flow" />
+      {[['نام', 52], ['تاریخ', 92], ['مبلغ', 132], ['شماره', 172]].map(([, y], i) => (
+        <g class="sv-seq" style={`--d:${0.6 + i * 0.6}s`}>
+          <rect x="236" y={y as number} width="124" height="30" rx="9" fill={PANEL} stroke={BORDER} />
+          <rect x="248" y={(y as number) + 12} width="38" height="6" rx="3" fill={DIM} />
+          <rect x="296" y={(y as number) + 11} width="52" height="8" rx="4" fill={A} />
+        </g>
+      ))}
+    </>
+  )}
+
+  {/* ---------- Data analytics & forecasting ---------- */}
+  {variant === 'forecast' && (
+    <>
+      <rect x="30" y="24" width="340" height="192" rx="16" fill={PANEL} stroke={BORDER} />
+      {[70, 110, 150, 190].map((y) => <path d={`M52 ${y}H350`} stroke={BORDER} />)}
+      <path d="M232 112 L268 96 L304 84 L346 62 L346 104 L304 116 L268 124 L232 132Z" fill={A} fill-opacity="0.16" class="sv-fade" />
+      <path d="M52 168 L88 150 L124 158 L160 128 L196 136 L232 122" stroke={A} stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" pathLength="100" stroke-dasharray="100" class="sv-draw" />
+      <path d="M232 122 L268 110 L304 100 L346 83" stroke={A} stroke-width="3" stroke-linecap="round" stroke-dasharray="3 7" class="sv-fade" />
+      <circle cx="232" cy="122" r="6" fill={A} class="sv-pulse" />
+      <rect x="252" y="36" width="96" height="24" rx="12" fill={SOFT} />
+      <rect x="264" y="45" width="60" height="6" rx="3" fill={A} />
+    </>
+  )}
+
+  {/* ---------- SaaS / multi-tenant platform ---------- */}
+  {variant === 'saas' && (
+    <>
+      <path d="M170 92a26 26 0 0 1 50-8 20 20 0 1 1 6 39h-54a16 16 0 0 1-2-31Z" fill={SOFT} stroke={A} stroke-width="2" class="sv-float" />
+      {[[40, 'var(--color-primary)'], [150, 'var(--color-accent-secondary)'], [260, 'var(--color-accent-gold)']].map(([x, c], i) => (
+        <g class="sv-rise" style={`--d:${i * 0.35}s`}>
+          <path d={`M200 124 L${(x as number) + 50} 150`} stroke={c as string} stroke-width="2" stroke-dasharray="4 6" class="sv-flow" />
+          <rect x={x as number} y="150" width="100" height="70" rx="12" fill={PANEL} stroke={c as string} stroke-opacity="0.6" />
+          <rect x={(x as number) + 12} y="162" width="22" height="22" rx="6" fill={c as string} />
+          <rect x={(x as number) + 40} y="166" width="48" height="6" rx="3" fill={LINE} />
+          <rect x={(x as number) + 12} y="194" width="76" height="6" rx="3" fill={LINE} />
+          <rect x={(x as number) + 12} y="205" width="50" height="6" rx="3" fill={c as string} opacity="0.6" />
+        </g>
+      ))}
+    </>
+  )}
+
+  {/* ---------- Mobile app / PWA ---------- */}
+  {variant === 'mobile' && (
+    <>
+      <rect x="146" y="14" width="108" height="212" rx="20" fill={PANEL} stroke={LINE} stroke-width="2" />
+      <rect x="182" y="22" width="36" height="6" rx="3" fill={LINE} />
+      <clipPath id="sv-phone"><rect x="154" y="34" width="92" height="166" rx="6" /></clipPath>
+      <g clip-path="url(#sv-phone)">
+        <g class="sv-scroll">
+          {[0, 1, 2, 3, 4, 5].map((i) => (
+            <g transform={`translate(0 ${i * 54})`}>
+              <rect x="158" y="38" width="84" height="46" rx="9" fill={i % 2 ? SOFT : 'var(--color-surface)'} stroke={BORDER} />
+              <circle cx="174" cy="61" r="9" fill={A} opacity={i % 2 ? 1 : 0.6} />
+              <rect x="188" y="54" width="44" height="6" rx="3" fill={LINE} />
+              <rect x="188" y="65" width="30" height="5" rx="2.5" fill={DIM} />
+            </g>
+          ))}
+        </g>
+      </g>
+      <rect x="154" y="202" width="92" height="16" rx="4" fill="var(--color-surface)" />
+      {[170, 200, 230].map((x, i) => <circle cx={x} cy="210" r="3.5" fill={i === 1 ? A : DIM} />)}
+      <g class="sv-pop" style="--d:1s">
+        <rect x="262" y="44" width="104" height="40" rx="12" fill={PANEL} stroke={A} stroke-opacity="0.6" />
+        <circle cx="282" cy="64" r="8" fill={A} />
+        <rect x="296" y="58" width="56" height="5" rx="2.5" fill={LINE} />
+        <rect x="296" y="67" width="36" height="5" rx="2.5" fill={DIM} />
+      </g>
+      <g class="sv-pop" style="--d:2.2s">
+        <rect x="36" y="150" width="96" height="34" rx="12" fill={PANEL} stroke={BORDER} />
+        <path d="M52 167l5 5 9-10" stroke={OK} stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        <rect x="74" y="164" width="46" height="6" rx="3" fill={LINE} />
+      </g>
+    </>
+  )}
+
+  {/* ---------- Website ---------- */}
+  {variant === 'website' && (
+    <>
+      <rect x="34" y="22" width="332" height="196" rx="14" fill={PANEL} stroke={BORDER} />
+      {[52, 66, 80].map((x) => <circle cx={x} cy="40" r="4" fill={DIM} />)}
+      <rect x="110" y="34" width="180" height="12" rx="6" fill="var(--color-surface)" />
+      <rect x="34" y="56" width="332" height="1" fill={BORDER} />
+      <g class="sv-slide" style="--d:0s"><rect x="56" y="74" width="150" height="14" rx="5" fill={LINE} /><rect x="56" y="96" width="120" height="8" rx="4" fill={DIM} opacity="0.6" /></g>
+      <g class="sv-slide" style="--d:.4s"><rect x="56" y="118" width="74" height="24" rx="8" fill={A} /></g>
+      <g class="sv-rise" style="--d:.8s"><rect x="230" y="72" width="114" height="76" rx="10" fill={SOFT} stroke={A} stroke-opacity="0.5" /><circle cx="262" cy="104" r="12" fill={A} opacity="0.7" /><path d="M240 140l26-22 18 14 14-10 36 18" stroke={A} stroke-width="2" /></g>
+      {[56, 156, 256].map((x, i) => (
+        <g class="sv-rise" style={`--d:${1.2 + i * 0.25}s`}><rect x={x} y="160" width="88" height="40" rx="9" fill="var(--color-surface)" stroke={BORDER} /><rect x={x + 12} y="172" width="40" height="6" rx="3" fill={LINE} /><rect x={x + 12} y="184" width="60" height="5" rx="2.5" fill={DIM} /></g>
+      ))}
+      <path d="M0 0l0 16 4.5-4 3 7 3-1.4-3-7 6 0Z" fill="#fff" stroke="#111" stroke-width="1" class="sv-cursor" />
+    </>
+  )}
+
+  {/* ---------- Online store ---------- */}
+  {variant === 'store' && (
+    <>
+      {[40, 150, 260].map((x, i) => (
+        <g>
+          <rect x={x} y="26" width="100" height="120" rx="12" fill={PANEL} stroke={BORDER} />
+          <rect x={x + 14} y="38" width="72" height="54" rx="8" fill={i === 1 ? SOFT : 'var(--color-surface)'} />
+          <circle cx={x + 50} cy="65" r="14" fill={A} opacity={i === 1 ? 1 : 0.45} />
+          <rect x={x + 14} y="102" width="56" height="6" rx="3" fill={LINE} />
+          <rect x={x + 14} y="116" width="34" height="8" rx="4" fill={A} opacity="0.8" />
+        </g>
+      ))}
+      <circle cx="200" cy="65" r="10" fill={A} class="sv-drop" />
+      <g transform="translate(166 160)">
+        <rect x="0" y="0" width="68" height="56" rx="14" fill={SOFT} stroke={A} stroke-opacity="0.6" />
+        <path d="M16 18h4l5 20h20l4-14H23" stroke={A} stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="28" cy="44" r="2.6" fill={A} /><circle cx="42" cy="44" r="2.6" fill={A} />
+        <g class="sv-bump"><circle cx="60" cy="6" r="10" fill={OK} /><path d="M56 6h8M60 2v8" stroke="#0a0a10" stroke-width="2" stroke-linecap="round" /></g>
+      </g>
+    </>
+  )}
+
+  {/* ---------- UI/UX design ---------- */}
+  {variant === 'design' && (
+    <>
+      <rect x="30" y="24" width="250" height="192" rx="12" fill={PANEL} stroke={BORDER} stroke-dasharray="5 5" />
+      <rect x="54" y="48" width="100" height="70" rx="10" fill={SOFT} stroke={A} stroke-width="2" class="sv-resize" />
+      <circle cx="210" cy="84" r="30" fill="var(--color-accent-secondary)" opacity="0.75" class="sv-float" />
+      <path d="M60 180 C 100 130, 160 220, 250 160" stroke={A} stroke-width="3" fill="none" pathLength="100" stroke-dasharray="100" class="sv-draw" />
+      <circle cx="60" cy="180" r="5" fill="#fff" stroke={A} stroke-width="2" />
+      <circle cx="250" cy="160" r="5" fill="#fff" stroke={A} stroke-width="2" />
+      <rect x="296" y="24" width="74" height="192" rx="12" fill={PANEL} stroke={BORDER} />
+      {['var(--color-primary)', 'var(--color-accent-secondary)', 'var(--color-accent-gold)', 'var(--color-danger)'].map((c, i) => (
+        <rect x="310" y={40 + i * 30} width="46" height="20" rx="6" fill={c} class="sv-seq" style={`--d:${i * 0.4}s`} />
+      ))}
+      <rect x="310" y="166" width="46" height="8" rx="4" fill={LINE} />
+      <rect x="310" y="182" width="30" height="8" rx="4" fill={LINE} />
+      <path d="M0 0l0 16 4.5-4 3 7 3-1.4-3-7 6 0Z" fill="#fff" stroke="#111" stroke-width="1" class="sv-drag" />
+    </>
+  )}
+
+  {/* ---------- Custom software / code ---------- */}
+  {variant === 'code' && (
+    <>
+      <rect x="40" y="22" width="320" height="196" rx="14" fill="#0d0d16" stroke={BORDER} />
+      {[58, 72, 86].map((x) => <circle cx={x} cy="40" r="4" fill={DIM} />)}
+      {[
+        [62, 40, 90, A],
+        [62, 60, 150, LINE],
+        [86, 40, 120, 'var(--color-accent-secondary)'],
+        [86, 60, 70, LINE],
+        [62, 50, 170, 'var(--color-accent-gold)'],
+        [86, 40, 110, LINE],
+        [62, 30, 60, A],
+      ].map(([x, , w, c], i) => (
+        <g>
+          <text x="330" y={70 + i * 20} fill={DIM} font-size="10" font-family="monospace" text-anchor="end">{i + 1}</text>
+          <rect x={x as number} y={63 + i * 20} width={w as number} height="8" rx="4" fill={c as string} class="sv-type" style={`--d:${i * 0.45}s`} />
+        </g>
+      ))}
+      <rect x="64" y="200" width="2.5" height="12" fill={A} class="sv-caret" />
+    </>
+  )}
+
+  {/* ---------- Accounting ledger ---------- */}
+  {variant === 'ledger' && (
+    <>
+      <rect x="36" y="22" width="328" height="196" rx="14" fill={PANEL} stroke={BORDER} />
+      <rect x="36" y="22" width="328" height="34" rx="14" fill={SOFT} />
+      {[0, 1, 2, 3].map((i) => (
+        <g class="sv-seq" style={`--d:${i * 0.45}s`}>
+          <rect x="56" y={72 + i * 28} width="90" height="7" rx="3.5" fill={LINE} />
+          <rect x="200" y={72 + i * 28} width="50" height="7" rx="3.5" fill={i % 2 ? 'var(--color-danger)' : OK} opacity="0.75" />
+          <rect x="282" y={72 + i * 28} width="60" height="7" rx="3.5" fill={DIM} />
+          <path d={`M56 ${88 + i * 28}H344`} stroke={BORDER} />
+        </g>
+      ))}
+      <rect x="56" y="188" width="90" height="12" rx="6" fill={LINE} />
+      <rect x="200" y="186" width="0" height="16" rx="8" fill={A} class="sv-grow" style="--w:142px" />
+    </>
+  )}
+
+  {/* ---------- POS ---------- */}
+  {variant === 'pos' && (
+    <>
+      <clipPath id="sv-receipt"><rect x="140" y="0" width="120" height="118" /></clipPath>
+      <g clip-path="url(#sv-receipt)">
+        <g class="sv-print">
+          <path d="M152 20h96v100l-8-5-8 5-8-5-8 5-8-5-8 5-8-5-8 5-8-5-8 5-8-5Z" fill="#f4f4f7" />
+          {[34, 48, 62, 76].map((y, i) => <><rect x="164" y={y} width="42" height="6" rx="3" fill="#c4c4d0" /><rect x="214" y={y} width="22" height="6" rx="3" fill={i === 3 ? A : '#c4c4d0'} /></>)}
+          <rect x="164" y="94" width="72" height="8" rx="4" fill="#9a9aab" />
+        </g>
+      </g>
+      <rect x="110" y="112" width="180" height="96" rx="16" fill={PANEL} stroke={BORDER} />
+      <rect x="140" y="106" width="120" height="12" rx="6" fill={LINE} />
+      <rect x="126" y="130" width="148" height="30" rx="8" fill="#0d0d16" />
+      <rect x="226" y="140" width="38" height="10" rx="5" fill={A} class="sv-blink" />
+      {[0, 1, 2, 3].map((i) => <rect x={130 + i * 36} y="170" width="28" height="22" rx="6" fill="var(--color-surface)" stroke={BORDER} />)}
+      <rect x="40" y="150" width="54" height="36" rx="8" fill={SOFT} stroke={A} stroke-opacity="0.6" class="sv-tap" />
+      <path d="M50 162h34M50 172h20" stroke={A} stroke-width="2.5" stroke-linecap="round" />
+    </>
+  )}
+
+  {/* ---------- CRM pipeline ---------- */}
+  {variant === 'crm' && (
+    <>
+      {[30, 144, 258].map((x) => (
+        <rect x={x} y="22" width="112" height="196" rx="14" fill={PANEL} stroke={BORDER} />
+      ))}
+      {[30, 144, 258].map((x, i) => <rect x={x + 14} y="36" width={[40, 54, 30][i]} height="8" rx="4" fill={[DIM, DIM, OK][i]} />)}
+      {[[44, 58], [44, 104], [158, 58], [272, 58]].map(([x, y]) => (
+        <g><rect x={x} y={y} width="84" height="38" rx="9" fill="var(--color-surface)" stroke={BORDER} /><circle cx={x + 16} cy={y + 19} r="8" fill={DIM} /><rect x={x + 30} y={y + 15} width="42" height="6" rx="3" fill={LINE} /></g>
+      ))}
+      <g class="sv-move">
+        <rect x="44" y="150" width="84" height="38" rx="9" fill={SOFT} stroke={A} stroke-width="1.5" />
+        <circle cx="60" cy="169" r="8" fill={A} />
+        <rect x="74" y="165" width="42" height="6" rx="3" fill={A} opacity="0.7" />
+      </g>
+    </>
+  )}
+
+  {/* ---------- Warehouse / inventory ---------- */}
+  {variant === 'warehouse' && (
+    <>
+      {[60, 120, 180].map((y) => <rect x="40" y={y} width="210" height="6" rx="3" fill={LINE} />)}
+      {[[52, 28], [92, 28], [52, 88], [132, 88], [172, 88], [92, 148], [132, 148]].map(([x, y]) => (
+        <g><rect x={x} y={y} width="34" height="32" rx="4" fill={PANEL} stroke={BORDER} /><path d={`M${x} ${y + 10}h34`} stroke={BORDER} /></g>
+      ))}
+      <g class="sv-box"><rect x="0" y="0" width="34" height="32" rx="4" fill={SOFT} stroke={A} stroke-width="1.5" /><path d="M0 10h34" stroke={A} stroke-opacity="0.6" /></g>
+      <rect x="276" y="28" width="94" height="182" rx="14" fill={PANEL} stroke={BORDER} />
+      {[0, 1, 2].map((i) => (
+        <g>
+          <rect x="290" y={48 + i * 54} width="50" height="6" rx="3" fill={DIM} />
+          <rect x="290" y={62 + i * 54} width="66" height="10" rx="5" fill="var(--color-surface)" />
+          <rect x="290" y={62 + i * 54} width="0" height="10" rx="5" fill={i === 2 ? 'var(--color-danger)' : A} class="sv-grow" style={`--w:${[54, 40, 14][i]}px;--d:${i * 0.3}s`} />
+        </g>
+      ))}
+    </>
+  )}
+
+  {/* ---------- Business automation workflow ---------- */}
+  {variant === 'flow' && (
+    <>
+      <path id="sv-flowpath" d="M62 120 H140 C 170 120 170 64 200 64 H 236 C 262 64 262 120 290 120 H 340" stroke={LINE} stroke-width="3" fill="none" />
+      <path d="M140 120 C 170 120 170 176 200 176 H 236 C 262 176 262 120 290 120" stroke={LINE} stroke-width="3" fill="none" stroke-dasharray="6 6" />
+      {[[62, 120, 'var(--color-primary)'], [200, 64, A], [200, 176, DIM], [340, 120, OK]].map(([x, y, c]) => (
+        <g><rect x={(x as number) - 28} y={(y as number) - 22} width="56" height="44" rx="12" fill={PANEL} stroke={c as string} stroke-width="1.5" /><rect x={(x as number) - 14} y={(y as number) - 4} width="28" height="8" rx="4" fill={c as string} opacity="0.8" /></g>
+      ))}
+      <path d="M140 108 l12 12 -12 12 -12 -12Z" fill={SOFT} stroke={A} stroke-width="1.5" />
+      <circle r="7" fill={A} class="sv-token" />
+    </>
+  )}
+
+  {/* ---------- Dashboard ---------- */}
+  {variant === 'dashboard' && (
+    <>
+      <rect x="30" y="22" width="340" height="196" rx="16" fill={PANEL} stroke={BORDER} />
+      {[48, 136, 224].map((x, i) => (
+        <g><rect x={x} y="38" width="76" height="40" rx="9" fill="var(--color-surface)" stroke={BORDER} /><rect x={x + 10} y="48" width="30" height="5" rx="2.5" fill={DIM} /><rect x={x + 10} y="59" width={[48, 40, 52][i]} height="10" rx="5" fill={i === 0 ? A : LINE} /></g>
+      ))}
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => {
+        const h = [46, 70, 54, 88, 64, 102, 82][i];
+        return <rect x={52 + i * 28} y={198 - h} width="18" height={h} rx="5" fill={A} opacity={0.45 + i * 0.07} class="sv-bar" style={`--d:${i * 0.12}s`} />;
+      })}
+      <circle cx="320" cy="150" r="34" stroke="var(--color-surface)" stroke-width="14" />
+      <circle cx="320" cy="150" r="34" stroke={A} stroke-width="14" pathLength="100" stroke-dasharray="64 100" transform="rotate(-90 320 150)" class="sv-ring" />
+      <circle cx="320" cy="150" r="34" stroke="var(--color-accent-secondary)" stroke-width="14" pathLength="100" stroke-dasharray="20 100" stroke-dashoffset="-64" transform="rotate(-90 320 150)" />
+      <rect x="312" y="40" width="40" height="36" rx="9" fill={SOFT} />
+    </>
+  )}
+
+  {/* ---------- API / integrations ---------- */}
+  {variant === 'api' && (
+    <>
+      {[[34, 'var(--color-primary)'], [276, 'var(--color-accent-secondary)']].map(([x, c]) => (
+        <g>
+          <rect x={x as number} y="50" width="90" height="140" rx="16" fill={PANEL} stroke={c as string} stroke-opacity="0.6" />
+          <rect x={(x as number) + 16} y="68" width="58" height="10" rx="5" fill={c as string} opacity="0.85" />
+          {[92, 110, 128, 146].map((y) => <rect x={(x as number) + 16} y={y} width="58" height="6" rx="3" fill={LINE} />)}
+          <rect x={(x as number) + 16} y="164" width="30" height="10" rx="5" fill={OK} opacity="0.7" />
+        </g>
+      ))}
+      <path d="M124 100H276M124 140H276" stroke={LINE} stroke-width="2" />
+      {[0, 1, 2].map((i) => <rect x="0" y="94" width="22" height="12" rx="6" fill="var(--color-primary)" class="sv-packet-r" style={`--d:${i * 0.9}s`} />)}
+      {[0, 1, 2].map((i) => <rect x="0" y="134" width="22" height="12" rx="6" fill="var(--color-accent-secondary)" class="sv-packet-l" style={`--d:${i * 0.9 + 0.45}s`} />)}
+      <rect x="168" y="168" width="64" height="26" rx="13" fill={SOFT} stroke={A} stroke-opacity="0.6" />
+      <text x="200" y="185" fill={A} font-size="11" font-weight="700" font-family="monospace" text-anchor="middle">{'{ }'}</text>
+    </>
+  )}
+
+  {/* ---------- Cloud / DevOps / security ---------- */}
+  {variant === 'cloud' && (
+    <>
+      <path d="M150 74a32 32 0 0 1 62-10 24 24 0 1 1 8 46h-68a18 18 0 0 1-2-36Z" fill={SOFT} stroke={A} stroke-width="2" class="sv-float" />
+      <path d="M200 112v22" stroke={A} stroke-width="2" stroke-dasharray="4 5" class="sv-flow" />
+      {[96, 166, 236].map((x, i) => (
+        <g>
+          <rect x={x} y="136" width="68" height="78" rx="10" fill={PANEL} stroke={BORDER} />
+          {[150, 172, 194].map((y, j) => (
+            <g><rect x={x + 10} y={y} width="48" height="14" rx="4" fill="var(--color-surface)" /><circle cx={x + 50} cy={y + 7} r="3" fill={OK} class="sv-led" style={`--d:${(i * 3 + j) * 0.23}s`} /></g>
+          ))}
+        </g>
+      ))}
+      <g transform="translate(318 40)" class="sv-pop" style="--d:.6s">
+        <path d="M22 0 42 8v16c0 14-9 22-20 26C11 46 2 38 2 24V8Z" fill={SOFT} stroke={A} stroke-width="2" />
+        <path d="M13 25l7 7 12-13" stroke={OK} stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      </g>
+      <rect x="30" y="40" width="92" height="26" rx="13" fill={PANEL} stroke={BORDER} />
+      <rect x="42" y="50" width="0" height="6" rx="3" fill={OK} class="sv-grow" style="--w:68px" />
+    </>
+  )}
+</svg>
+
+<style>
+  .svis {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .svis :global(*) {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation-play-state: paused;
+  }
+
+  .svis:global(.is-active) :global(*) {
+    animation-play-state: running;
+  }
+
+  .svis :global(.sv-seq) { animation: sv-seq 6s var(--d, 0s) infinite both; }
+  .svis :global(.sv-dot) { animation: sv-dot 1s var(--d, 0s) infinite; }
+  .svis :global(.sv-pulse) { animation: sv-pulse 2.4s ease-in-out infinite; }
+  .svis :global(.sv-flow) { animation: sv-flow 1.2s linear var(--d, 0s) infinite; }
+  .svis :global(.sv-node) { animation: sv-node 2.5s ease-in-out var(--d, 0s) infinite; }
+  .svis :global(.sv-spin) { animation: sv-spin 6s linear infinite; }
+  .svis :global(.sv-grow) { animation: sv-grow 3.5s cubic-bezier(.16, 1, .3, 1) var(--d, 0s) infinite; }
+  .svis :global(.sv-scan) { animation: sv-scan 3s ease-in-out infinite; }
+  .svis :global(.sv-blink) { animation: sv-blink 1.6s ease-in-out infinite; }
+  .svis :global(.sv-draw) { animation: sv-draw 4s cubic-bezier(.65, 0, .35, 1) infinite; }
+  .svis :global(.sv-fade) { animation: sv-fade 4s ease-in-out infinite; }
+  .svis :global(.sv-float) { animation: sv-float 4s ease-in-out infinite; }
+  .svis :global(.sv-rise) { animation: sv-rise 5s cubic-bezier(.16, 1, .3, 1) var(--d, 0s) infinite both; }
+  .svis :global(.sv-scroll) { animation: sv-scroll 7s ease-in-out infinite; }
+  .svis :global(.sv-pop) { animation: sv-pop 5s cubic-bezier(.34, 1.56, .64, 1) var(--d, 0s) infinite both; }
+  .svis :global(.sv-slide) { animation: sv-slide 5s cubic-bezier(.16, 1, .3, 1) var(--d, 0s) infinite both; }
+  .svis :global(.sv-cursor) { animation: sv-cursor 5s ease-in-out infinite; }
+  .svis :global(.sv-drop) { animation: sv-drop 2.6s cubic-bezier(.55, 0, .45, 1) infinite; }
+  .svis :global(.sv-bump) { animation: sv-bump 2.6s ease-out infinite; }
+  .svis :global(.sv-resize) { animation: sv-resize 4s ease-in-out infinite; transform-origin: left top; }
+  .svis :global(.sv-drag) { animation: sv-drag 4s ease-in-out infinite; }
+  .svis :global(.sv-type) { animation: sv-type 6s steps(14) var(--d, 0s) infinite both; transform-origin: right center; }
+  .svis :global(.sv-caret) { animation: sv-blink 1s steps(1) infinite; }
+  .svis :global(.sv-print) { animation: sv-print 3.5s ease-in-out infinite; }
+  .svis :global(.sv-tap) { animation: sv-tap 3.5s ease-in-out infinite; }
+  .svis :global(.sv-move) { animation: sv-move 5s cubic-bezier(.65, 0, .35, 1) infinite; }
+  .svis :global(.sv-box) { animation: sv-box 5s cubic-bezier(.65, 0, .35, 1) infinite; }
+  .svis :global(.sv-token) { offset-path: path('M62 120 H140 C 170 120 170 64 200 64 H 236 C 262 64 262 120 290 120 H 340'); animation: sv-token 3.2s ease-in-out infinite; }
+  .svis :global(.sv-bar) { animation: sv-bar 3.5s cubic-bezier(.16, 1, .3, 1) var(--d, 0s) infinite both; transform-origin: center bottom; }
+  .svis :global(.sv-ring) { animation: sv-ring 3.5s cubic-bezier(.16, 1, .3, 1) infinite; }
+  .svis :global(.sv-packet-r) { animation: sv-packet-r 2.7s linear var(--d, 0s) infinite; }
+  .svis :global(.sv-packet-l) { animation: sv-packet-l 2.7s linear var(--d, 0s) infinite; }
+  .svis :global(.sv-led) { animation: sv-blink 1.4s steps(2) var(--d, 0s) infinite; }
+
+  @keyframes sv-seq { 0% { opacity: 0; transform: translateY(10px); } 8%, 82% { opacity: 1; transform: none; } 92%, 100% { opacity: 0; transform: none; } }
+  @keyframes sv-dot { 0%, 100% { opacity: .3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+  @keyframes sv-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.12); opacity: .75; } }
+  @keyframes sv-flow { to { stroke-dashoffset: -28; } }
+  @keyframes sv-node { 0%, 100% { transform: none; } 20% { transform: translateY(-4px) scale(1.06); } }
+  @keyframes sv-spin { to { transform: rotate(360deg); } }
+  @keyframes sv-grow { 0% { width: 0; } 60%, 85% { width: var(--w); } 100% { width: var(--w); opacity: 0; } }
+  @keyframes sv-scan { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(192px); } }
+  @keyframes sv-blink { 50% { opacity: .25; } }
+  @keyframes sv-draw { 0% { stroke-dashoffset: 100; } 55%, 85% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+  @keyframes sv-fade { 0%, 45% { opacity: 0; } 60%, 88% { opacity: 1; } 100% { opacity: 0; } }
+  @keyframes sv-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+  @keyframes sv-rise { 0% { opacity: 0; transform: translateY(16px); } 15%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  @keyframes sv-scroll { 0%, 15% { transform: translateY(0); } 45%, 60% { transform: translateY(-108px); } 90%, 100% { transform: translateY(0); } }
+  @keyframes sv-pop { 0% { opacity: 0; transform: scale(.6); } 12%, 80% { opacity: 1; transform: scale(1); } 92%, 100% { opacity: 0; transform: scale(.9); } }
+  @keyframes sv-slide { 0% { opacity: 0; transform: translateX(24px); } 15%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  @keyframes sv-cursor { 0% { transform: translate(320px, 200px); } 35% { transform: translate(92px, 128px); } 45% { transform: translate(92px, 128px) scale(.85); } 55% { transform: translate(92px, 128px); } 100% { transform: translate(320px, 200px); } }
+  @keyframes sv-drop { 0%, 15% { transform: translate(0, 0) scale(1); opacity: 1; } 70% { transform: translate(0, 116px) scale(.6); opacity: 1; } 75%, 100% { transform: translate(0, 116px) scale(.6); opacity: 0; } }
+  @keyframes sv-bump { 0%, 68% { transform: scale(1); } 76% { transform: scale(1.35); } 86%, 100% { transform: scale(1); } }
+  @keyframes sv-resize { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3, 1.2); } }
+  @keyframes sv-drag { 0%, 100% { transform: translate(154px, 118px); } 50% { transform: translate(204px, 140px); } }
+  @keyframes sv-type { 0% { transform: scaleX(0); } 20%, 85% { transform: scaleX(1); } 100% { transform: scaleX(1); opacity: 0; } }
+  @keyframes sv-print { 0% { transform: translateY(100px); } 70%, 90% { transform: translateY(0); } 100% { transform: translateY(0); opacity: 0; } }
+  @keyframes sv-tap { 0%, 30%, 100% { transform: translate(0, 0); } 45%, 60% { transform: translate(66px, -6px); } }
+  @keyframes sv-move { 0%, 10% { transform: translate(0, 0); } 40%, 50% { transform: translate(114px, -46px); } 80%, 100% { transform: translate(228px, -46px); } }
+  @keyframes sv-box { 0%, 10% { transform: translate(300px, 210px); opacity: 0; } 25% { opacity: 1; } 60%, 100% { transform: translate(172px, 148px); opacity: 1; } }
+  @keyframes sv-token { 0% { offset-distance: 0%; } 100% { offset-distance: 100%; } }
+  @keyframes sv-bar { 0% { transform: scaleY(0); } 40%, 85% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: .2; } }
+  @keyframes sv-ring { 0% { stroke-dasharray: 0 100; } 50%, 100% { stroke-dasharray: 64 100; } }
+  @keyframes sv-packet-r { 0% { transform: translateX(124px); opacity: 0; } 10%, 90% { opacity: 1; } 100% { transform: translateX(254px); opacity: 0; } }
+  @keyframes sv-packet-l { 0% { transform: translateX(254px); opacity: 0; } 10%, 90% { opacity: 1; } 100% { transform: translateX(124px); opacity: 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .svis :global(*) {
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  // Run each scene's animation only while it is on screen.
+  function initServiceVisuals() {
+    const scenes = document.querySelectorAll<SVGElement>('.svis:not([data-sv-bound])');
+    if (!scenes.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => entry.target.classList.toggle('is-active', entry.isIntersecting)),
+      { threshold: 0.15 },
+    );
+    scenes.forEach((scene) => {
+      scene.setAttribute('data-sv-bound', '');
+      observer.observe(scene);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initServiceVisuals);
+</script>

@@ -1,6 +1,7 @@
 ---
 import Button from '../common/Button.astro';
 import { projects } from '../../data/projects';
+import { services } from '../../data/services';
 
 // Short project names (the part before the dash) for "a project like this one" requests.
 const portfolioOptions = projects.map((project) => ({
@@ -8,19 +9,7 @@ const portfolioOptions = projects.map((project) => ({
   value: `مشابه نمونه‌کار: ${project.title.split(' — ')[0]}`,
 }));
 
-const projectTypes = [
-  'فقط مشاوره می‌خواهم',
-  'طراحی سایت',
-  'فروشگاه اینترنتی',
-  'نرم‌افزار اختصاصی',
-  'سیستم حسابداری',
-  'سیستم صندوق (POS)',
-  'CRM',
-  'مدیریت انبار',
-  'اتوماسیون کسب‌وکار',
-  'داشبورد مدیریتی',
-  'اتصال سامانه‌ها (API)',
-];
+const projectTypes = [{ value: 'فقط مشاوره می‌خواهم', slug: '' }, ...services.map((service) => ({ value: service.title, slug: service.slug }))];
 ---
 
 <div class="contact-form-wrap">
@@ -54,7 +43,7 @@ const projectTypes = [
       <select id="project-type" name="projectType" required>
         <option value="" disabled selected>یک گزینه را انتخاب کنید</option>
         <optgroup label="خدمات">
-          {projectTypes.map((type) => <option value={type}>{type}</option>)}
+          {projectTypes.map((type) => <option value={type.value} data-service={type.slug || undefined}>{type.value}</option>)}
         </optgroup>
         <optgroup label="پروژه‌ای مشابه نمونه‌کارهای ما">
           {portfolioOptions.map((option) => <option value={option.value} data-project={option.slug}>{option.value}</option>)}
@@ -203,10 +192,11 @@ const projectTypes = [
   const errorMessage = document.getElementById('contact-error');
   const submitButton = form?.querySelector<HTMLButtonElement>('.contact-form__submit');
 
-  // Coming from a project page's "request a similar project" link: preselect that project.
-  const requestedProject = new URLSearchParams(location.search).get('project');
-  if (requestedProject) {
-    const option = form?.querySelector<HTMLOptionElement>(`option[data-project="${CSS.escape(requestedProject)}"]`);
+  // Coming from a project page or a service's consult link: preselect that option.
+  const params = new URLSearchParams(location.search);
+  for (const key of ['project', 'service']) {
+    const requested = params.get(key);
+    const option = requested && form?.querySelector<HTMLOptionElement>(`option[data-${key}="${CSS.escape(requested)}"]`);
     if (option) option.selected = true;
   }
 
