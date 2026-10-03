@@ -6,14 +6,28 @@ import CtaSection from '../components/common/CtaSection.astro';
 import GradientMesh from '../components/common/GradientMesh.astro';
 import { toneForIndex } from '../lib/tones';
 import { projects, projectCategories } from '../data/projects';
+import { site } from '../data/site';
 
 const categories = Object.entries(projectCategories);
+
+const projectListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'نمونه‌کارهای هوشیوا',
+  itemListElement: projects.map((project, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: project.title,
+    url: new URL(`/portfolio/${project.slug}`, site.url).toString(),
+  })),
+};
 ---
 
 <MainLayout
   title="نمونه‌کارهای هوشیوا"
   description="مجموعه‌ای از پروژه‌های اجراشده هوشیوا در طراحی سایت، فروشگاه اینترنتی، نرم‌افزار اختصاصی، سیستم‌های مدیریتی و داشبورد."
   path="/portfolio"
+  structuredData={[projectListSchema]}
 >
   <section class="section portfolio-page tone-gold">
     <GradientMesh variant="hero" secondary="var(--color-primary)" />

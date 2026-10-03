@@ -4,7 +4,9 @@ import Icon from '../../components/common/Icon.astro';
 import CtaSection from '../../components/common/CtaSection.astro';
 import ProjectCover from '../../components/illustrations/ProjectCover.astro';
 import { toneForIndex, toneVars } from '../../lib/tones';
+import ProjectCard from '../../components/portfolio/ProjectCard.astro';
 import { projects, projectCategories, type Project } from '../../data/projects';
+import { site } from '../../data/site';
 
 export function getStaticPaths() {
   return projects.map((project, index) => ({
@@ -20,12 +22,40 @@ interface Props {
 
 const { project, tone } = Astro.props;
 const images = project.gallery ?? (project.coverImage ? [project.coverImage] : []);
+const pageUrl = new URL(`/portfolio/${project.slug}`, site.url).toString();
+
+// Prefer projects of the same kind, then fill up with the rest, so every page links to three others.
+const related = [
+  ...projects.filter((p) => p.slug !== project.slug && p.category === project.category),
+  ...projects.filter((p) => p.slug !== project.slug && p.category !== project.category),
+].slice(0, 3);
+
+const projectSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: project.title,
+  ...(project.englishName && { alternateName: project.englishName }),
+  headline: project.title,
+  description: project.shortDescription,
+  abstract: project.overview,
+  url: pageUrl,
+  image: images.map((src) => new URL(src, site.url).toString()),
+  genre: projectCategories[project.category],
+  keywords: [...(project.keywords ?? []), ...project.technologies].join('، '),
+  inLanguage: 'fa-IR',
+  creator: { '@type': 'Organization', name: 'هوشیوا', alternateName: 'Houshiva', url: site.url },
+  ...(project.link && { sameAs: project.link }),
+};
 ---
 
 <MainLayout
-  title={project.title}
+  title={project.englishName ? `${project.title} (${project.englishName})` : project.title}
   description={project.shortDescription}
   path={`/portfolio/${project.slug}`}
+  ogType="article"
+  ogImage={project.coverImage}
+  ogImageAlt={project.title}
+  structuredData={[projectSchema]}
   breadcrumbs={[
     { label: 'نمونه‌کارها', path: '/portfolio' },
     { label: project.title, path: `/portfolio/${project.slug}` },
@@ -40,6 +70,7 @@ const images = project.gallery ?? (project.coverImage ? [project.coverImage] : [
 
       <span class="project-page__category">{projectCategories[project.category]}</span>
       <h1 class="text-balance">{project.title}</h1>
+      {project.englishName && <p class="project-page__en" lang="en" dir="ltr">{project.englishName}</p>}
       <p class="project-page__lead">{project.shortDescription}</p>
 
       {
@@ -54,14 +85,22 @@ const images = project.gallery ?? (project.coverImage ? [project.coverImage] : [
       }
 
       <div class="project-page__cover">
-        {project.coverImage ? <img src={project.coverImage} alt={project.title} /> : <ProjectCover variant={project.cover as any} />}
+        {
+          project.coverImage ? (
+            <img src={project.coverImage} alt={`${project.title} — تصویر اصلی`} fetchpriority="high" />
+          ) : (
+            <ProjectCover variant={project.cover as any} />
+          )
+        }
       </div>
 
       {
         images.length > 1 && (
           <div class="project-page__gallery">
-            {images.slice(1).map((src) => (
-              <img src={src} alt={project.title} loading="lazy" />
+            {images.slice(1).map((src, index) => (
+              <a href={src} target="_blank" rel="noopener">
+                <img src={src} alt={`${project.title} — تصویر ${index + 2}`} loading="lazy" />
+              </a>
             ))}
           </div>
         )
@@ -102,8 +141,22 @@ const images = project.gallery ?? (project.coverImage ? [project.coverImage] : [
         <h3>نتیجه</h3>
         <p>{project.result}</p>
       </div>
+
+      <h2 class="project-page__heading">تکنولوژی‌ها و برچسب‌ها</h2>
+      <ul class="project-page__tags">
+        {[...project.technologies, ...(project.keywords ?? [])].map((tag) => <li>{tag}</li>)}
+      </ul>
     </div>
   </article>
+
+  <section class="section section--alt">
+    <div class="container">
+      <h2 class="project-page__related-title">نمونه‌کارهای دیگر</h2>
+      <div class="project-page__related">
+        {related.map((p, index) => <ProjectCard project={p} tone={toneForIndex(index + 1)} />)}
+      </div>
+    </div>
+  </section>
 
   <CtaSection
     title="پروژه‌ی بعدی می‌تواند مال کسب‌وکار شما باشد"
@@ -150,6 +203,16 @@ const images = project.gallery ?? (project.coverImage ? [project.coverImage] : [
     margin-bottom: var(--space-4);
   }
 
+  .project-page__en {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.04em;
+    color: var(--color-text-subtle);
+    text-align: end;
+    margin-top: calc(-1 * var(--space-2));
+    margin-bottom: var(--space-4);
+  }
+
   .project-page__lead {
     font-size: var(--font-size-lg);
     margin-bottom: var(--space-6);
@@ -192,7 +255,12 @@ const images = project.gallery ?? (project.coverImage ? [project.coverImage] : [
     margin-bottom: var(--space-10);
   }
 
+  .project-page__gallery a {
+    display: block;
+  }
+
   .project-page__gallery img {
+    display: block;
     width: 100%;
     aspect-ratio: 400 / 240;
     object-fit: cover;
@@ -298,6 +366,33 @@ const images = project.gallery ?? (project.coverImage ? [project.coverImage] : [
     font-weight: var(--font-weight-semibold);
     color: var(--tone-accent-hover);
     margin-bottom: var(--space-2);
+  }
+
+  .project-page__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .project-page__tags li {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: var(--space-1) var(--space-3);
+  }
+
+  .project-page__related-title {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--space-6);
+  }
+
+  .project-page__related {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-6);
   }
 
   @media (max-width: 720px) {
