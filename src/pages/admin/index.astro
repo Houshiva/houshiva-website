@@ -120,20 +120,6 @@ const links: { label: string; description: string; href: string; icon: IconName 
             ورود به ویرایشگر
             <Icon name="chevron-start" size={16} />
           </a>
-          <details class="admin__help">
-            <summary>اولین ورود: ساخت کلید دسترسی (فقط یک بار)</summary>
-            <ol>
-              <li>با حساب گیت‌هابی که به ریپوی سایت دسترسی دارد (Houshiva) وارد github.com شوید.</li>
-              <li>
-                به <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">ساخت توکن جدید</a> بروید
-                (Fine-grained token).
-              </li>
-              <li>یک نام بدهید، مدت اعتبار را مثلاً یک سال بگذارید و در «Repository access» فقط <b>houshiva-website</b> را انتخاب کنید.</li>
-              <li>در «Permissions» گزینه‌ی <b>Contents</b> را روی <b>Read and write</b> بگذارید و توکن را بسازید.</li>
-              <li>در ویرایشگر، «Sign In Using Access Token» را بزنید و توکن را وارد کنید. مرورگر شما آن را به خاطر می‌سپارد.</li>
-            </ol>
-            <p>این توکن مثل رمز است؛ آن را جایی ذخیره یا برای کسی ارسال نکنید.</p>
-          </details>
         </section>
 
         <section class="admin__card">
@@ -549,20 +535,6 @@ const links: { label: string; description: string; href: string; icon: IconName 
         font-size: var(--font-size-sm);
       }
 
-      .admin__help {
-        font-size: var(--font-size-sm);
-        color: var(--color-text-muted);
-        border-top: 1px solid var(--color-border);
-        padding-top: var(--space-4);
-      }
-
-      .admin__help summary {
-        cursor: pointer;
-        font-weight: var(--font-weight-semibold);
-        color: var(--color-text);
-      }
-
-      .admin__help ol,
       .admin__setup ol {
         list-style: decimal;
         padding-inline-start: var(--space-6);
