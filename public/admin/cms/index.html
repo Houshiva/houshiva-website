@@ -6,8 +6,21 @@
     <meta name="robots" content="noindex, nofollow" />
     <title>ویرایش محتوا | پنل مدیریت هوشیوا</title>
     <link rel="icon" type="image/png" href="/favicon.png" />
+    <script>
+      // Only open the editor from a tab that has logged in at /admin. (Saving still
+      // needs the GitHub access token inside the editor; this just keeps the door shut.)
+      var unlocked = false;
+      try {
+        unlocked = Boolean(sessionStorage.getItem('houshiva-admin-key'));
+      } catch (e) {}
+      if (!unlocked) {
+        location.replace('/admin/');
+      } else {
+        var cms = document.createElement('script');
+        cms.src = 'https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js';
+        document.head.appendChild(cms);
+      }
+    </script>
   </head>
-  <body>
-    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
-  </body>
+  <body></body>
 </html>

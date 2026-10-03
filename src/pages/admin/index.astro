@@ -47,6 +47,32 @@ const links: { label: string; description: string; href: string; icon: IconName 
     <title>پنل مدیریت | هوشیوا</title>
   </head>
   <body>
+    <div class="admin-login" id="admin-login">
+      <form class="admin-login__card" id="admin-login-form" hidden>
+        <img src="/favicon.png" alt="" width="44" height="44" />
+        <h1>ورود به پنل مدیریت</h1>
+        <p>هوشیوا</p>
+        <label>
+          ایمیل
+          <input type="email" id="admin-email" autocomplete="username" dir="ltr" required />
+        </label>
+        <label>
+          رمز عبور
+          <input type="password" id="admin-password" autocomplete="current-password" dir="ltr" required />
+        </label>
+        <p class="admin-login__error" id="admin-login-error" hidden>ایمیل یا رمز عبور اشتباه است.</p>
+        <button type="submit" class="admin__btn" id="admin-login-submit">ورود</button>
+      </form>
+      <p class="admin-login__card" id="admin-login-off" hidden>
+        پنل مدیریت هنوز فعال نشده است: ایمیل و رمز عبور مدیر (ADMIN_EMAIL و ADMIN_PASSWORD) در تنظیمات گیت‌هاب ثبت نشده‌اند.
+      </p>
+    </div>
+
+    <div id="admin-root"></div>
+    <script is:inline type="application/json" id="admin-payload"></script>
+
+    {/* Everything between these markers is encrypted at build time (integrations/admin-lock.mjs). */}
+    <i hidden data-admin-start></i>
     <div class="admin">
       <header class="admin__top">
         <div>
@@ -56,10 +82,13 @@ const links: { label: string; description: string; href: string; icon: IconName 
             آخرین انتشار سایت: <span data-date={builtAt.toISOString()}></span>
           </p>
         </div>
-        <a class="admin__btn admin__btn--ghost" href="/">
-          مشاهده‌ی سایت
-          <Icon name="chevron-start" size={16} />
-        </a>
+        <div class="admin__top-actions">
+          <a class="admin__btn admin__btn--ghost" href="/">
+            مشاهده‌ی سایت
+            <Icon name="chevron-start" size={16} />
+          </a>
+          <button type="button" class="admin__btn admin__btn--ghost" id="admin-logout">خروج</button>
+        </div>
       </header>
 
       <section class="admin__stats">
@@ -182,94 +211,103 @@ const links: { label: string; description: string; href: string; icon: IconName 
         }
       </section>
     </div>
+    <i hidden data-admin-end></i>
 
     <script>
+      import { unlockAdmin, lockAdmin } from '../../lib/adminLock';
+
       const fa = (d: Date) =>
         d.toLocaleString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-      document.querySelectorAll<HTMLElement>('[data-date]').forEach((el) => {
-        el.textContent = fa(new Date(el.dataset.date!));
-      });
+      function initPanel() {
+        document.getElementById('admin-logout')!.addEventListener('click', lockAdmin);
 
-      // ---- deploy runs (public GitHub API, no token needed) ----
-      const runsEl = document.getElementById('runs')!;
-      const ago = (d: Date) => {
-        const m = Math.round((Date.now() - d.getTime()) / 60000);
-        if (m < 1) return 'همین الان';
-        if (m < 60) return `${m.toLocaleString('fa-IR')} دقیقه پیش`;
-        const h = Math.round(m / 60);
-        if (h < 24) return `${h.toLocaleString('fa-IR')} ساعت پیش`;
-        return `${Math.round(h / 24).toLocaleString('fa-IR')} روز پیش`;
-      };
-      const label = (r: { status: string; conclusion: string | null }) =>
-        r.status !== 'completed'
-          ? ['در حال انتشار…', 'running']
-          : r.conclusion === 'success'
-            ? ['منتشر شد', 'ok']
-            : ['ناموفق', 'fail'];
-      const why = (r: { event: string; display_title: string }) =>
-        r.event === 'schedule' ? 'به‌روزرسانی خودکار قیمت‌ها' : r.event === 'workflow_dispatch' ? 'انتشار دستی' : r.display_title;
+        document.querySelectorAll<HTMLElement>('[data-date]').forEach((el) => {
+          el.textContent = fa(new Date(el.dataset.date!));
+        });
 
-      async function loadRuns() {
-        try {
-          const res = await fetch(`https://api.github.com/repos/${runsEl.dataset.repo}/actions/runs?per_page=6`);
-          if (!res.ok) throw new Error(String(res.status));
-          const { workflow_runs: runs } = await res.json();
-          runsEl.replaceChildren(
-            ...runs.map((r: any) => {
-              const [text, cls] = label(r);
-              const li = document.createElement('li');
-              li.innerHTML = `<span class="admin__dot admin__dot--${cls}"></span><span class="admin__run-title" dir="auto"></span><span class="admin__run-meta">${text} · ${ago(new Date(r.created_at))}</span>`;
-              li.querySelector('.admin__run-title')!.textContent = why(r);
-              return li;
-            }),
-          );
-          if (runs.some((r: any) => r.status !== 'completed')) setTimeout(loadRuns, 15000);
-        } catch {
-          runsEl.innerHTML = '<li class="admin__muted">دریافت وضعیت ممکن نشد؛ لینک پایین را باز کنید.</li>';
+        // ---- deploy runs (public GitHub API, no token needed) ----
+        const runsEl = document.getElementById('runs')!;
+        const ago = (d: Date) => {
+          const m = Math.round((Date.now() - d.getTime()) / 60000);
+          if (m < 1) return 'همین الان';
+          if (m < 60) return `${m.toLocaleString('fa-IR')} دقیقه پیش`;
+          const h = Math.round(m / 60);
+          if (h < 24) return `${h.toLocaleString('fa-IR')} ساعت پیش`;
+          return `${Math.round(h / 24).toLocaleString('fa-IR')} روز پیش`;
+        };
+        const label = (r: { status: string; conclusion: string | null }) =>
+          r.status !== 'completed'
+            ? ['در حال انتشار…', 'running']
+            : r.conclusion === 'success'
+              ? ['منتشر شد', 'ok']
+              : ['ناموفق', 'fail'];
+        const why = (r: { event: string; display_title: string }) =>
+          r.event === 'schedule' ? 'به‌روزرسانی خودکار قیمت‌ها' : r.event === 'workflow_dispatch' ? 'انتشار دستی' : r.display_title;
+
+        async function loadRuns() {
+          try {
+            const res = await fetch(`https://api.github.com/repos/${runsEl.dataset.repo}/actions/runs?per_page=6`);
+            if (!res.ok) throw new Error(String(res.status));
+            const { workflow_runs: runs } = await res.json();
+            runsEl.replaceChildren(
+              ...runs.map((r: any) => {
+                const [text, cls] = label(r);
+                const li = document.createElement('li');
+                li.innerHTML = `<span class="admin__dot admin__dot--${cls}"></span><span class="admin__run-title" dir="auto"></span><span class="admin__run-meta">${text} · ${ago(new Date(r.created_at))}</span>`;
+                li.querySelector('.admin__run-title')!.textContent = why(r);
+                return li;
+              }),
+            );
+            if (runs.some((r: any) => r.status !== 'completed')) setTimeout(loadRuns, 15000);
+          } catch {
+            runsEl.innerHTML = '<li class="admin__muted">دریافت وضعیت ممکن نشد؛ لینک پایین را باز کنید.</li>';
+          }
         }
+        loadRuns();
+
+        // ---- Umami share dashboard, remembered only in this browser ----
+        const KEY = 'houshiva-admin-umami-share';
+        const wrap = document.getElementById('umami-frame-wrap')!;
+        const setup = document.getElementById('umami-setup')!;
+        const frame = document.getElementById('umami-frame') as HTMLIFrameElement;
+        const open = document.getElementById('umami-open') as HTMLAnchorElement;
+        const reset = document.getElementById('umami-reset')!;
+        const read = () => {
+          try {
+            return localStorage.getItem(KEY);
+          } catch {
+            return null;
+          }
+        };
+        function show(url: string | null) {
+          const on = Boolean(url);
+          wrap.hidden = !on;
+          reset.hidden = !on;
+          setup.hidden = on;
+          if (url) {
+            frame.src = url;
+            open.href = url;
+          }
+        }
+        document.getElementById('umami-form')!.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const url = (document.getElementById('umami-url') as HTMLInputElement).value.trim();
+          try {
+            localStorage.setItem(KEY, url);
+          } catch {}
+          show(url);
+        });
+        reset.addEventListener('click', () => {
+          try {
+            localStorage.removeItem(KEY);
+          } catch {}
+          show(null);
+        });
+        show(read());
       }
-      loadRuns();
 
-      // ---- Umami share dashboard, remembered only in this browser ----
-      const KEY = 'houshiva-admin-umami-share';
-      const wrap = document.getElementById('umami-frame-wrap')!;
-      const setup = document.getElementById('umami-setup')!;
-      const frame = document.getElementById('umami-frame') as HTMLIFrameElement;
-      const open = document.getElementById('umami-open') as HTMLAnchorElement;
-      const reset = document.getElementById('umami-reset')!;
-      const read = () => {
-        try {
-          return localStorage.getItem(KEY);
-        } catch {
-          return null;
-        }
-      };
-      function show(url: string | null) {
-        const on = Boolean(url);
-        wrap.hidden = !on;
-        reset.hidden = !on;
-        setup.hidden = on;
-        if (url) {
-          frame.src = url;
-          open.href = url;
-        }
-      }
-      document.getElementById('umami-form')!.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const url = (document.getElementById('umami-url') as HTMLInputElement).value.trim();
-        try {
-          localStorage.setItem(KEY, url);
-        } catch {}
-        show(url);
-      });
-      reset.addEventListener('click', () => {
-        try {
-          localStorage.removeItem(KEY);
-        } catch {}
-        show(null);
-      });
-      show(read());
+      unlockAdmin(initPanel);
     </script>
 
     <style is:global>
@@ -278,8 +316,83 @@ const links: { label: string; description: string; href: string; icon: IconName 
         background: var(--color-background);
       }
 
-      .admin [hidden] {
+      .admin [hidden],
+      .admin-login [hidden] {
         display: none !important;
+      }
+
+      .admin-login {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: var(--space-4);
+      }
+
+      .admin-login:empty,
+      .admin-login.is-done {
+        display: none;
+      }
+
+      .admin-login__card {
+        width: min(400px, 100%);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+        padding: var(--space-8);
+        background:
+          linear-gradient(150deg, var(--color-primary-soft), transparent 60%),
+          var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        color: var(--color-text-muted);
+        line-height: var(--line-height-normal);
+      }
+
+      .admin-login__card img {
+        border-radius: var(--radius-md);
+      }
+
+      .admin-login__card h1 {
+        font-size: var(--font-size-xl);
+        color: var(--color-text);
+        margin-bottom: calc(-1 * var(--space-3));
+      }
+
+      .admin-login__card label {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text);
+      }
+
+      .admin-login__card input {
+        padding: var(--space-3) var(--space-4);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--color-border-strong);
+        background: var(--color-background-alt);
+        color: var(--color-text);
+        font: inherit;
+      }
+
+      .admin-login__card input:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 1px;
+      }
+
+      .admin-login__card .admin__btn {
+        width: 100%;
+      }
+
+      .admin-login__error {
+        font-size: var(--font-size-sm);
+        color: var(--color-danger);
+      }
+
+      .admin__top-actions {
+        display: flex;
+        gap: var(--space-3);
       }
 
       .admin {
