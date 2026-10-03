@@ -1,5 +1,12 @@
 ---
 import Button from '../common/Button.astro';
+import { projects } from '../../data/projects';
+
+// Short project names (the part before the dash) for "a project like this one" requests.
+const portfolioOptions = projects.map((project) => ({
+  slug: project.slug,
+  value: `مشابه نمونه‌کار: ${project.title.split(' — ')[0]}`,
+}));
 
 const projectTypes = [
   'فقط مشاوره می‌خواهم',
@@ -46,7 +53,12 @@ const projectTypes = [
       <label for="project-type">نوع درخواست <span aria-hidden="true">*</span></label>
       <select id="project-type" name="projectType" required>
         <option value="" disabled selected>یک گزینه را انتخاب کنید</option>
-        {projectTypes.map((type) => <option value={type}>{type}</option>)}
+        <optgroup label="خدمات">
+          {projectTypes.map((type) => <option value={type}>{type}</option>)}
+        </optgroup>
+        <optgroup label="پروژه‌ای مشابه نمونه‌کارهای ما">
+          {portfolioOptions.map((option) => <option value={option.value} data-project={option.slug}>{option.value}</option>)}
+        </optgroup>
       </select>
     </div>
 
@@ -190,6 +202,13 @@ const projectTypes = [
   const success = document.getElementById('contact-success');
   const errorMessage = document.getElementById('contact-error');
   const submitButton = form?.querySelector<HTMLButtonElement>('.contact-form__submit');
+
+  // Coming from a project page's "request a similar project" link: preselect that project.
+  const requestedProject = new URLSearchParams(location.search).get('project');
+  if (requestedProject) {
+    const option = form?.querySelector<HTMLOptionElement>(`option[data-project="${CSS.escape(requestedProject)}"]`);
+    if (option) option.selected = true;
+  }
 
   form?.addEventListener('submit', async (event) => {
     event.preventDefault();

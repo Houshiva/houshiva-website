@@ -73,16 +73,20 @@ const projectSchema = {
       {project.englishName && <p class="project-page__en" lang="en" dir="ltr">{project.englishName}</p>}
       <p class="project-page__lead">{project.shortDescription}</p>
 
-      {
-        project.link && (
-          <div class="project-page__meta">
+      <div class="project-page__meta">
+        <a href={`/contact?project=${project.slug}`} class="project-page__link">
+          درخواست پروژه‌ی مشابه
+          <Icon name="chevron-start" size={16} />
+        </a>
+        {
+          project.link && (
             <a href={project.link} target="_blank" rel="noopener noreferrer" class="project-page__link">
               مشاهده پروژه
               <Icon name="chevron-start" size={16} />
             </a>
-          </div>
-        )
-      }
+          )
+        }
+      </div>
 
       <div class="project-page__cover">
         {
@@ -219,6 +223,9 @@ const projectSchema = {
   }
 
   .project-page__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
     margin-bottom: var(--space-8);
   }
 
